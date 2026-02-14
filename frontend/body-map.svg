@@ -1,0 +1,43 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 400" width="200" height="400">
+  <!-- Baş -->
+  <ellipse id="head" cx="100" cy="40" rx="35" ry="40" fill="#e0e0e0" stroke="#333" stroke-width="2" class="body-part" data-region="baş" cursor="pointer" />
+  
+  <!-- Boyun -->
+  <rect id="neck" x="85" y="75" width="30" height="25" fill="#e0e0e0" stroke="#333" stroke-width="2" class="body-part" data-region="boyun" cursor="pointer" />
+  
+  <!-- Göğüs -->
+  <ellipse id="chest" cx="100" cy="130" rx="50" ry="40" fill="#e0e0e0" stroke="#333" stroke-width="2" class="body-part" data-region="göğüs" cursor="pointer" />
+  
+  <!-- Karın -->
+  <ellipse id="abdomen" cx="100" cy="195" rx="45" ry="35" fill="#e0e0e0" stroke="#333" stroke-width="2" class="body-part" data-region="karın" cursor="pointer" />
+  
+  <!-- Sol Kol -->
+  <rect id="left-arm" x="35" y="100" width="20" height="100" rx="10" fill="#e0e0e0" stroke="#333" stroke-width="2" class="body-part" data-region="sol kol" cursor="pointer" />
+  
+  <!-- Sağ Kol -->
+  <rect id="right-arm" x="145" y="100" width="20" height="100" rx="10" fill="#e0e0e0" stroke="#333" stroke-width="2" class="body-part" data-region="sağ kol" cursor="pointer" />
+  
+  <!-- Sol Bacak -->
+  <rect id="left-leg" x="70" y="230" width="25" height="150" rx="12" fill="#e0e0e0" stroke="#333" stroke-width="2" class="body-part" data-region="sol bacak" cursor="pointer" />
+  
+  <!-- Sağ Bacak -->
+  <rect id="right-leg" x="105" y="230" width="25" height="150" rx="12" fill="#e0e0e0" stroke="#333" stroke-width="2" class="body-part" data-region="sağ bacak" cursor="pointer" />
+  
+  <!-- İkonlar -->
+  <text x="100" y="45" text-anchor="middle" font-size="20">😊</text>
+  
+  <style>
+    .body-part {
+      transition: all 0.3s ease;
+    }
+    .body-part:hover {
+      fill: #667eea;
+      transform: scale(1.05);
+    }
+    .body-part.selected {
+      fill: #764ba2;
+      stroke: #667eea;
+      stroke-width: 3;
+    }
+  </style>
+</svg>
