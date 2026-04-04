@@ -1,0 +1,212 @@
+﻿require('dotenv').config();
+const express = require('express');
+const cors = require('cors');
+const { GoogleGenerativeAI } = require('@google/generative-ai');
+
+const app = express();
+const PORT = process.env.PORT || 3001;
+
+// Middleware
+app.use(cors());
+app.use((req, res, next) => {
+  res.header('Access-Control-Allow-Origin', '*');
+  res.header('Access-Control-Allow-Headers', 'Content-Type');
+  next();
+});
+app.use(express.json());
+
+
+// Gemini AI
+const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
+
+// B├Âl├╝m listesi
+const DEPARTMENTS = {
+  'dahiliye': 'Dahiliye (─░├ğ Hastal─▒klar─▒)',
+  'kardiyoloji': 'Kardiyoloji',
+  'noroloji': 'N├Âroloji',
+  'ortopedi': 'Ortopedi ve Travmatoloji',
+  'kbb': 'Kulak Burun Bo─şaz',
+  'goz': 'G├Âz Hastal─▒klar─▒',
+  'dermatoloji': 'Dermatoloji (Cilt Hastal─▒klar─▒)',
+  'psikiyatri': 'Psikiyatri',
+  'kadin_dogum': 'Kad─▒n Hastal─▒klar─▒ ve Do─şum',
+  'uroloji': '├£roloji',
+  'cocuk': '├çocuk Sa─şl─▒─ş─▒ ve Hastal─▒klar─▒',
+  'fizik_tedavi': 'Fizik Tedavi ve Rehabilitasyon',
+  'genel_cerrahi': 'Genel Cerrahi',
+  'gogus': 'G├Â─ş├╝s Hastal─▒klar─▒',
+  'aile_hekimi': 'Aile Hekimi'
+};
+
+// System Prompt
+const SYSTEM_PROMPT = `Sen bir sa─şl─▒k y├Ânlendirme asistan─▒s─▒n. Kullan─▒c─▒n─▒n ┼şik├óyetini analiz edip en uygun poliklinik b├Âl├╝m├╝n├╝ ├Âner.
+
+KR─░T─░K KURALLAR:
+1. ASLA te┼şhis koyma
+2. ASLA ila├ğ ├Ânerme  
+3. MUTLAKA yeterli bilgi yoksa followUpQuestions sor
+4. Sadece JSON format─▒nda cevap ver
+
+B├Âl├╝mler:
+dahiliye, kardiyoloji, noroloji, ortopedi, kbb, goz, dermatoloji, psikiyatri, kadin_dogum, uroloji, cocuk, fizik_tedavi, genel_cerrahi, gogus, aile_hekimi
+
+=== AC─░L DURUM KURALLARI ===
+A┼şa─ş─▒daki durumlarda isEmergency: true + followUpQuestions: []
+- G├Â─ş├╝s a─şr─▒s─▒ + nefes darl─▒─ş─▒
+- Bay─▒lma, bilin├ğ kayb─▒
+- ┼Şiddetli kafa travmas─▒
+- Ani konu┼şma bozuklu─şu / fel├ğ
+- ┼Şiddetli kar─▒n a─şr─▒s─▒ + kusma
+- Kanamal─▒ yaralanma
+- ┼Şiddetli ba┼ş a─şr─▒s─▒ + g├Ârme kayb─▒
+
+=== SORU SORMA KURALLARI (├çOK ├ûNEML─░!) ===
+A┼şa─ş─▒daki ┼şikayetlerde MUTLAKA followUpQuestions doldur:
+
+1. BO─ŞAZ A─ŞRISI:
+   followUpQuestions: ["Ate┼şiniz var m─▒?", "Yutkunurken ├ğok mu a─şr─▒yor?", "Ka├ğ g├╝nd├╝r devam ediyor?"]
+
+2. KARIN A─ŞRISI:
+   followUpQuestions: ["A─şr─▒ ani mi ba┼şlad─▒ yoksa yava┼ş yava┼ş m─▒?", "Ate┼şiniz var m─▒?", "Kusma var m─▒?", "Hangi b├Âlgede a─şr─▒ var? (sa─ş/sol/orta)"]
+
+3. BA┼Ş A─ŞRISI:
+   followUpQuestions: ["En k├Ât├╝ ba┼ş a─şr─▒n─▒z m─▒?", "G├Ârme bozuklu─şu var m─▒?", "Boyun sertli─şi var m─▒?"]
+
+4. G├û─Ş├£S A─ŞRISI:
+   followUpQuestions: ["Nefes darl─▒─ş─▒ var m─▒?", "Kola veya ├ğeneye yay─▒l─▒yor mu?", "Eforla m─▒ artt─▒?"]
+
+5. BACAK/KOL A─ŞRISI:
+   followUpQuestions: ["┼Şi┼şlik var m─▒?", "Travma ge├ğirdiniz mi?", "Uyu┼şma veya g├╝├ğs├╝zl├╝k var m─▒?"]
+
+6. ├ûKS├£R├£K:
+   followUpQuestions: ["Balgam var m─▒?", "Kan geliyor mu?", "Nefes darl─▒─ş─▒ var m─▒?", "Ate┼ş var m─▒?"]
+
+SADECE kullan─▒c─▒ zaten detayl─▒ bilgi verdiyse soru sorma!
+├ûrnek: "Karn─▒m─▒n sa─ş alt taraf─▒ ├ğok a─şr─▒yor, 2 saattir, ate┼şim 38.5" ÔåÆ Soru sorma, direkt cevap ver
+
+=== A─░LE HEK─░M─░ KURALLARI ===
+E─şer sorular sorulduysa ve cevaplara g├Âre basitse:
+primaryDepartment: "aile_hekimi"
+familyDoctorMessage: "┼Şikayetiniz basit g├Âr├╝n├╝yor. ├ûnce aile hekiminize ba┼şvurabilirsiniz. E─şer 3 g├╝n i├ğinde ge├ğmezse [alternatif_b├Âl├╝m] b├Âl├╝m├╝ne gidin."
+
+Aile hekiminin ├ğ├Âzebilece─şi durumlar (sorular sorulduktan SONRA):
+- Basit bo─şaz a─şr─▒s─▒ (ate┼ş yoksa/hafifse)
+- Hafif ├Âks├╝r├╝k (kan yoksa)
+- So─şuk alg─▒nl─▒─ş─▒, nezle
+- Re├ğete yenileme
+- K├╝├ğ├╝k yara pansuman
+
+=== CEVAP FORMATI ===
+{
+  "needsMoreInfo": true/false,
+  "followUpQuestions": ["soru1", "soru2", "soru3"],
+  "primaryDepartment": "bolum_id",
+  "alternatives": ["bolum_id"],
+  "confidence": "high/medium/low",
+  "isEmergency": false,
+  "isFamilyDoctor": false,
+  "familyDoctorMessage": "",
+  "reasoning": "K─▒sa a├ğ─▒klama",
+  "note": "Bu ├Âneri te┼şhis de─şildir. Kesin tan─▒ i├ğin doktor muayenesi gereklidir."
+}
+
+├ûNEML─░: 
+- E─şer followUpQuestions doluysa, needsMoreInfo: true olmal─▒
+- E─şer needsMoreInfo: true ise, primaryDepartment: "" bo┼ş b─▒rak
+- Kullan─▒c─▒ yeterli detay verdiyse direkt cevap ver
+`;
+
+// Ana endpoint
+app.post('/api/analyze', async (req, res) => {
+  try {
+    const { symptom } = req.body;
+
+    // Validasyon
+    if (!symptom || symptom.trim().length < 10) {
+      return res.status(400).json({
+        success: false,
+        error: 'L├╝tfen ┼şik├óyetinizi en az 10 karakter ile a├ğ─▒klay─▒n.'
+      });
+    }
+
+    console.log('­şôØ ┼Şik├óyet:', symptom);
+
+    // Gemini'ye sor
+    const model = genAI.getGenerativeModel({
+      model: 'gemini-2.5-flash-preview-09-2025',
+      generationConfig: {
+        temperature: 0.3,
+        responseMimeType: 'application/json'
+      }
+    });
+
+   const result = await model.generateContent(
+  `${SYSTEM_PROMPT}\n\nKullan─▒c─▒ ┼şik├óyeti: "${symptom}"`
+);
+
+let text = result.response.text();
+
+// JSON d─▒┼ş─▒ndaki metni temizle
+if (text.includes('```json')) {
+  text = text.split('```json')[1].split('```')[0].trim();
+} else if (text.includes('```')) {
+  text = text.split('```')[1].split('```')[0].trim();
+}
+    console.log('­şñû AI Yan─▒t─▒:', text);
+
+    let parsed;
+    try {
+      parsed = JSON.parse(text);
+    } catch (parseError) {
+      const cleanText = text.replace(/```json|```/g, '').trim();
+      parsed = JSON.parse(cleanText);
+    }
+
+    // Acil durum kontrol├╝
+    if (parsed.isEmergency) {
+      parsed.emergencyMessage = 'ÔÜá´©Å AC─░L DURUM! 112\'yi aray─▒n veya en yak─▒n acil servise gidin!';
+    }
+    
+    // Aile hekimi kontrol├╝
+    if (parsed.primaryDepartment === 'aile_hekimi') {
+      parsed.isFamilyDoctor = true;
+      if (!parsed.familyDoctorMessage) {
+        parsed.familyDoctorMessage = 'Bu ┼şikayetiniz i├ğin hastaneye gitmenize gerek yok. Aile hekiminiz size yard─▒mc─▒ olabilir. Daha h─▒zl─▒ ve kolay!';
+      }
+    }
+
+    // B├Âl├╝m isimlerini T├╝rk├ğeye ├ğevir
+    parsed.primaryDepartmentName = DEPARTMENTS[parsed.primaryDepartment] || parsed.primaryDepartment;
+    parsed.alternativeNames = (parsed.alternatives || []).map(id => DEPARTMENTS[id] || id);
+
+    console.log('Ô£à Sonu├ğ:', parsed);
+
+    res.json({
+      success: true,
+      data: parsed
+    });
+
+  } catch (error) {
+    console.error('ÔØî Hata:', error);
+    res.status(500).json({
+      success: false,
+      error: 'Bir hata olu┼ştu. L├╝tfen tekrar deneyin.',
+      details: error.message
+    });
+  }
+});
+
+// Health check
+app.get('/health', (req, res) => {
+  res.json({ 
+    status: 'ok', 
+    message: 'Sa─şl─▒kY├Ân Backend ├ğal─▒┼ş─▒yor',
+    timestamp: new Date().toISOString() 
+  });
+});
+
+// Sunucuyu ba┼şlat
+app.listen(PORT, () => {
+  console.log(`­şÜÇ Backend ├ğal─▒┼ş─▒yor: http://localhost:${PORT}`);
+  console.log(`Ô£à Health check: http://localhost:${PORT}/health`);
+});

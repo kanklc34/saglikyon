@@ -1,854 +1,572 @@
-// Backend URL (localhost'ta çalışıyor)
-const BACKEND_URL = 'http://localhost:3001';
+// ============================================
+// SağlıkYön v2 – Main application logic
+// Connects UI with local algorithmic engine
+// ============================================
 
-let currentQuestionIndex = 0;
-let allQuestions = [];
-let followUpAnswers = [];
+import { analyzeSymptoms } from './engine/analyzer.js';
 
-const confidenceLabels = {
-  high: 'Yüksek Güven',
-  medium: 'Orta Güven',
-  low: 'Düşük Güven'
+// --- State ---
+const state = {
+  currentResult: null,
+  followUpQuestions: [],
+  followUpAnswers: [],
+  currentQuestionIndex: 0,
+  history: JSON.parse(localStorage.getItem('sy_history') || '[]'),
+  totalQueries: parseInt(localStorage.getItem('sy_total_queries') || '0'),
+  theme: localStorage.getItem('sy_theme') || 'light'
 };
 
-// Karakter sayacı
-const textarea = document.getElementById('symptom');
-textarea.addEventListener('input', () => {
-  const count = textarea.value.length;
-  document.getElementById('charCount').textContent = count;
-  
-  if (count > 500) {
-    textarea.value = textarea.value.substring(0, 500);
-    document.getElementById('charCount').textContent = 500;
-  }
-});
+// --- DOM Elements ---
+const DOM = {
+  input: document.getElementById('symptomInput'),
+  charCount: document.getElementById('charCount'),
+  analyzeBtn: document.getElementById('analyzeBtn'),
+  voiceBtn: document.getElementById('voiceBtn'),
+  voiceStatus: document.getElementById('voiceStatus'),
+  loading: document.getElementById('loading'),
+  error: document.getElementById('error'),
+  result: document.getElementById('result'),
+  themeToggle: document.getElementById('themeToggle'),
+  elderlyToggle: document.getElementById('elderlyToggle'),
+  bodyMapParts: document.querySelectorAll('.body-part'),
+  popupContainer: document.getElementById('popupContainer'),
+  welcomeModal: document.getElementById('welcomeModal'),
+  welcomeBtn: document.getElementById('welcomeBtn'),
+  historyBtn: document.getElementById('historyBtn'),
+  historyPanel: document.getElementById('historyPanel'),
+  historyList: document.getElementById('historyList'),
+  closeHistoryBtn: document.getElementById('closeHistory'),
+  clearHistoryBtn: document.getElementById('clearHistory'),
+  statsBadge: document.getElementById('totalQueries')
+};
 
-// Yaşlı modu
-function toggleElderlyMode() {
-  const body = document.body;
-  const btn = document.querySelector('.elderly-toggle');
-  
-  body.classList.toggle('elderly-mode');
-  
-  if (body.classList.contains('elderly-mode')) {
-    btn.textContent = '👴 Yaşlı Modu: AÇIK';
-    btn.style.background = '#28a745';
-  } else {
-    btn.textContent = '👴 Yaşlı Modunu Aç';
-    btn.style.background = '#6c757d';
-  }
+// --- Initialization ---
+function init() {
+  applyTheme(state.theme);
+  updateStats();
+  setupEventListeners();
+  checkWelcomeModal();
+  initBodyMap();
 }
 
-// Ana analiz fonksiyonu
-async function analyze() {
-  const symptom = document.getElementById('symptom').value;
-  const loadingEl = document.getElementById('loading');
-  const errorEl = document.getElementById('error');
-  const resultEl = document.getElementById('result');
-  const button = document.getElementById('analyzeBtn');
-
-  // Temizle
-  loadingEl.classList.add('hidden');
-  errorEl.classList.add('hidden');
-  resultEl.classList.add('hidden');
-
-  // Validasyon
-  if (!symptom || symptom.trim().length < 10) {
-    errorEl.textContent = '❌ Lütfen şikâyetinizi en az 10 karakter ile açıklayın.';
-    errorEl.classList.remove('hidden');
-    return;
-  }
-
-  // Loading
-  loadingEl.classList.remove('hidden');
-  button.disabled = true;
-
-  try {
-    const response = await fetch(`${BACKEND_URL}/api/analyze`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({ symptom: symptom.trim() })
-    });
-
-    const data = await response.json();
-
-    if (!data.success) {
-      throw new Error(data.error || 'Bir hata oluştu');
-    }
-
-    displayResult(data.data);
-
-  } catch (error) {
-    console.error('Error:', error);
-    errorEl.innerHTML = `
-      ❌ ${error.message}<br>
-      <small>Backend çalışıyor mu kontrol edin (Terminal'de npm start).</small>
-    `;
-    errorEl.classList.remove('hidden');
-  } finally {
-    loadingEl.classList.add('hidden');
-    button.disabled = false;
-  }
-}
-
-// Sonuç göster
-function displayResult(result) {
-  const resultEl = document.getElementById('result');
+function setupEventListeners() {
+  DOM.input.addEventListener('input', handleInput);
+  DOM.analyzeBtn.addEventListener('click', startAnalysis);
+  DOM.themeToggle.addEventListener('click', toggleTheme);
+  DOM.elderlyToggle.addEventListener('click', toggleElderlyMode);
+  DOM.welcomeBtn.addEventListener('click', closeWelcomeModal);
   
-  // Acil durum
-  if (result.isEmergency) {
-    resultEl.innerHTML = `
-      <div class="emergency">
-        <h2>⚠️ ACİL DURUM!</h2>
-        <p>${result.emergencyMessage}</p>
-        <a href="tel:112" class="emergency-call-link">📞 112'yi Ara</a>
-      </div>
-    `;
-    resultEl.classList.remove('hidden');
-    return;
-  }
-
-  // Akıllı sorular var mı?
-  if (result.needsMoreInfo && result.followUpQuestions && result.followUpQuestions.length > 0) {
-    showFollowUpQuestions(result.followUpQuestions);
-    return;
-  }
-
-  // Aile hekimi filtresi
-  if (result.isFamilyDoctor || result.primaryDepartment === 'aile_hekimi') {
-    resultEl.innerHTML = `
-      <div class="family-doctor-card">
-        <h3>💡 Aile Hekiminize Başvurabilirsiniz</h3>
-        <div class="family-doctor-message">
-          ${result.familyDoctorMessage || 'Bu şikayetiniz için hastaneye gitmenize gerek yok. Aile hekiminiz size yardımcı olabilir.'}
-        </div>
-        <div class="family-doctor-benefits">
-          <div class="benefit-item">⏱️ Daha hızlı</div>
-          <div class="benefit-item">📍 Daha yakın</div>
-          <div class="benefit-item">💰 Daha kolay</div>
-        </div>
-        ${result.alternatives && result.alternatives.length > 0 ? `
-          <div class="family-doctor-alternative">
-            <small>Eğer 3 gün içinde geçmezse <strong>${DEPARTMENTS[result.alternatives[0]] || result.alternatives[0]}</strong> bölümüne başvurun.</small>
-          </div>
-        ` : ''}
-      </div>
-      ${generateDoctorNoteButton()}
-    `;
-    resultEl.classList.remove('hidden');
-    resultEl.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-    return;
-  }
-
-  // Normal sonuç
- // Normal sonuç
-  let html = `
-    <div class="department-card">
-      <h3>📍 Önerilen Sağlık Bölümü</h3>
-      <div class="department-name">${result.primaryDepartmentName}</div>
-      <span class="confidence">${confidenceLabels[result.confidence] || result.confidence}</span>
-      ${result.reasoning ? `<div class="reasoning">💡 ${result.reasoning}</div>` : ''}
-    </div>
-
-    <a href="https://mhrs.gov.tr" target="_blank" class="mhrs-button">
-      🏥 Online Randevu Sistemine Git
-    </a>
-    
-     ${generateDoctorNoteButton()}  `;
-
-  // Alternatifler
-  if (result.alternativeNames && result.alternativeNames.length > 0) {
-    html += `
-      <div class="alternatives">
-        <h4>🔄 Alternatif Bölümler (Opsiyonel)</h4>
-        ${result.alternativeNames.map(name => `<span class="alt-tag">${name}</span>`).join('')}
-      </div>
-    `;
-  }
-
-  // Not
-  html += `
-    <div class="note">
-      ℹ️ ${result.note}
-    </div>
-  `;
-
-  resultEl.innerHTML = html;
-  resultEl.classList.remove('hidden');
+  // History panel
+  DOM.historyBtn.addEventListener('click', toggleHistoryPanel);
+  DOM.closeHistoryBtn.addEventListener('click', () => DOM.historyPanel.classList.add('hidden'));
+  DOM.clearHistoryBtn.addEventListener('click', clearHistory);
   
-  // Smooth scroll
-  resultEl.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-}
-// ============================================
-// VÜCUT HARİTASI FONKSİYONLARI
-// ============================================
-
-let selectedBodyRegion = null;
-let currentPopup = null;
-let selectedSymptoms = {};
-
-// Sayfa yüklendiğinde event listener ekle
-document.addEventListener('DOMContentLoaded', () => {
-  const bodyParts = document.querySelectorAll('.body-part');
-  
-  bodyParts.forEach(part => {
-    part.style.cursor = 'pointer';
-    
-    part.addEventListener('click', function(e) {
-      e.stopPropagation();
-      const region = this.getAttribute('data-region');
-      const x = this.getAttribute('data-x');
-      const y = this.getAttribute('data-y');
-      toggleBodyRegion(region, x, y, this);
-    });
-    
-    // Hover efekti
-    part.addEventListener('mouseenter', function() {
-      if (!this.classList.contains('active')) {
-        this.style.fill = '#667eea';
+  // Voice input
+  if (DOM.voiceBtn) {
+      if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
+         DOM.voiceBtn.addEventListener('click', toggleVoiceInput);
+      } else {
+         DOM.voiceBtn.style.display = 'none';
       }
-    });
-    
-    part.addEventListener('mouseleave', function() {
-      if (!this.classList.contains('active')) {
-        this.style.fill = '#e0e0e0';
-      }
-    });
-  });
-  
-  // Dışarı tıklandığında popup'ları kapat
-  document.addEventListener('click', function(e) {
+  }
+
+  // Global click to close popups
+  document.addEventListener('click', (e) => {
     if (!e.target.closest('.symptom-popup') && !e.target.closest('.body-part')) {
       closeAllPopups();
     }
   });
-});
-// ESC tuşu ile popup'ları kapat
-  document.addEventListener('keydown', function(e) {
-    if (e.key === 'Escape') {
-      closeAllPopups();
-    }
-  });
-  
-  // İlk gelenlere ipucu göster
- // showTooltipHint();
+}
 
-function toggleBodyRegion(region, x, y, element) {
-  // Eğer aynı bölgeye tekrar tıklanırsa kapat
-  if (element.classList.contains('active')) {
-    closePopup(region, element);
+function checkWelcomeModal() {
+  const seen = localStorage.getItem('sy_welcome_seen');
+  if (!seen) {
+    DOM.welcomeModal.classList.remove('hidden');
+  } else {
+    DOM.welcomeModal.classList.add('hidden');
+  }
+}
+
+function closeWelcomeModal() {
+  DOM.welcomeModal.classList.add('hidden');
+  localStorage.setItem('sy_welcome_seen', 'true');
+}
+
+// --- UI Logic ---
+function handleInput() {
+  const count = DOM.input.value.length;
+  DOM.charCount.textContent = count;
+  if (count > 500) {
+    DOM.input.value = DOM.input.value.substring(0, 500);
+    DOM.charCount.textContent = 500;
+  }
+}
+
+function toggleTheme() {
+  state.theme = state.theme === 'light' ? 'dark' : 'light';
+  applyTheme(state.theme);
+  localStorage.setItem('sy_theme', state.theme);
+}
+
+function applyTheme(theme) {
+  if (theme === 'dark') {
+    document.body.setAttribute('data-theme', 'dark');
+    DOM.themeToggle.innerHTML = '<span class="theme-icon">☀️</span>';
+  } else {
+    document.body.removeAttribute('data-theme');
+    DOM.themeToggle.innerHTML = '<span class="theme-icon">🌙</span>';
+  }
+}
+
+function toggleElderlyMode() {
+  const isElderly = document.body.classList.toggle('elderly-mode');
+  if (isElderly) {
+    DOM.elderlyToggle.innerHTML = '👩‍🦳 Standart Mod';
+    DOM.elderlyToggle.style.borderColor = 'var(--accent)';
+    DOM.elderlyToggle.style.color = 'var(--accent)';
+  } else {
+    DOM.elderlyToggle.innerHTML = '👴 Yaşlı Modu';
+    DOM.elderlyToggle.removeAttribute('style');
+  }
+}
+
+// --- Analysis Logic ---
+async function startAnalysis() {
+  const text = DOM.input.value.trim();
+  
+  if (text.length < 5) {
+    showError('Lütfen şikayetinizi daha detaylı açıklayın (en az 5 karakter).');
     return;
   }
   
-  // Diğer bölgeleri kapat
-  closeAllPopups();
+  DOM.error.classList.add('hidden');
+  DOM.result.classList.add('hidden');
+  DOM.loading.classList.remove('hidden');
+  DOM.analyzeBtn.disabled = true;
   
-  // Bu bölgeyi aç
-  element.classList.add('active');
-  selectedBodyRegion = region;
+  // Simulate network delay for UX (loading animation)
+  animateLoadingSteps();
+  await new Promise(r => setTimeout(r, 1500));
   
-  // Popup oluştur
-  createSymptomPopup(region, x, y);
+  try {
+    const result = analyzeSymptoms(text);
+    
+    if (result.error) {
+      showError(result.error);
+    } else if (result.noMatch) {
+      showError(result.message);
+    } else if (result.needsMoreInfo) {
+      startFollowUp(result);
+    } else {
+      displayResult(result, text);
+    }
+  } catch (err) {
+    console.error('Analiz hatası:', err);
+    showError('Analiz sırasında bir hata oluştu. Lütfen tekrar deneyin.');
+  } finally {
+    DOM.loading.classList.add('hidden');
+    DOM.analyzeBtn.disabled = false;
+  }
 }
 
-function createSymptomPopup(region, x, y) {
-  const symptomData = {
-    'baş': [
-      { 
-        title: 'Baş Ağrısı', 
-        details: ['Şiddetli ağrı', 'Hafif ağrı', 'Migren tarzı', 'Sabahları başlıyor', 'Zonklayıcı'] 
-      },
-      { 
-        title: 'Göz Sorunları', 
-        details: ['Bulanık görme', 'Çift görme', 'Işık hassasiyeti', 'Göz ağrısı'] 
-      },
-      { 
-        title: 'Kulak Sorunları', 
-        details: ['Kulak çınlaması', 'İşitme kaybı', 'Kulak ağrısı', 'Dolgunluk hissi'] 
-      }
-    ],
-    'boyun': [
-      { title: 'Boyun Ağrısı', details: ['Şiddetli', 'Hareketle artan', 'Sabah tutukluğu', 'Kas gerginliği'] },
-      { title: 'Boyun Tutulması', details: ['Ani başlayan', 'Hareket kısıtlılığı', 'Sertlik'] },
-      { title: 'Yutkunma Güçlüğü', details: ['Ağrılı yutkunma', 'Boğaz kuruluğu'] }
-    ],
-    'göğüs': [
-      { title: 'Göğüs Ağrısı', details: ['Şiddetli', 'Nefes darlığı ile', 'Eforla artan', 'Sıkışma hissi'] },
-      { title: 'Solunum Sorunları', details: ['Nefes darlığı', 'Hırıltı', 'Öksürük'] },
-      { title: 'Kalp Çarpıntısı', details: ['Hızlı kalp atışı', 'Düzensiz atım', 'Göğüste çırpınma'] }
-    ],
-    'karın': [
-      { title: 'Karın Ağrısı', details: ['Şiddetli', 'Kramp şeklinde', 'Sürekli', 'Yemekten sonra'] },
-      { title: 'Sindirim Sorunları', details: ['Mide bulantısı', 'Kusma', 'İshal', 'Kabızlık'] },
-      { title: 'Şişkinlik', details: ['Gaz', 'Geğirme', 'Karında dolgunluk'] }
-    ],
-    'sol kol': [
-      { title: 'Kol Ağrısı', details: ['Şiddetli', 'Hareketle artan', 'Gece ağrısı'] },
-      { title: 'Uyuşma/Karıncalanma', details: ['Parmak uçlarında', 'Tüm kolda', 'Geceleri artan'] },
-      { title: 'Güçsüzlük', details: ['Kuvvet kaybı', 'Tutamama', 'Yorgunluk'] }
-    ],
-    'sağ kol': [
-      { title: 'Kol Ağrısı', details: ['Şiddetli', 'Hareketle artan', 'Gece ağrısı'] },
-      { title: 'Uyuşma/Karıncalanma', details: ['Parmak uçlarında', 'Tüm kolda', 'Geceleri artan'] },
-      { title: 'Güçsüzlük', details: ['Kuvvet kaybı', 'Tutamama', 'Yorgunluk'] }
-    ],
-    'sol bacak': [
-      { title: 'Bacak Ağrısı', details: ['Yürürken', 'Dinlenirkende', 'Gece krampları'] },
-      { title: 'Şişlik', details: ['Ayak bileğinde', 'Tüm bacakta', 'Akşamları artan'] },
-      { title: 'Hareket Kısıtlılığı', details: ['Topallama', 'Eklem sertliği', 'Güçsüzlük'] }
-    ],
-    'sağ bacak': [
-      { title: 'Bacak Ağrısı', details: ['Yürürken', 'Dinlenirkende', 'Gece krampları'] },
-      { title: 'Şişlik', details: ['Ayak bileğinde', 'Tüm bacakta', 'Akşamları artan'] },
-      { title: 'Hareket Kısıtlılığı', details: ['Topallama', 'Eklem sertliği', 'Güçsüzlük'] }
-    ]
-  };
-
-  const problems = symptomData[region] || [];
-  if (problems.length === 0) return;
-
-  const popup = document.createElement('div');
-  popup.className = `symptom-popup popup-${region.replace(/ /g, '-')}`;
-  popup.id = `popup-${region}`;
+function animateLoadingSteps() {
+  const steps = document.querySelectorAll('.loading-steps .step');
+  steps.forEach(s => s.classList.remove('active'));
   
-  let problemsHTML = '';
-  problems.forEach((problem, index) => {
-    problemsHTML += `
-      <div class="problem-card" data-problem="${problem.title}" data-index="${index}">
-        <div class="problem-title">
-          <span>${problem.title}</span>
-          <span class="problem-arrow">›</span>
-        </div>
-        <div class="problem-details">
-          ${problem.details.map(detail => `
-            <div class="detail-option" data-detail="${detail}">
-              ${detail}
-            </div>
-          `).join('')}
+  setTimeout(() => steps[0] && steps[0].classList.add('active'), 100);
+  setTimeout(() => steps[1] && steps[1].classList.add('active'), 600);
+  setTimeout(() => steps[2] && steps[2].classList.add('active'), 1100);
+}
+
+function showError(msg) {
+  DOM.error.innerHTML = `⚠️ ${msg}`;
+  DOM.error.classList.remove('hidden');
+  DOM.loading.classList.add('hidden');
+  DOM.analyzeBtn.disabled = false;
+}
+
+// --- Follow-Up Questions ---
+function startFollowUp(result) {
+  state.followUpQuestions = result.followUpQuestions;
+  state.followUpAnswers = [];
+  state.currentQuestionIndex = 0;
+  state.currentResult = result;
+  
+  renderChatUI();
+}
+
+function renderChatUI() {
+  DOM.result.innerHTML = `
+    <div class="chat-container">
+      <div class="chat-header">
+        <h3>💬 Birkaç Ek Soru</h3>
+        <p class="chat-hint">Algoritmanın daha doğru karar vermesi için lütfen cevaplayın</p>
+      </div>
+      <div class="chat-messages" id="chatMessages"></div>
+    </div>
+  `;
+  DOM.result.classList.remove('hidden');
+  DOM.result.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  
+  showNextQuestion();
+}
+
+function showNextQuestion() {
+  if (state.currentQuestionIndex >= state.followUpQuestions.length) {
+    finishFollowUp();
+    return;
+  }
+  
+  const q = state.followUpQuestions[state.currentQuestionIndex];
+  const chatMessages = document.getElementById('chatMessages');
+  
+  const qDiv = document.createElement('div');
+  qDiv.className = 'chat-message ai-message';
+  qDiv.innerHTML = `
+    <div class="message-avatar">🤖</div>
+    <div class="message-content">
+      <p>${q.question}</p>
+      <div class="message-buttons">
+        <button class="chat-btn chat-btn-yes" data-ans="Evet">Evet</button>
+        <button class="chat-btn chat-btn-no" data-ans="Hayır">Hayır</button>
+        <button class="chat-btn chat-btn-skip" data-ans="Emin Değilim">Emin Değilim</button>
+      </div>
+    </div>
+  `;
+  
+  chatMessages.appendChild(qDiv);
+  chatMessages.scrollTop = chatMessages.scrollHeight;
+  
+  // Event listeners for buttons
+  qDiv.querySelectorAll('.chat-btn').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      const ans = e.target.getAttribute('data-ans');
+      const allBtns = qDiv.querySelectorAll('.chat-btn');
+      allBtns.forEach(b => b.disabled = true);
+      e.target.classList.add('selected');
+      
+      handleAnswer(ans, q);
+    });
+  });
+}
+
+function handleAnswer(answer, questionObj) {
+  state.followUpAnswers.push({
+    question: questionObj.question,
+    answer: answer,
+    impact: questionObj.impact
+  });
+  
+  const chatMessages = document.getElementById('chatMessages');
+  const uDiv = document.createElement('div');
+  uDiv.className = 'chat-message user-message';
+  uDiv.innerHTML = `
+    <div class="message-content"><p>${answer}</p></div>
+    <div class="message-avatar">👤</div>
+  `;
+  
+  chatMessages.appendChild(uDiv);
+  chatMessages.scrollTop = chatMessages.scrollHeight;
+  
+  state.currentQuestionIndex++;
+  setTimeout(showNextQuestion, 400);
+}
+
+async function finishFollowUp() {
+  const chatMessages = document.getElementById('chatMessages');
+  const loadingDiv = document.createElement('div');
+  loadingDiv.className = 'chat-message ai-message';
+  loadingDiv.innerHTML = `
+    <div class="message-avatar">🤖</div>
+    <div class="message-content"><p>Cevaplarınız analiz ediliyor...</p></div>
+  `;
+  chatMessages.appendChild(loadingDiv);
+  chatMessages.scrollTop = chatMessages.scrollHeight;
+  
+  await new Promise(r => setTimeout(r, 800));
+  
+  const originalText = DOM.input.value;
+  const finalResult = analyzeSymptoms(originalText, state.followUpAnswers);
+  displayResult(finalResult, originalText, true);
+}
+
+// --- Show Final Result ---
+function displayResult(result, originalText, fromFollowUp = false) {
+  let html = '';
+  
+  if (result.isEmergency) {
+    html = `
+      <div class="emergency-card">
+        <h2>⚠️ DİKKAT!</h2>
+        <p>${result.emergencyMessage}</p>
+        <a href="tel:112" class="emergency-call">📞 112'yi Ara</a>
+      </div>
+    `;
+  } else if (result.isFamilyDoctor) {
+    html = `
+      <div class="family-card">
+        <h3>👨‍⚕️ Aile Hekiminize Başvurabilirsiniz</h3>
+        <p>${result.familyDoctorMessage}</p>
+        <div class="family-benefits">
+          <div class="benefit-item">⏱️ Daha hızlı</div>
+          <div class="benefit-item">📍 Daha yakın</div>
         </div>
       </div>
     `;
+  } else {
+    html = `
+      <div class="dept-card">
+        <div class="dept-label">Önerilen Bölüm</div>
+        <div class="dept-name">
+          <span class="dept-icon">${result.primaryDepartmentIcon}</span>
+          ${result.primaryDepartmentName}
+        </div>
+        <div class="confidence-badge confidence-${result.confidence}">
+          Güven Skoru: %${result.confidenceScore}
+        </div>
+        <div class="reasoning-box">
+          ${result.reasoning}
+        </div>
+        
+        ${result.matchedSymptoms && result.matchedSymptoms.length > 0 ? `
+          <div class="matched-symptoms">
+            ${result.matchedSymptoms.map(s => `<span class="symptom-tag">🔍 ${s.keyword}</span>`).join('')}
+          </div>
+        ` : ''}
+      </div>
+      
+      <a href="https://mhrs.gov.tr" target="_blank" class="mhrs-btn">
+        📅 MHRS Online Randevu
+      </a>
+      
+      ${result.alternatives && result.alternatives.length > 0 ? `
+        <div class="alt-section">
+          <div class="alt-title">Alternatif Bölümler</div>
+          <div class="alt-tags">
+            ${result.alternatives.map(alt => `<span class="alt-tag">${alt.icon} ${alt.name}</span>`).join('')}
+          </div>
+        </div>
+      ` : ''}
+      
+      <div class="note-box">
+        ${result.note}
+      </div>
+    `;
+  }
+  
+  // Doctor note button
+  html += `
+    <button class="doctor-note-btn" id="generateNoteBtn">
+      📝 Doktora Göstermek İçin Özet Kopyala
+    </button>
+  `;
+  
+  DOM.result.innerHTML = html;
+  
+  if (!fromFollowUp) {
+    DOM.result.classList.remove('hidden');
+  }
+  
+  DOM.result.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  
+  // Add logical event listeners inside
+  document.getElementById('generateNoteBtn')?.addEventListener('click', () => {
+    generateDoctorNote(result, originalText);
   });
   
+  // Save to history
+  saveToHistory(originalText, result);
+}
+
+function generateDoctorNote(result, text) {
+  const d = new Date().toLocaleDateString('tr-TR');
+  let note = `Tarih: ${d}\nPlatform: SağlıkYön Algoritması\n\nHASTA ŞİKAYETİ:\n${text}\n`;
+  
+  if (state.followUpAnswers.length > 0) {
+    note += `\nEK BİLGİLER:\n`;
+    state.followUpAnswers.forEach(ans => {
+      note += `- ${ans.question} -> ${ans.answer}\n`;
+    });
+  }
+  
+  navigator.clipboard.writeText(note).then(() => {
+    alert('✅ Doktor notu kopyalandı!');
+  }).catch(() => {
+    alert('Kopyalama başarısız, lütfen manuel yapın.');
+  });
+}
+
+// --- History & Stats ---
+function saveToHistory(text, result) {
+  const deptName = result.isEmergency ? 'ACİL' : 
+                   result.isFamilyDoctor ? 'Aile Hekimi' : 
+                   result.primaryDepartmentName;
+                   
+  const item = {
+    text: text.substring(0, 50) + (text.length > 50 ? '...' : ''),
+    dept: deptName,
+    date: new Date().toLocaleDateString('tr-TR', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' })
+  };
+  
+  state.history.unshift(item);
+  if (state.history.length > 10) state.history.pop();
+  
+  localStorage.setItem('sy_history', JSON.stringify(state.history));
+  
+  state.totalQueries++;
+  localStorage.setItem('sy_total_queries', state.totalQueries.toString());
+  updateStats();
+  renderHistory();
+}
+
+function toggleHistoryPanel() {
+  DOM.historyPanel.classList.toggle('hidden');
+  if (!DOM.historyPanel.classList.contains('hidden')) {
+    renderHistory();
+  }
+}
+
+function renderHistory() {
+  if (state.history.length === 0) {
+    DOM.historyList.innerHTML = '<p class="history-empty">Henüz sorgulama yapılmadı.</p>';
+    return;
+  }
+  
+  DOM.historyList.innerHTML = state.history.map(item => `
+    <div class="history-item">
+      <div class="history-symptom">"${item.text}"</div>
+      <div style="display:flex; justify-content:space-between;">
+        <span class="history-dept">${item.dept}</span>
+        <span class="history-date">${item.date}</span>
+      </div>
+    </div>
+  `).join('');
+}
+
+function clearHistory() {
+  state.history = [];
+  localStorage.removeItem('sy_history');
+  renderHistory();
+}
+
+function updateStats() {
+  if (DOM.statsBadge) {
+    DOM.statsBadge.textContent = state.totalQueries;
+  }
+}
+
+// --- Voice Recognition ---
+let recognition = null;
+let isListening = false;
+
+function toggleVoiceInput() {
+  if (!('webkitSpeechRecognition' in window || 'SpeechRecognition' in window)) {
+    return;
+  }
+  const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+  
+  if (!recognition) {
+    recognition = new SpeechRecognition();
+    recognition.lang = 'tr-TR';
+    recognition.continuous = false;
+    
+    recognition.onstart = () => {
+      isListening = true;
+      DOM.voiceBtn.classList.add('listening');
+      DOM.voiceStatus.textContent = '🎤 Dinliyorum...';
+      DOM.voiceStatus.classList.remove('hidden', 'error');
+    };
+    
+    recognition.onresult = (event) => {
+      const transcript = event.results[0][0].transcript;
+      if (DOM.input.value.trim()) {
+        DOM.input.value += ' ' + transcript;
+      } else {
+        DOM.input.value = transcript;
+      }
+      handleInput();
+      DOM.voiceStatus.textContent = `✅ "${transcript}" eklendi`;
+      setTimeout(() => DOM.voiceStatus.classList.add('hidden'), 3000);
+    };
+    
+    recognition.onerror = (event) => {
+      DOM.voiceStatus.textContent = '⚠️ Hata: Ses anlaşılamadı veya izin yok.';
+      DOM.voiceStatus.classList.add('error');
+      setTimeout(() => DOM.voiceStatus.classList.add('hidden'), 3000);
+    };
+    
+    recognition.onend = () => {
+      isListening = false;
+      DOM.voiceBtn.classList.remove('listening');
+    };
+  }
+  
+  if (isListening) recognition.stop();
+  else recognition.start();
+}
+
+// --- Body Map Interactions ---
+function initBodyMap() {
+  DOM.bodyMapParts.forEach(part => {
+    part.addEventListener('click', function(e) {
+      e.stopPropagation();
+      const region = this.getAttribute('data-region');
+      
+      // Close others
+      DOM.bodyMapParts.forEach(p => p.classList.remove('active'));
+      closeAllPopups();
+      
+      this.classList.add('active');
+      showPopup(region);
+    });
+  });
+}
+
+function closeAllPopups() {
+  const container = document.getElementById('popupContainer');
+  if (container) container.innerHTML = '';
+  DOM.bodyMapParts.forEach(p => p.classList.remove('active'));
+}
+
+function showPopup(region) {
+  const symptomsByRegion = {
+    'baş': ['Baş ağrısı', 'Gözlerim bulanık', 'Kulak ağrısı', 'Baş dönmesi'],
+    'boyun': ['Boyun ağrısı', 'Boğaz ağrısı', 'Yutkunma güçlüğü'],
+    'göğüs': ['Göğüs ağrısı', 'Nefes darlığı', 'Çarpıntı', 'Öksürük'],
+    'karın': ['Karın ağrısı', 'Mide bulantısı', 'İshal'],
+    'sol kol': ['Sol kol ağrısı', 'Sol el uyuşması'],
+    'sağ kol': ['Sağ kol ağrısı', 'Sağ el uyuşması'],
+    'sol bacak': ['Sol bacak ağrısı', 'Sol diz ağrısı'],
+    'sağ bacak': ['Sağ bacak ağrısı', 'Sağ diz ağrısı']
+  };
+  
+  const options = symptomsByRegion[region];
+  if (!options) return;
+  
+  const popup = document.createElement('div');
+  popup.className = `symptom-popup`;
   popup.innerHTML = `
     <div class="popup-header">
       <span class="popup-title">${region.toUpperCase()}</span>
-      <button class="popup-close" onclick="closePopup('${region}')">×</button>
+      <button class="popup-close" onclick="this.parentElement.parentElement.remove()">✕</button>
     </div>
-    <div class="main-problems">
-      ${problemsHTML}
-    </div>
-    <button class="popup-submit" onclick="submitSymptoms('${region}')">
-      ✓ Ekle ve Devam Et
-    </button>
-    <div class="selection-counter">
-      <span id="counter-${region}">0 seçim</span>
+    <div class="problem-details" style="display:block">
+      ${options.map(opt => `<div class="detail-option" data-sym="${opt}">${opt}</div>`).join('')}
     </div>
   `;
   
   document.getElementById('popupContainer').appendChild(popup);
   
-  // Problem kartlarına click event
-  popup.querySelectorAll('.problem-card').forEach(card => {
-    card.addEventListener('click', function(e) {
-      if (!e.target.classList.contains('detail-option')) {
-        this.classList.toggle('expanded');
-        updateSelectionCounter(region);
-      }
+  popup.querySelectorAll('.detail-option').forEach(opt => {
+    opt.addEventListener('click', (e) => {
+      const sym = e.target.getAttribute('data-sym');
+      const current = DOM.input.value.trim();
+      DOM.input.value = current ? `${current}, ${sym}` : sym;
+      handleInput();
+      closeAllPopups();
     });
   });
-  
-  // Detay seçeneklerine click event
-  popup.querySelectorAll('.detail-option').forEach(option => {
-    option.addEventListener('click', function(e) {
-      e.stopPropagation();
-      this.classList.toggle('selected');
-      updateSelectionCounter(region);
-    });
-  });
-  
-  // İlk seçimleri sakla
-  if (!selectedSymptoms[region]) {
-    selectedSymptoms[region] = [];
-  }
 }
 
-function updateSelectionCounter(region) {
-  const popup = document.getElementById(`popup-${region}`);
-  if (!popup) return;
-  
-  const selected = popup.querySelectorAll('.detail-option.selected').length;
-  const counter = document.getElementById(`counter-${region}`);
-  if (counter) {
-    counter.textContent = `${selected} seçim`;
-  }
-}
-
-function closePopup(region, element) {
-  const popup = document.getElementById(`popup-${region}`);
-  if (popup) {
-    popup.remove();
-  }
-  
-  if (element) {
-    element.classList.remove('active');
-  } else {
-    const bodyPart = document.querySelector(`[data-region="${region}"]`);
-    if (bodyPart) {
-      bodyPart.classList.remove('active');
-      bodyPart.style.fill = '#e0e0e0';
-    }
-  }
-}
-
-function closeAllPopups() {
-  document.querySelectorAll('.symptom-popup').forEach(popup => popup.remove());
-  document.querySelectorAll('.body-part').forEach(part => {
-    part.classList.remove('active');
-    part.style.fill = '#e0e0e0';
-  });
-  selectedBodyRegion = null;
-}
-
-function submitSymptoms(region) {
-  const popup = document.getElementById(`popup-${region}`);
-
-  if (!popup) return;
-  
-  const selections = [];
-  
-  // Seçilen detayları topla
-  popup.querySelectorAll('.problem-card.expanded').forEach(card => {
-    const problemTitle = card.querySelector('.problem-title span').textContent;
-    const selectedDetails = [];
-    
-    card.querySelectorAll('.detail-option.selected').forEach(detail => {
-      selectedDetails.push(detail.textContent.trim());
-    });
-    
-    if (selectedDetails.length > 0) {
-      selections.push(`${problemTitle}: ${selectedDetails.join(', ')}`);
-    }
-  });
-  
-  if (selections.length === 0) {
-    alert('Lütfen en az bir semptom seçin!');
-    return;
-  }
-  
-  // Textarea'ya ekle
-  const textarea = document.getElementById('symptom');
-  const text = `${region.toUpperCase()} bölgesinde şikayetlerim:\n${selections.join('\n')}\n\n`;
-  
-  if (textarea.value.trim() === '') {
-    textarea.value = text;
-  } else {
-    textarea.value += text;
-  }
-  
-  document.getElementById('charCount').textContent = textarea.value.length;
-  
-  // Popup'ı kapat
-  closePopup(region);
-  
-  // Input'a scroll
-  textarea.focus();
-  document.querySelector('.input-section').scrollIntoView({ behavior: 'smooth', block: 'center' });
-}
-// ============================================
-// AKILLI SORULAR - CHAT TARZI
-// ============================================
-
-
-
-function showFollowUpQuestions(questions) {
-  allQuestions = questions;
-  currentQuestionIndex = 0;
-  followUpAnswers = [];
-  
-  const resultEl = document.getElementById('result');
-  
-  resultEl.innerHTML = `
-    <div class="chat-container">
-      <div class="chat-header">
-        <h3>💬 Birkaç Ek Soru</h3>
-        <p class="chat-hint">Daha doğru yönlendirme için lütfen cevaplayın</p>
-      </div>
-      <div class="chat-messages" id="chatMessages"></div>
-    </div>
-  `;
-  resultEl.classList.remove('hidden');
-  resultEl.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-  
-  // İlk soruyu göster
-  showNextQuestion();
-}
-
-function showNextQuestion() {
-  if (currentQuestionIndex >= allQuestions.length) {
-    // Tüm sorular bitti, tekrar analiz et
-    submitAllAnswers();
-    return;
-  }
-  
-   const question = allQuestions[currentQuestionIndex];
-  const chatMessages = document.getElementById('chatMessages');
-  
-  // AI sorusunu ekle
-  const questionDiv = document.createElement('div');
-  questionDiv.className = 'chat-message ai-message';
-  questionDiv.innerHTML = `
-    <div class="message-avatar">🤖</div>
-    <div class="message-content">
-      <p>${question}</p>
-      <div class="message-buttons">
-        <button class="chat-btn chat-btn-yes" onclick="handleAnswer('Evet')">✓ Evet</button>
-        <button class="chat-btn chat-btn-no" onclick="handleAnswer('Hayır')">✗ Hayır</button>
-      </div>
-    </div>
-  `;
-  
-  chatMessages.appendChild(questionDiv);
-  chatMessages.scrollTop = chatMessages.scrollHeight;
-}
-
-function handleAnswer(answer) {
-  followUpAnswers[currentQuestionIndex] = answer;
-  
-  const chatMessages = document.getElementById('chatMessages');
-  
-  // Butonları devre dışı bırak
-  const lastMessage = chatMessages.lastElementChild;
-  const buttons = lastMessage.querySelectorAll('.chat-btn');
-  buttons.forEach(btn => btn.disabled = true);
-  
- // Seçilen butonu vurgula
-  const selectedBtn = answer === 'Evet' 
-    ? lastMessage.querySelector('.chat-btn-yes')
-    : lastMessage.querySelector('.chat-btn-no');
-  selectedBtn.classList.add('selected');
-  
-  // Kullanıcı cevabını ekle
-  const userDiv = document.createElement('div');
-  userDiv.className = 'chat-message user-message';
-  userDiv.innerHTML = `
-    <div class="message-content">
-      <p>${answer}</p>
-    </div>
-    <div class="message-avatar">👤</div>
-  `;
-  
-  chatMessages.appendChild(userDiv);
-  chatMessages.scrollTop = chatMessages.scrollHeight;
-  
-  // Sonraki soruya geç (kısa bir gecikme ile)
-  currentQuestionIndex++;
-  setTimeout(() => {
-    showNextQuestion();
-  }, 500);
-}
-
-function submitAllAnswers() {
-  const chatMessages = document.getElementById('chatMessages');
-  
-  // "Analiz ediliyor..." mesajı
-  const loadingDiv = document.createElement('div');
-  loadingDiv.className = 'chat-message ai-message';
-  loadingDiv.innerHTML = `
-    <div class="message-avatar">🤖</div>
-    <div class="message-content">
-      <p>Cevaplarınızı analiz ediyorum...</p>
-    </div>
-  `;
-  chatMessages.appendChild(loadingDiv);
-  chatMessages.scrollTop = chatMessages.scrollHeight;
-  
-  // Tüm cevapları ekleyip tekrar gönder
-  const originalSymptom = document.getElementById('symptom').value;
-  const answersText = followUpAnswers.map((a, i) => {
-    return `${allQuestions[i]} → ${a}`;
-  }).join('\n');
-
-  document.getElementById('symptom').value = `${originalSymptom}\n\nEk Bilgiler:\n${answersText}`;
-  
-  // Tekrar analiz et
-  setTimeout(() => {
-    followUpAnswers = [];
-    allQuestions = [];
-    currentQuestionIndex = 0;
-    analyze();
-  }, 800);
-}
-
-// ============================================
-// DOKTOR NOTU
-// ============================================
-
-function generateDoctorNoteButton() {
-  return `
-    <button class="doctor-note-btn" onclick="generateDoctorNote()">
-      📋 Doktor İçin Özet Hazırla
-    </button>
-  `;
-}
-
-function generateDoctorNote() {
-  const symptom = document.getElementById('symptom').value;
-  const today = new Date().toLocaleDateString('tr-TR');
-  
-  const note = `
-HASTA BEYANI ÖZETİ
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-Tarih: ${today}
-Platform: SağlıkYön (AI Asistanı)
-
-ŞİKAYETLER:
-${symptom}
-
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-NOT: Bu özet hastanın kendi beyanı olup,
-SağlıkYön AI asistanı tarafından muayene
-öncesi organize edilmiştir.
-
-Kesin tanı için doktor muayenesi gereklidir.
-  `.trim();
-  
-  // Kopyala
-  navigator.clipboard.writeText(note).then(() => {
-    alert('✅ Doktor notu kopyalandı! Doktora gösterebilirsiniz.');
-  }).catch(() => {
-    // Fallback: Metin alanı göster
-    const modal = document.createElement('div');
-    modal.className = 'doctor-note-modal';
-    modal.innerHTML = `
-      <div class="doctor-note-content">
-        <h3>📋 Doktor İçin Özet</h3>
-        <textarea readonly rows="12">${note}</textarea>
-        <div class="doctor-note-actions">
-          <button onclick="this.parentElement.parentElement.parentElement.remove()">Kapat</button>
-          <button onclick="copyNoteManually()">Kopyala</button>
-        </div>
-      </div>
-    `;
-    document.body.appendChild(modal);
-    
-    window.copyNoteManually = function() {
-      const textarea = modal.querySelector('textarea');
-      textarea.select();
-      document.execCommand('copy');
-      alert('✅ Kopyalandı!');
-      modal.remove();
-    };
-  });
-}
-
-const DEPARTMENTS = {
-  'dahiliye': 'Dahiliye (İç Hastalıkları)',
-  'kardiyoloji': 'Kardiyoloji',
-  'noroloji': 'Nöroloji',
-  'ortopedi': 'Ortopedi ve Travmatoloji',
-  'kbb': 'Kulak Burun Boğaz',
-  'goz': 'Göz Hastalıkları',
-  'dermatoloji': 'Dermatoloji',
-  'psikiyatri': 'Psikiyatri',
-  'kadin_dogum': 'Kadın Hastalıkları ve Doğum',
-  'uroloji': 'Üroloji',
-  'cocuk': 'Çocuk Sağlığı ve Hastalıkları',
-  'fizik_tedavi': 'Fizik Tedavi ve Rehabilitasyon',
-  'genel_cerrahi': 'Genel Cerrahi',
-  'gogus': 'Göğüs Hastalıkları',
-  'aile_hekimi': 'Aile Hekimi'
-};
-// ============================================
-// SESLİ GİRİŞ (Web Speech API)
-// ============================================
-
-(function() {
-  let recognition = null;
-  let isListening = false;
-
-  // Tarayıcı desteği kontrolü ve başlatma
-  if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
-    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-    recognition = new SpeechRecognition();
-    
-    recognition.lang = 'tr-TR';
-    recognition.continuous = false;
-    recognition.interimResults = false;
-    recognition.maxAlternatives = 1;
-    
-    recognition.onstart = function() {
-      console.log('🎤 Dinleme başladı');
-      isListening = true;
-      
-      const btn = document.getElementById('voiceBtn');
-      const status = document.getElementById('voiceStatus');
-      
-      if (btn) btn.classList.add('listening');
-      if (status) {
-        status.classList.remove('hidden', 'error');
-        status.textContent = '🎤 Dinliyorum... Konuşun';
-      }
-    };
-    
-    recognition.onresult = function(event) {
-      const transcript = event.results[0][0].transcript;
-      console.log('✅ Algılanan:', transcript);
-      
-      const textarea = document.getElementById('symptom');
-      
-      if (textarea.value.trim()) {
-        textarea.value += ' ' + transcript;
-      } else {
-        textarea.value = transcript;
-      }
-      
-      document.getElementById('charCount').textContent = textarea.value.length;
-      
-      const status = document.getElementById('voiceStatus');
-      if (status) {
-        status.textContent = '✅ Eklendi: "' + transcript + '"';
-        status.classList.remove('error');
-        setTimeout(() => status.classList.add('hidden'), 3000);
-      }
-    };
-    
-    recognition.onerror = function(event) {
-      console.error('❌ Hata:', event.error);
-      
-      const errorMessages = {
-        'no-speech': '❌ Ses algılanamadı. Tekrar deneyin.',
-        'audio-capture': '❌ Mikrofon bulunamadı.',
-        'not-allowed': '❌ Mikrofon izni gerekli.',
-        'network': '❌ İnternet bağlantısı gerekli.'
-      };
-      
-      const status = document.getElementById('voiceStatus');
-      if (status) {
-        status.textContent = errorMessages[event.error] || '❌ Bir hata oluştu.';
-        status.classList.add('error');
-        status.classList.remove('hidden');
-        setTimeout(() => status.classList.add('hidden'), 5000);
-      }
-    };
-    
-    recognition.onend = function() {
-      console.log('🎤 Dinleme bitti');
-      isListening = false;
-      
-      const btn = document.getElementById('voiceBtn');
-      if (btn) btn.classList.remove('listening');
-    };
-    
-    console.log('✅ Sesli giriş hazır');
-  } else {
-    console.warn('⚠️ Tarayıcı sesli girişi desteklemiyor');
-  }
-
-  // Global fonksiyon - window'a ekle
-  window.toggleVoiceInput = function() {
-    console.log('🎤 Butona tıklandı');
-    
-    if (!recognition) {
-      alert('❌ Tarayıcınız sesli girişi desteklemiyor.\n\nChrome, Edge veya Safari kullanın.');
-      return;
-    }
-    
-    if (isListening) {
-      console.log('🛑 Durduruluyor');
-      recognition.stop();
-      return;
-    }
-    
-    console.log('▶️ Başlatılıyor');
-    try {
-      recognition.start();
-    } catch (error) {
-      console.error('❌ Başlatma hatası:', error);
-      
-      if (error.message && error.message.includes('already')) {
-        recognition.stop();
-        setTimeout(() => recognition.start(), 200);
-      } else {
-        alert('Mikrofon başlatılamadı.\nTarayıcı ayarlarından mikrofon iznini kontrol edin.');
-      }
-    }
-  };
-  // Global fonksiyon - window'a ekle
-  window.toggleVoiceInput = function() {
-    console.log('🎤 Butona tıklandı');
-    
-    if (!recognition) {
-      alert('❌ Tarayıcınız sesli girişi desteklemiyor.\n\nChrome, Edge veya Safari kullanın.');
-      return;
-    }
-    
-    if (isListening) {
-      console.log('🛑 Durduruluyor');
-      recognition.stop();
-      return;
-    }
-    
-    console.log('▶️ Başlatılıyor');
-    try {
-      recognition.start();
-    } catch (error) {
-      console.error('❌ Başlatma hatası:', error);
-      
-      if (error.message && error.message.includes('already')) {
-        recognition.stop();
-        setTimeout(() => recognition.start(), 200);
-      } else {
-        alert('Mikrofon başlatılamadı.\nTarayıcı ayarlarından mikrofon iznini kontrol edin.');
-      }
-    }
-  };
-  
-  // Event listener ekle - DOMContentLoaded'dan sonra
-  document.addEventListener('DOMContentLoaded', function() {
-    const voiceBtn = document.getElementById('voiceBtn');
-    if (voiceBtn) {
-      voiceBtn.addEventListener('click', window.toggleVoiceInput);
-      console.log('✅ Mikrofon butonu event listener eklendi');
-    }
-  });
-})();
-
-// ============================================
-// KARŞILAMA EKRANI
-// ============================================
-
-function closeWelcome() {
-  const modal = document.getElementById('welcomeModal');
-  if (modal) {
-    modal.classList.add('hidden');
-    
-    // localStorage'a kaydet (bir daha gösterme)
-    try {
-      localStorage.setItem('welcomeSeen', 'true');
-    } catch (e) {
-      console.log('localStorage kullanılamıyor');
-    }
-  }
-}
-
-// Sayfa yüklendiğinde kontrol et
-document.addEventListener('DOMContentLoaded', function() {
-  const modal = document.getElementById('welcomeModal');
-  
-  if (modal) {
-    try {
-      const seen = localStorage.getItem('welcomeSeen');
-      if (seen === 'true') {
-        // Daha önce görmüş, gizle
-        modal.classList.add('hidden');
-      }
-    } catch (e) {
-      // localStorage yoksa her seferinde göster
-      console.log('localStorage kullanılamıyor, modal gösteriliyor');
-    }
-  }
-});
+// Start app
+document.addEventListener('DOMContentLoaded', init);
