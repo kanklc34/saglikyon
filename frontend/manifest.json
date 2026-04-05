@@ -1,12 +1,12 @@
 {
   "name": "SağlıkYön Algoritmik Motor",
   "short_name": "SağlıkYön",
-  "description": "500+ semptom analiz eden yapay zeka bağımsız, tamamen algoritmik ücretsiz sağlık yönlendirme asistanı.",
+  "description": "Semptomları ön değerlendirme ile analiz eden, açık kaynak ve ücretsiz sağlık yönlendirme aracı.",
   "start_url": "./index.html",
   "display": "standalone",
   "background_color": "#ffffff",
-  "theme_color": "#667eea",
-  "orientations": "portrait",
+  "theme_color": "#1d4ed8",
+  "orientation": "portrait",
   "lang": "tr",
   "icons": [
     {

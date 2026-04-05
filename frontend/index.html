@@ -5,10 +5,12 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>SağlıkYön – Akıllı Sağlık Yönlendirme</title>
   <meta name="description" content="Algoritmik analiz ile hangi sağlık bölümüne gitmeniz gerektiğini ücretsiz öğrenin.">
-  <meta name="theme-color" content="#667eea">
+  <meta name="theme-color" content="#1d4ed8">
+  <meta name="referrer" content="strict-origin-when-cross-origin">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="manifest" href="manifest.json">
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -39,8 +41,8 @@
   <div class="app-container" id="appContainer">
     <header class="app-header">
       <div class="header-left">
-        <h1 class="app-logo"><span class="logo-icon">🏥</span><span class="logo-text">SağlıkYön</span><span class="logo-badge">v2</span></h1>
-        <p class="app-tagline">Algoritmik Sağlık Yönlendirme • Açık Kaynak</p>
+        <h1 class="app-logo"><span class="logo-icon">🏥</span><span class="logo-text">SağlıkYön</span></h1>
+        <p class="app-tagline">Açık Kaynak Bölüm Yönlendirme • Gizlilik Odaklı</p>
       </div>
       <div class="header-right">
         <button id="elderlyToggle" class="btn-secondary btn-sm">👴 Yaşlı Modu</button>
@@ -48,44 +50,109 @@
       </div>
     </header>
 
+    <section class="hero-panel">
+      <div class="hero-copy">
+        <div class="hero-kicker">Açık kaynak • ücretsiz • veriniz cihazda kalır</div>
+        <h2 class="hero-title">Şikayetinizi yazın, doğru bölüme daha sakin bir başlangıç yapın.</h2>
+        <p class="hero-desc">
+          SağlıkYön; yazı, ses ve vücut haritası girişlerini birlikte değerlendirir. Önce risk seviyesini çıkarır,
+          sonra en uygun branşı önerir. Emin olmadığı durumda paniğe yöneltmek yerine ek bilgi ister.
+        </p>
+        <div class="hero-trust">
+          <div class="hero-trust-card">
+            <strong>4 seviyeli ön değerlendirme</strong>
+            <span>Rutin, yakın zamanda, aynı gün ve acil ayrımı yapar.</span>
+          </div>
+          <div class="hero-trust-card">
+            <strong>Veri cihazda kalır</strong>
+            <span>Şikayet metni varsayılan olarak uzak bir sunucuya gönderilmez.</span>
+          </div>
+          <div class="hero-trust-card">
+            <strong>Takip soruları sorar</strong>
+            <span>Gerektiğinde bölüm önerisini netleştirmek için ek soru sorar.</span>
+          </div>
+        </div>
+      </div>
+      <div class="hero-side">
+        <div class="hero-side-card">
+          <div class="hero-side-label">Kısa Bakış</div>
+          <h3 class="hero-side-title">İlk temas için tasarlanmış sade bir yönlendirme aracı.</h3>
+          <p class="hero-side-intro">Uygulamanın ne sunduğunu ve neyi özellikle yapmadığını ilk bakışta netleştirir.</p>
+          <div class="hero-side-list">
+            <div class="hero-side-item">
+              <strong>Bölüm önerir</strong>
+              <p>Şikayetleri tek tek değil, birlikte değerlendirip en uygun başlangıç noktasını bulur.</p>
+            </div>
+            <div class="hero-side-item">
+              <strong>Aciliyeti ayıklar</strong>
+              <p>Güçlü kırmızı bayraklarda 112 veya acil servis yönlendirmesi verir.</p>
+            </div>
+            <div class="hero-side-item">
+              <strong>Teşhis koymaz</strong>
+              <p>Doktor muayenesinin yerini almaz; amacı güvenli bir ilk yönlendirme sağlamaktır.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
     <div class="info-banner">
       <div class="banner-icon">💡</div>
-      <div class="banner-text"><strong>Nasıl çalışır?</strong> Şikayetinizi yazın veya sesli anlatın. Algoritmamız 500+ semptom veritabanı ile en uygun bölümü belirler. <span class="banner-highlight">API yok, maliyet yok, tamamen ücretsiz.</span></div>
+      <div class="banner-text"><strong>Not:</strong> Bu ürün teşhis koymaz. Amaç, şikayetinizi daha doğru branşa ve daha uygun hızda yönlendirmektir. <span class="banner-highlight">Acil görünen kombinasyonlarda uyarır, belirsiz durumlarda ek soru sorar.</span></div>
     </div>
 
-    <!-- Body Map -->
-    <section class="section body-map-section" id="bodyMapSection">
-      <h2 class="section-title"><span class="section-icon">🫀</span> Vücut Haritası</h2>
-      <p class="section-desc">Ağrı veya rahatsızlık hissettiğiniz bölgeye tıklayın</p>
-      <div class="body-map-wrapper">
-        <svg id="bodyMapSVG" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 400" width="180" height="360">
-          <ellipse class="body-part" data-region="baş" cx="100" cy="40" rx="35" ry="40"/>
-          <rect class="body-part" data-region="boyun" x="85" y="75" width="30" height="25" rx="5"/>
-          <ellipse class="body-part" data-region="göğüs" cx="100" cy="130" rx="50" ry="40"/>
-          <ellipse class="body-part" data-region="karın" cx="100" cy="195" rx="45" ry="35"/>
-          <rect class="body-part" data-region="sol kol" x="35" y="100" width="20" height="100" rx="10"/>
-          <rect class="body-part" data-region="sağ kol" x="145" y="100" width="20" height="100" rx="10"/>
-          <rect class="body-part" data-region="sol bacak" x="70" y="230" width="25" height="150" rx="12"/>
-          <rect class="body-part" data-region="sağ bacak" x="105" y="230" width="25" height="150" rx="12"/>
-          <text x="100" y="45" text-anchor="middle" font-size="20">😊</text>
-        </svg>
-        <div id="popupContainer"></div>
-      </div>
-    </section>
+    <div class="intake-grid">
+      <!-- Body Map -->
+      <section class="section body-map-section" id="bodyMapSection">
+        <div class="section-head">
+          <div>
+            <h2 class="section-title"><span class="section-icon">🫀</span> Vücut Haritası</h2>
+            <p class="section-desc">Rahatsızlık hissettiğiniz bölgeye tıklayıp örnek semptom seçin.</p>
+          </div>
+          <span class="section-pill">Hızlı seçim</span>
+        </div>
+        <div class="body-map-wrapper">
+          <svg id="bodyMapSVG" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 400" width="180" height="360">
+            <ellipse class="body-part" data-region="baş" cx="100" cy="40" rx="35" ry="40"/>
+            <rect class="body-part" data-region="boyun" x="85" y="75" width="30" height="25" rx="5"/>
+            <ellipse class="body-part" data-region="göğüs" cx="100" cy="130" rx="50" ry="40"/>
+            <ellipse class="body-part" data-region="karın" cx="100" cy="195" rx="45" ry="35"/>
+            <rect class="body-part" data-region="sol kol" x="35" y="100" width="20" height="100" rx="10"/>
+            <rect class="body-part" data-region="sağ kol" x="145" y="100" width="20" height="100" rx="10"/>
+            <rect class="body-part" data-region="sol bacak" x="70" y="230" width="25" height="150" rx="12"/>
+            <rect class="body-part" data-region="sağ bacak" x="105" y="230" width="25" height="150" rx="12"/>
+            <text x="100" y="45" text-anchor="middle" font-size="20">😊</text>
+          </svg>
+          <div id="popupContainer"></div>
+        </div>
+      </section>
 
-    <!-- Input -->
-    <section class="section input-section">
-      <h2 class="section-title"><span class="section-icon">✍️</span> Şikayetinizi Anlatın</h2>
-      <div class="textarea-container">
-        <textarea id="symptomInput" placeholder="Örnek: Başım ağrıyor ve gözüm bulanık görüyor..." rows="4" maxlength="500" aria-label="Şikayet girişi"></textarea>
-        <button type="button" id="voiceBtn" class="voice-btn" title="Sesli giriş">🎤</button>
-      </div>
-      <div class="input-meta">
-        <span id="voiceStatus" class="voice-status hidden"></span>
-        <span class="char-counter"><span id="charCount">0</span> / 500</span>
-      </div>
-      <button id="analyzeBtn" class="btn-primary btn-analyze"><span class="btn-icon">🔍</span> Hangi Bölüme Gitmeliyim?</button>
-    </section>
+      <!-- Input -->
+      <section class="section input-section">
+        <div class="section-head">
+          <div>
+            <h2 class="section-title"><span class="section-icon">✍️</span> Şikayetinizi Anlatın</h2>
+            <p class="section-desc">Semptomu olabildiğince doğal yazın. Sistem metni ayrıştırıp gerekirse takip soruları sorar.</p>
+          </div>
+          <span class="section-pill">Ön değerlendirme</span>
+        </div>
+        <div class="textarea-container">
+          <textarea id="symptomInput" placeholder="Örnek: Başım ağrıyor, mide bulantım var ve ışığa bakınca artıyor..." rows="5" maxlength="500" aria-label="Şikayet girişi"></textarea>
+          <button type="button" id="voiceBtn" class="voice-btn" title="Sesli giriş">🎤</button>
+        </div>
+        <div class="input-meta">
+          <span id="voiceStatus" class="voice-status hidden"></span>
+          <span id="rateLimitStatus" class="rate-limit-status" aria-live="polite"></span>
+          <span class="char-counter"><span id="charCount">0</span> / 500</span>
+        </div>
+        <div class="example-row" aria-hidden="true">
+          <span class="example-chip">Baş ağrısı + bulantı</span>
+          <span class="example-chip">Boğaz ağrısı + ateş</span>
+          <span class="example-chip">Göğüs ağrısı + nefes darlığı</span>
+        </div>
+        <button id="analyzeBtn" class="btn-primary btn-analyze"><span class="btn-icon">🔍</span> Hangi Bölüme Gitmeliyim?</button>
+      </section>
+    </div>
 
     <!-- Loading -->
     <div id="loading" class="loading-container hidden">
@@ -111,10 +178,10 @@
     <footer class="app-footer">
       <p class="footer-disclaimer">⚠️ Bu platform teşhis koymaz. Kesin tanı için mutlaka doktora gidin.</p>
       <p class="footer-tech">Algoritmik Analiz Motoru • 500+ Semptom • Sıfır API Maliyeti</p>
-      <p class="footer-links"><a href="https://mhrs.gov.tr" target="_blank">MHRS Randevu</a> <span>•</span> <span>MIT Lisans</span></p>
+      <p class="footer-links"><a href="https://mhrs.gov.tr" target="_blank" rel="noopener noreferrer">MHRS Randevu</a> <span>•</span> <span>MIT Lisans</span></p>
     </footer>
   </div>
 
-  <script type="module" src="script.js"></script>
+  <script src="app.bundle.js" defer></script>
 </body>
 </html>

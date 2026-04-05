@@ -1,11 +1,50 @@
 // ============================================
-// SağlıkYön v2 – Ana Analiz Motoru
-// Katmanlı semptom analizi, acil durum tespiti,
-// departman skorlama ve akıllı soru sistemi
+// SağlıkYön - Geliştirilmiş analiz motoru
+// Daha seçici eşleştirme, katmanlı aciliyet ve daha net bölüm önerisi
 // ============================================
 
-import { SYMPTOM_DATABASE, DEPARTMENTS, EMERGENCY_RULES, FOLLOW_UP_TEMPLATES } from './symptom-db.js';
-import { preprocessText, matchKeywords, tokenize } from './nlp.js';
+import { SYMPTOM_DATABASE, DEPARTMENTS, FOLLOW_UP_TEMPLATES } from './symptom-db.js';
+import { matchKeywords, normalizeForSearch } from './nlp.js';
+
+const IMMEDIATE_RED_FLAG_IDS = new Set([
+  'felc',
+  'gorme_kaybi',
+  'hemoptizi',
+  'bayilma',
+  'nöbet'
+]);
+
+const HIGH_RISK_IDS = new Set([
+  'gogus_agrisi',
+  'nefes_darligi',
+  'sag_alt_karin',
+  'kanli_diski',
+  'sarilik',
+  'bobrek_agrisi'
+]);
+
+const CARE_LEVELS = {
+  emergency: {
+    label: 'Acil yardım gerekebilir',
+    summary: 'Belirtiler acil müdahale gerektirebilir.',
+    advice: '112 ile iletişime geçin veya en yakın acil servise başvurun.'
+  },
+  urgent: {
+    label: 'Aynı gün değerlendirme iyi olur',
+    summary: 'Belirtileriniz aynı gün doktor tarafından değerlendirilmelidir.',
+    advice: 'Mümkünse bugün içinde acil servis veya ilgili branşa başvurun.'
+  },
+  soon: {
+    label: 'Kısa sürede randevu alın',
+    summary: 'Belirtileriniz acil görünmüyor ancak geciktirilmemeli.',
+    advice: 'İlgili bölümden yakın tarihe randevu almanız uygun olur.'
+  },
+  routine: {
+    label: 'Rutin poliklinik uygun',
+    summary: 'Belirtileriniz poliklinik veya aile hekimi düzeyinde görünüyor.',
+    advice: 'Uygun ilk randevuda ilgili bölüme veya aile hekiminize başvurabilirsiniz.'
+  }
+};
 
 // ============================================
 // ANA ANALİZ FONKSİYONU
@@ -16,47 +55,52 @@ export function analyzeSymptoms(inputText, previousAnswers = null) {
     return { error: 'Lütfen şikayetinizi en az 5 karakter ile açıklayın.' };
   }
 
-  // 1. Semptomları çıkar
   const extractedSymptoms = extractSymptoms(inputText);
-  
+
   if (extractedSymptoms.length === 0) {
     return {
       error: null,
       noMatch: true,
-      message: 'Şikayetinizi anlayamadım. Lütfen daha detaylı açıklayın veya vücut haritasını kullanın.',
-      suggestion: 'Örnek: "Başım ağrıyor ve bulantı var" veya "Göğsümde ağrı hissediyorum"'
+      message: 'Şikayetinizi yeterince net anlayamadım. Lütfen daha detaylı yazın veya vücut haritasından destek alın.',
+      suggestion: 'Örnek: "Başım ağrıyor ve mide bulantım var" veya "Göğsümde baskı hissediyorum".'
     };
   }
 
-  // 2. Acil durum kontrolü
-  const emergencyCheck = checkEmergency(extractedSymptoms);
-  if (emergencyCheck.isEmergency) {
+  const immediateEmergency = checkImmediateEmergency(extractedSymptoms);
+  if (immediateEmergency.isEmergency) {
     return {
       isEmergency: true,
-      emergencyMessage: emergencyCheck.message,
-      emergencyName: emergencyCheck.name,
-      matchedSymptoms: extractedSymptoms.map(s => s.id)
+      emergencyMessage: immediateEmergency.message,
+      emergencyName: immediateEmergency.name,
+      matchedSymptoms: extractedSymptoms.map(symptom => symptom.id)
     };
   }
 
-  // 3. Akıllı sorular gerekiyor mu?
+  const triage = evaluateTriage(extractedSymptoms, previousAnswers);
+  if (triage.isEmergency) {
+    return {
+      isEmergency: true,
+      emergencyMessage: triage.message,
+      emergencyName: triage.name,
+      matchedSymptoms: extractedSymptoms.map(symptom => symptom.id)
+    };
+  }
+
   if (!previousAnswers) {
     const followUpQuestions = generateFollowUpQuestions(extractedSymptoms);
+
     if (followUpQuestions.length > 0) {
       return {
         needsMoreInfo: true,
-        followUpQuestions: followUpQuestions,
-        matchedSymptoms: extractedSymptoms.map(s => s.id),
+        followUpQuestions,
+        matchedSymptoms: extractedSymptoms.map(symptom => symptom.id),
         primarySymptom: extractedSymptoms[0].id
       };
     }
   }
 
-  // 4. Departman skorlama
   const scores = calculateDepartmentScores(extractedSymptoms, previousAnswers);
-
-  // 5. Sonuç üret
-  return buildResult(scores, extractedSymptoms);
+  return buildResult(scores, extractedSymptoms, triage);
 }
 
 // ============================================
@@ -68,7 +112,7 @@ function extractSymptoms(inputText) {
 
   for (const symptom of SYMPTOM_DATABASE) {
     const result = matchKeywords(inputText, symptom.keywords);
-    
+
     if (result.matched) {
       matched.push({
         ...symptom,
@@ -78,126 +122,282 @@ function extractSymptoms(inputText) {
     }
   }
 
-  // Skor sırasına göre sırala
-  matched.sort((a, b) => b.matchScore - a.matchScore);
-  
-  return matched;
+  if (matched.length === 0) return [];
+
+  matched.sort((left, right) => right.matchScore - left.matchScore);
+
+  const topScore = matched[0].matchScore;
+  const threshold = Math.max(0.78, topScore * 0.72);
+
+  return matched
+    .filter((symptom, index) => symptom.matchScore >= threshold || (index < 2 && symptom.matchScore >= 0.76))
+    .slice(0, 6);
 }
 
 // ============================================
 // ACİL DURUM TESPİTİ
 // ============================================
 
-function checkEmergency(extractedSymptoms) {
-  const symptomIds = new Set(extractedSymptoms.map(s => s.id));
-  
-  // Tek başına yüksek urgency (9-10) olan semptomlar
+function checkImmediateEmergency(extractedSymptoms) {
+  const symptomIds = new Set(extractedSymptoms.map(symptom => symptom.id));
+
   for (const symptom of extractedSymptoms) {
-    if (symptom.urgency >= 9) {
+    if (IMMEDIATE_RED_FLAG_IDS.has(symptom.id) && symptom.matchScore >= 0.86) {
       return {
         isEmergency: true,
-        message: `⚠️ ACİL DURUM! ${symptom.keywords[0]} ciddi bir duruma işaret edebilir. Hemen 112'yi arayın veya en yakın acil servise gidin!`,
-        name: symptom.id
+        name: symptom.id,
+        message: buildImmediateEmergencyMessage(symptom.id, symptom.matchedKeyword || symptom.keywords[0])
       };
     }
   }
 
-  // Kombinasyon bazlı acil durum kontrolü
-  for (const rule of EMERGENCY_RULES) {
-    const requiredMatch = rule.requiredAny.some(id => symptomIds.has(id));
-    if (!requiredMatch) continue;
+  const strongChestAlarm =
+    symptomIds.has('gogus_agrisi') &&
+    symptomIds.has('nefes_darligi') &&
+    (symptomIds.has('kol_agrisi') || symptomIds.has('terleme') || symptomIds.has('kalp_carpintisi'));
 
-    const boostMatches = rule.boostIf.filter(id => symptomIds.has(id)).length;
-    const totalMatches = (requiredMatch ? 1 : 0) + boostMatches;
+  if (strongChestAlarm) {
+    return {
+      isEmergency: true,
+      name: 'olasi_kalp_krizi',
+      message: 'Göğüs ağrısı, nefes darlığı ve eşlik eden belirtiler acil müdahale gerektirebilir. Hemen 112 ile iletişime geçin.'
+    };
+  }
 
-    if (totalMatches >= rule.minMatch) {
-      return {
-        isEmergency: true,
-        message: rule.message,
-        name: rule.name
-      };
-    }
+  const respiratoryAlarm = symptomIds.has('nefes_darligi') && symptomIds.has('hemoptizi');
+  if (respiratoryAlarm) {
+    return {
+      isEmergency: true,
+      name: 'ciddi_solunum_sorunu',
+      message: 'Nefes darlığı ve kanlı balgam birlikte ciddi bir tabloya işaret edebilir. Hemen 112 ile iletişime geçin.'
+    };
   }
 
   return { isEmergency: false };
 }
 
+function buildImmediateEmergencyMessage(symptomId, matchedKeyword) {
+  const label = matchedKeyword || symptomId;
+
+  if (symptomId === 'felc') {
+    return `Ani felç veya konuşma kaybı benzeri "${label}" belirtisi acil müdahale gerektirebilir. Hemen 112 ile iletişime geçin.`;
+  }
+
+  if (symptomId === 'gorme_kaybi') {
+    return `Ani gelişen "${label}" durumu acil değerlendirme gerektirir. Hemen 112 ile iletişime geçin veya acil servise başvurun.`;
+  }
+
+  if (symptomId === 'hemoptizi') {
+    return `"${label}" ciddi bir tabloya işaret edebilir. Hemen acil destek alın.`;
+  }
+
+  if (symptomId === 'bayilma' || symptomId === 'nöbet') {
+    return `"${label}" acil müdahale gerektirebilir. Hemen 112 ile iletişime geçin.`;
+  }
+
+  return `"${label}" ciddi bir duruma işaret edebilir. Hemen 112 ile iletişime geçin veya acil servise başvurun.`;
+}
+
 // ============================================
-// AKILLI SORU ÜRETİMİ
+// TAKİP SORULARI
 // ============================================
 
 function generateFollowUpQuestions(extractedSymptoms) {
   const questions = [];
   const addedQuestions = new Set();
 
-  for (const symptom of extractedSymptoms) {
+  const prioritizedSymptoms = extractedSymptoms
+    .filter((symptom, index) => index < 2 || symptom.urgency >= 7)
+    .sort((left, right) => right.urgency - left.urgency);
+
+  for (const symptom of prioritizedSymptoms) {
     if (!symptom.followUp) continue;
 
     const templates = FOLLOW_UP_TEMPLATES[symptom.id];
     if (!templates) continue;
 
     for (const template of templates) {
-      if (!addedQuestions.has(template.question)) {
-        questions.push({
-          question: template.question,
-          symptomId: symptom.id,
-          impact: template.impact,
-          urgent: template.urgent || false
-        });
-        addedQuestions.add(template.question);
+      if (addedQuestions.has(template.question)) continue;
+
+      questions.push({
+        question: template.question,
+        symptomId: symptom.id,
+        impact: template.impact,
+        urgent: Boolean(template.urgent)
+      });
+
+      addedQuestions.add(template.question);
+    }
+  }
+
+  return questions
+    .sort((left, right) => Number(right.urgent) - Number(left.urgent))
+    .slice(0, 4);
+}
+
+// ============================================
+// TRIAGE
+// ============================================
+
+function evaluateTriage(extractedSymptoms, previousAnswers) {
+  const symptomIds = new Set(extractedSymptoms.map(symptom => symptom.id));
+  const avgUrgency = extractedSymptoms.reduce((sum, symptom) => sum + symptom.urgency, 0) / extractedSymptoms.length;
+  const answers = createAnswerLookup(previousAnswers);
+
+  if (answers.hasPositive('intihar dusunceniz var mi')) {
+    return {
+      isEmergency: true,
+      name: 'ruhsal_kriz',
+      message: 'Kendinize zarar verme düşünceniz varsa acil destek alın. 112 ile iletişime geçin veya en yakın acil servise başvurun.'
+    };
+  }
+
+  const chestEmergency =
+    symptomIds.has('gogus_agrisi') &&
+    (
+      symptomIds.has('nefes_darligi') ||
+      symptomIds.has('kol_agrisi') ||
+      symptomIds.has('terleme') ||
+      answers.hasPositive('nefes darligi eslik ediyor mu') ||
+      answers.hasPositive('kola veya ceneye yayiliyor mu')
+    );
+
+  if (chestEmergency) {
+    return {
+      isEmergency: true,
+      name: 'olasi_kalp_krizi',
+      message: 'Göğüs ağrısı ile birlikte eşlik eden belirtiler acil müdahale gerektirebilir. Hemen 112 ile iletişime geçin.'
+    };
+  }
+
+  const respiratoryEmergency =
+    symptomIds.has('nefes_darligi') &&
+    (
+      symptomIds.has('hemoptizi') ||
+      symptomIds.has('gogus_agrisi') ||
+      answers.hasPositive('istirahat halinde de nefes darliginiz var mi')
+    );
+
+  if (respiratoryEmergency) {
+    return {
+      isEmergency: true,
+      name: 'ciddi_solunum_sorunu',
+      message: 'Nefes darlığı istirahatte de sürüyorsa veya göğüs ağrısı ile birlikteyse acil değerlendirme gerekir. Hemen 112 ile iletişime geçin.'
+    };
+  }
+
+  const abdominalEmergency =
+    (
+      symptomIds.has('sag_alt_karin') ||
+      answers.hasPositive('agri sag alt karinda mi')
+    ) &&
+    (
+      symptomIds.has('ates') ||
+      symptomIds.has('mide_bulantisi') ||
+      answers.hasPositive('atesiniz var mi') ||
+      answers.hasPositive('kusma var mi')
+    );
+
+  if (abdominalEmergency) {
+    return {
+      isEmergency: true,
+      name: 'akut_karin',
+      message: 'Sağ alt karın ağrısı ve eşlik eden belirtiler akut karın tablosuna işaret edebilir. Gecikmeden acil servise başvurun.'
+    };
+  }
+
+  let careLevel = 'routine';
+
+  if (
+    avgUrgency >= 6 ||
+    extractedSymptoms.some(symptom => HIGH_RISK_IDS.has(symptom.id)) ||
+    answers.hasPositive('kanli balgam var mi')
+  ) {
+    careLevel = 'urgent';
+  } else if (avgUrgency >= 4.5 || extractedSymptoms.some(symptom => symptom.urgency >= 5)) {
+    careLevel = 'soon';
+  }
+
+  return {
+    isEmergency: false,
+    careLevel,
+    ...CARE_LEVELS[careLevel]
+  };
+}
+
+function createAnswerLookup(previousAnswers) {
+  const positiveQuestions = new Set();
+
+  if (Array.isArray(previousAnswers)) {
+    for (const answer of previousAnswers) {
+      if (answer.answer === 'Evet' && answer.question) {
+        positiveQuestions.add(normalizeForSearch(answer.question));
       }
     }
   }
 
-  // En fazla 4 soru döndür
-  return questions.slice(0, 4);
+  return {
+    hasPositive(fragment) {
+      const normalizedFragment = normalizeForSearch(fragment);
+
+      for (const question of positiveQuestions) {
+        if (question.includes(normalizedFragment)) {
+          return true;
+        }
+      }
+
+      return false;
+    }
+  };
 }
 
 // ============================================
-// DEPARTMAN SKORLAMA
+// BÖLÜM SKORLAMA
 // ============================================
 
 function calculateDepartmentScores(extractedSymptoms, previousAnswers) {
   const scores = {};
 
-  // Tüm departmanları sıfırla
-  for (const deptId of Object.keys(DEPARTMENTS)) {
-    scores[deptId] = 0;
+  for (const departmentId of Object.keys(DEPARTMENTS)) {
+    scores[departmentId] = 0;
   }
 
-  // Ana semptom skorları
   for (const symptom of extractedSymptoms) {
-    const weight = symptom.matchScore;
-    
-    for (const [deptId, deptScore] of Object.entries(symptom.departments)) {
-      if (!scores[deptId]) scores[deptId] = 0;
-      scores[deptId] += deptScore * weight;
+    const confidenceWeight = 0.8 + symptom.matchScore * 0.5;
+    const urgencyWeight = 0.85 + symptom.urgency * 0.04;
+
+    for (const [departmentId, departmentScore] of Object.entries(symptom.departments)) {
+      scores[departmentId] += departmentScore * confidenceWeight * urgencyWeight;
     }
   }
 
-  // Follow-up cevapları varsa, ek puanlar
-  if (previousAnswers && Array.isArray(previousAnswers)) {
+  if (Array.isArray(previousAnswers)) {
     for (const answer of previousAnswers) {
-      if (answer.answer === 'Evet' && answer.impact) {
-        for (const [deptId, boost] of Object.entries(answer.impact)) {
-          if (!scores[deptId]) scores[deptId] = 0;
-          scores[deptId] += boost;
+      if (!answer.impact) continue;
+
+      for (const [departmentId, boost] of Object.entries(answer.impact)) {
+        if (answer.answer === 'Evet') {
+          scores[departmentId] += boost * 1.15;
+        }
+
+        if (answer.answer === 'Hayır') {
+          scores[departmentId] = Math.max(0, scores[departmentId] - boost * 0.35);
         }
       }
     }
   }
 
-  // Birden fazla semptom aynı departmanı gösteriyorsa bonus
-  const deptSymptomCount = {};
+  const departmentSymptomCount = {};
+
   for (const symptom of extractedSymptoms) {
-    for (const deptId of Object.keys(symptom.departments)) {
-      deptSymptomCount[deptId] = (deptSymptomCount[deptId] || 0) + 1;
+    for (const departmentId of Object.keys(symptom.departments)) {
+      departmentSymptomCount[departmentId] = (departmentSymptomCount[departmentId] || 0) + 1;
     }
   }
 
-  for (const [deptId, count] of Object.entries(deptSymptomCount)) {
+  for (const [departmentId, count] of Object.entries(departmentSymptomCount)) {
     if (count >= 2) {
-      scores[deptId] *= 1 + (count - 1) * 0.15; // her ek semptom %15 bonus
+      scores[departmentId] *= 1 + (count - 1) * 0.12;
     }
   }
 
@@ -205,95 +405,89 @@ function calculateDepartmentScores(extractedSymptoms, previousAnswers) {
 }
 
 // ============================================
-// SONUÇ OLUŞTURMA
+// SONUÇ
 // ============================================
 
-function buildResult(scores, extractedSymptoms) {
-  // Skorları sırala
+function buildResult(scores, extractedSymptoms, triage) {
   const sorted = Object.entries(scores)
-    .filter(([_, score]) => score > 0)
-    .sort((a, b) => b[1] - a[1]);
+    .filter(([, score]) => score > 0)
+    .sort((left, right) => right[1] - left[1]);
 
   if (sorted.length === 0) {
     return {
       error: null,
       noMatch: true,
-      message: 'Şikayetinize uygun bir bölüm bulunamadı. Lütfen aile hekiminize danışın.'
+      message: 'Bu şikayet için net bir bölüm çıkarılamadı. İlk adım olarak aile hekiminizden destek alabilirsiniz.'
     };
   }
 
-  const [primaryDeptId, primaryScore] = sorted[0];
-  const maxPossibleScore = extractedSymptoms.length * 1.0;
-  const normalizedScore = Math.min(primaryScore / Math.max(maxPossibleScore, 0.5), 1.0);
+  const [primaryDepartmentId, primaryScore] = sorted[0];
+  const secondScore = sorted[1]?.[1] || 0;
+  const topThreeTotal = sorted.slice(0, 3).reduce((sum, [, score]) => sum + score, 0) || primaryScore;
+  const dominance = primaryScore / topThreeTotal;
+  const normalizedScore = Math.min(primaryScore / Math.max(extractedSymptoms.length * 1.1, 1), 1);
+  const confidenceScore = Math.round((normalizedScore * 0.55 + dominance * 0.45) * 100);
 
-  // Güven skoru
-  let confidence;
-  if (normalizedScore >= 0.6) confidence = 'high';
-  else if (normalizedScore >= 0.35) confidence = 'medium';
-  else confidence = 'low';
+  let confidence = 'low';
+  if (confidenceScore >= 72 && primaryScore - secondScore > 0.2) confidence = 'high';
+  else if (confidenceScore >= 55) confidence = 'medium';
 
-  // Alternatif departmanlar
   const alternatives = sorted
     .slice(1, 4)
-    .filter(([_, score]) => score > primaryScore * 0.3)
-    .map(([id]) => id);
+    .filter(([, score]) => score >= primaryScore * 0.55)
+    .map(([id]) => ({
+      id,
+      name: DEPARTMENTS[id]?.name || id,
+      icon: DEPARTMENTS[id]?.icon || '🏥'
+    }));
 
-  // Aile hekimi kontrolü – basit şikayetler
-  const avgUrgency = extractedSymptoms.reduce((sum, s) => sum + s.urgency, 0) / extractedSymptoms.length;
-  const isFamilyDoctor = primaryDeptId === 'aile_hekimi' || (avgUrgency <= 3 && confidence !== 'high');
+  const averageUrgency = extractedSymptoms.reduce((sum, symptom) => sum + symptom.urgency, 0) / extractedSymptoms.length;
+  const isFamilyDoctor =
+    triage.careLevel === 'routine' &&
+    (primaryDepartmentId === 'aile_hekimi' || (averageUrgency <= 3.2 && confidence !== 'high'));
 
-  // Açıklama oluştur
-  const reasoning = generateReasoning(extractedSymptoms, primaryDeptId);
-
-  const primaryDept = DEPARTMENTS[primaryDeptId];
+  const primaryDepartment = DEPARTMENTS[primaryDepartmentId];
+  const reasoning = generateReasoning(extractedSymptoms, primaryDepartmentId, triage);
 
   return {
     isEmergency: false,
     needsMoreInfo: false,
-    primaryDepartment: primaryDeptId,
-    primaryDepartmentName: primaryDept ? primaryDept.name : primaryDeptId,
-    primaryDepartmentIcon: primaryDept ? primaryDept.icon : '🏥',
-    primaryDepartmentColor: primaryDept ? primaryDept.color : '#667eea',
+    primaryDepartment: primaryDepartmentId,
+    primaryDepartmentName: primaryDepartment ? primaryDepartment.name : primaryDepartmentId,
+    primaryDepartmentIcon: primaryDepartment ? primaryDepartment.icon : '🏥',
+    primaryDepartmentColor: primaryDepartment ? primaryDepartment.color : '#667eea',
     confidence,
-    confidenceScore: Math.round(normalizedScore * 100),
-    alternatives: alternatives.map(id => ({
-      id,
-      name: DEPARTMENTS[id]?.name || id,
-      icon: DEPARTMENTS[id]?.icon || '🏥'
-    })),
+    confidenceScore,
+    alternatives,
     isFamilyDoctor,
-    familyDoctorMessage: isFamilyDoctor 
-      ? 'Bu şikayetiniz için hastaneye gitmenize gerek olmayabilir. Aile hekiminiz size yardımcı olabilir. Daha hızlı ve kolay!' 
+    familyDoctorMessage: isFamilyDoctor
+      ? 'Belirtileriniz ilk adımda aile hekimi tarafından değerlendirilebilir. Gerekirse doğru branşa yönlendirme yapılabilir.'
       : null,
     reasoning,
-    matchedSymptoms: extractedSymptoms.map(s => ({
-      id: s.id,
-      keyword: s.matchedKeyword,
-      score: Math.round(s.matchScore * 100)
+    matchedSymptoms: extractedSymptoms.map(symptom => ({
+      id: symptom.id,
+      keyword: symptom.matchedKeyword || symptom.keywords[0],
+      score: Math.round(symptom.matchScore * 100)
     })),
-    note: 'Bu öneri teşhis değildir. Kesin tanı için mutlaka doktor muayenesi gereklidir.',
+    careLevel: triage.careLevel,
+    careLabel: triage.label,
+    careSummary: triage.summary,
+    careAdvice: triage.advice,
+    note: `${triage.advice} Bu öneri teşhis değildir; kesin tanı için doktor muayenesi gerekir.`,
     timestamp: new Date().toISOString()
   };
 }
 
-// ============================================
-// AÇIKLAMA OLUŞTURMA
-// ============================================
-
-function generateReasoning(symptoms, primaryDeptId) {
-  const symptomNames = symptoms.map(s => s.matchedKeyword || s.keywords[0]);
-  const deptName = DEPARTMENTS[primaryDeptId]?.name || primaryDeptId;
+function generateReasoning(symptoms, primaryDepartmentId, triage) {
+  const symptomNames = symptoms.slice(0, 3).map(symptom => symptom.matchedKeyword || symptom.keywords[0]);
+  const departmentName = DEPARTMENTS[primaryDepartmentId]?.name || primaryDepartmentId;
+  const joinedSymptoms = symptomNames.join(', ');
 
   if (symptoms.length === 1) {
-    return `"${symptomNames[0]}" şikayetiniz için en uygun bölüm ${deptName} olarak belirlendi.`;
+    return `"${joinedSymptoms}" şikayeti en çok ${departmentName} ile uyumlu görünüyor. ${triage.summary}`;
   }
 
-  const joinedSymptoms = symptomNames.slice(0, 3).join(', ');
-  return `${joinedSymptoms} şikayetleriniz birlikte değerlendirildiğinde, ${deptName} bölümüne başvurmanız önerilmektedir.`;
+  return `${joinedSymptoms} belirtileri birlikte değerlendirildiğinde en uygun bölüm ${departmentName} görünüyor. ${triage.summary}`;
 }
-
-// ============================================
-// EXPORT: Tüm departmanlar ve analiz fonksiyonu
-// ============================================
 
 export { DEPARTMENTS, SYMPTOM_DATABASE };

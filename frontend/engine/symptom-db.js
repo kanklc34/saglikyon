@@ -1,7 +1,7 @@
 // ============================================
-// SağlıkYön v2 – Semptom Veritabanı
+// SağlıkYön – Semptom veritabanı
 // 500+ Türkçe semptom kaydı, 15 departman
-// Açık Kaynak | Sıfır API Maliyeti
+// Açık kaynak | Sıfır API maliyeti
 // ============================================
 
 export const DEPARTMENTS = {

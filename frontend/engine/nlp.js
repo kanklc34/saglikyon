@@ -1,62 +1,60 @@
 // ============================================
-// SağlıkYön v2 – Türkçe NLP Modülü
-// Metin ön işleme, fuzzy matching, stemming
+// SağlıkYön - Türkçe NLP modülü
+// Metin ön işleme, fuzzy matching ve seçici semptom eşleştirme
 // ============================================
 
 import { STOP_WORDS, SYNONYMS } from './symptom-db.js';
 
+const TURKISH_FOLD_MAP = {
+  c: /[ç]/g,
+  g: /[ğ]/g,
+  i: /[ıiİ]/g,
+  o: /[ö]/g,
+  s: /[ş]/g,
+  u: /[ü]/g
+};
+
+const FOLDED_STOP_WORDS = new Set(
+  [...STOP_WORDS].map(word => foldTurkish(word))
+);
+
+const SYNONYM_INDEX = new Map();
+
+for (const [base, variants] of Object.entries(SYNONYMS)) {
+  const foldedBase = canonicalizeToken(base, false);
+  SYNONYM_INDEX.set(foldedBase, foldedBase);
+
+  for (const variant of variants) {
+    SYNONYM_INDEX.set(canonicalizeToken(variant, false), foldedBase);
+  }
+}
+
 // ============================================
-// METİN ÖN İŞLEME
+// METIN ON ISLEME
 // ============================================
 
 export function preprocessText(text) {
   if (!text || typeof text !== 'string') return '';
-  
-  let processed = text
+
+  return text
     .toLowerCase()
-    .replace(/[.,!?;:'"()\[\]{}]/g, ' ')
+    .replace(/[.,!?;:'"`()[\]{}<>/+*=_%#@^~\\|-]/g, ' ')
     .replace(/\s+/g, ' ')
     .trim();
-
-  // Türkçe karakter normalizasyonu
-  processed = normalizeTurkish(processed);
-  
-  return processed;
 }
 
-function normalizeTurkish(text) {
-  // Yaygın yazım hatalarını düzelt
-  const corrections = {
-    'agri': 'ağrı', 'agrı': 'ağrı', 'agrı': 'ağrı',
-    'bas': 'baş', 'basım': 'başım',
-    'gogus': 'göğüs', 'gogüs': 'göğüs', 'gögüs': 'göğüs',
-    'karin': 'karın', 'karım': 'karın',
-    'ates': 'ateş', 'ates': 'ateş',
-    'oksuruk': 'öksürük', 'öksüruk': 'öksürük',
-    'bulanti': 'bulantı', 'bulantı': 'bulantı',
-    'ishal': 'ishal',
-    'kusma': 'kusma',
-    'nefes': 'nefes',
-    'carpinti': 'çarpıntı', 'çarpıntı': 'çarpıntı',
-    'sislik': 'şişlik', 'şişlik': 'şişlik',
-    'kasinti': 'kaşıntı', 'kaşıntı': 'kaşıntı',
-    'yorgunluk': 'yorgunluk',
-    'uykusuzluk': 'uykusuzluk',
-    'migren': 'migren',
-    'vertigo': 'vertigo',
-    'tansiyon': 'tansiyon',
-    'diyabet': 'diyabet', 'seker': 'şeker',
-    'reflü': 'reflü', 'reflu': 'reflü',
-    'hemoroid': 'hemoroid', 'basur': 'basur',
-    'tiroid': 'tiroid', 'guatr': 'guatr'
-  };
-  
-  let result = text;
-  for (const [wrong, correct] of Object.entries(corrections)) {
-    const regex = new RegExp(`\\b${escapeRegex(wrong)}\\b`, 'gi');
-    result = result.replace(regex, correct);
+export function normalizeForSearch(text) {
+  return foldTurkish(text);
+}
+
+function foldTurkish(text) {
+  let folded = preprocessText(text);
+
+  for (const [replacement, pattern] of Object.entries(TURKISH_FOLD_MAP)) {
+    folded = folded.replace(pattern, replacement);
   }
-  return result;
+
+  return folded;
 }
 
 function escapeRegex(str) {
@@ -64,20 +62,42 @@ function escapeRegex(str) {
 }
 
 // ============================================
-// KELİME AYIRMA & STOP-WORD TEMİZLİĞİ
+// KELIME AYIRMA
 // ============================================
 
 export function tokenize(text) {
-  const processed = preprocessText(text);
-  if (!processed) return [];
+  return tokenizeForMatching(text)
+    .map(token => token.original)
+    .filter(Boolean);
+}
 
-  const words = processed.split(/\s+/);
-  return words.filter(w => w.length > 1 && !STOP_WORDS.has(w));
+function tokenizeForMatching(text) {
+  const folded = foldTurkish(text);
+  if (!folded) return [];
+
+  return folded
+    .split(/\s+/)
+    .filter(token => token.length > 1 && !FOLDED_STOP_WORDS.has(token))
+    .map(token => ({
+      original: token,
+      stem: stemTurkish(token),
+      canonical: canonicalizeToken(token)
+    }));
+}
+
+function canonicalizeToken(token, resolveSynonym = true) {
+  const folded = foldTurkish(token);
+  const stemmed = stemTurkish(folded, false);
+
+  if (!resolveSynonym) {
+    return stemmed;
+  }
+
+  return SYNONYM_INDEX.get(stemmed) || stemmed;
 }
 
 // ============================================
-// FUZZY MATCHING (Levenshtein Mesafesi)
-// Yazım hatalarına tolerans
+// FUZZY MATCHING
 // ============================================
 
 export function levenshteinDistance(a, b) {
@@ -89,6 +109,7 @@ export function levenshteinDistance(a, b) {
   for (let i = 0; i <= b.length; i++) {
     matrix[i] = [i];
   }
+
   for (let j = 0; j <= a.length; j++) {
     matrix[0][j] = j;
   }
@@ -97,9 +118,9 @@ export function levenshteinDistance(a, b) {
     for (let j = 1; j <= a.length; j++) {
       const cost = b.charAt(i - 1) === a.charAt(j - 1) ? 0 : 1;
       matrix[i][j] = Math.min(
-        matrix[i - 1][j] + 1,      // silme
-        matrix[i][j - 1] + 1,      // ekleme
-        matrix[i - 1][j - 1] + cost // değiştirme
+        matrix[i - 1][j] + 1,
+        matrix[i][j - 1] + 1,
+        matrix[i - 1][j - 1] + cost
       );
     }
   }
@@ -108,125 +129,155 @@ export function levenshteinDistance(a, b) {
 }
 
 export function fuzzyMatch(input, target, maxDistance = 2) {
-  // Tam eşleşme
-  if (input === target) return { match: true, distance: 0, score: 1.0 };
-  
-  // İçerme kontrolü
-  if (target.includes(input) || input.includes(target)) {
-    return { match: true, distance: 0, score: 0.95 };
+  const normalizedInput = canonicalizeToken(input);
+  const normalizedTarget = canonicalizeToken(target);
+
+  if (!normalizedInput || !normalizedTarget) {
+    return { match: false, distance: Infinity, score: 0 };
   }
 
-  // Levenshtein mesafesi
-  const distance = levenshteinDistance(input, target);
-  const maxLen = Math.max(input.length, target.length);
-  
-  if (distance <= maxDistance && maxLen > 3) {
-    const score = 1 - (distance / maxLen);
+  if (normalizedInput === normalizedTarget) {
+    return { match: true, distance: 0, score: 1 };
+  }
+
+  const shorterLength = Math.min(normalizedInput.length, normalizedTarget.length);
+  if (
+    shorterLength >= 4 &&
+    (normalizedInput.includes(normalizedTarget) || normalizedTarget.includes(normalizedInput))
+  ) {
+    return { match: true, distance: 1, score: 0.9 };
+  }
+
+  const distance = levenshteinDistance(normalizedInput, normalizedTarget);
+  const maxLen = Math.max(normalizedInput.length, normalizedTarget.length);
+  const allowedDistance = Math.min(maxDistance, Math.max(1, Math.floor(maxLen / 4)));
+
+  if (maxLen >= 4 && distance <= allowedDistance) {
+    const score = 1 - distance / maxLen;
     return { match: true, distance, score };
   }
 
   return { match: false, distance, score: 0 };
 }
 
+function compareTokens(inputToken, keywordToken) {
+  if (inputToken.canonical === keywordToken.canonical) return 1;
+  if (inputToken.stem === keywordToken.stem) return 0.96;
+
+  const direct = fuzzyMatch(inputToken.original, keywordToken.original);
+  if (direct.match && direct.score >= 0.84) {
+    return direct.score;
+  }
+
+  const canonical = fuzzyMatch(inputToken.canonical, keywordToken.canonical, 1);
+  if (canonical.match && canonical.score >= 0.88) {
+    return canonical.score * 0.95;
+  }
+
+  return 0;
+}
+
+function minimumCoverage(keywordLength) {
+  if (keywordLength <= 1) return 1;
+  if (keywordLength === 2) return 1;
+  return 0.67;
+}
+
 // ============================================
-// ANAHTAR KELİME EŞLEŞTİRME
-// Bir metnin belirli keyword listesiyle eşleşip eşleşmediğini kontrol et
+// ANAHTAR KELIME ESLESTIRME
 // ============================================
 
 export function matchKeywords(inputText, keywords) {
-  const processed = preprocessText(inputText);
+  const normalizedInput = foldTurkish(inputText);
+  const inputTokens = tokenizeForMatching(inputText);
+
+  if (!normalizedInput || inputTokens.length === 0) {
+    return { matched: false, score: 0, keyword: null };
+  }
+
   let bestScore = 0;
   let bestKeyword = null;
 
   for (const keyword of keywords) {
-    const processedKeyword = preprocessText(keyword);
-    
-    // 1. Tam içerme kontrolü (en güçlü)
-    if (processed.includes(processedKeyword)) {
-      const score = processedKeyword.length / processed.length;
-      const finalScore = Math.min(1.0, 0.7 + score * 0.3);
-      if (finalScore > bestScore) {
-        bestScore = finalScore;
+    const normalizedKeyword = foldTurkish(keyword);
+    const keywordTokens = tokenizeForMatching(keyword);
+
+    if (!normalizedKeyword || keywordTokens.length === 0) continue;
+
+    if (
+      normalizedKeyword.length >= 4 &&
+      new RegExp(`(^|\\s)${escapeRegex(normalizedKeyword)}($|\\s)`).test(normalizedInput)
+    ) {
+      const score = normalizedKeyword === normalizedInput ? 1 : 0.98;
+      if (score > bestScore) {
+        bestScore = score;
         bestKeyword = keyword;
       }
       continue;
     }
 
-    // 2. Kelime bazlı eşleştirme
-    const keywordWords = processedKeyword.split(/\s+/);
-    const inputWords = processed.split(/\s+/);
-    let matchedWords = 0;
+    const matchedScores = [];
 
-    for (const kw of keywordWords) {
-      for (const iw of inputWords) {
-        const result = fuzzyMatch(iw, kw);
-        if (result.match) {
-          matchedWords++;
-          break;
-        }
+    for (const keywordToken of keywordTokens) {
+      let tokenBestScore = 0;
+
+      for (const inputToken of inputTokens) {
+        tokenBestScore = Math.max(tokenBestScore, compareTokens(inputToken, keywordToken));
+      }
+
+      if (tokenBestScore >= 0.84) {
+        matchedScores.push(tokenBestScore);
       }
     }
 
-    if (matchedWords > 0) {
-      const ratio = matchedWords / keywordWords.length;
-      if (ratio > 0.5 && ratio > bestScore) {
-        bestScore = ratio * 0.8; // kelime eşleşmesi biraz düşük skorlu
-        bestKeyword = keyword;
-      }
-    }
+    const coverage = matchedScores.length / keywordTokens.length;
+    if (coverage < minimumCoverage(keywordTokens.length)) continue;
 
-    // 3. Eşanlamlı kelime kontrolü
-    for (const iw of inputWords) {
-      for (const [base, synonymList] of Object.entries(SYNONYMS)) {
-        const allForms = [base, ...synonymList];
-        const inputInSynonyms = allForms.some(s => fuzzyMatch(iw, s).match);
-        
-        if (inputInSynonyms) {
-          for (const kw of keywordWords) {
-            const keywordInSynonyms = allForms.some(s => fuzzyMatch(kw, s).match);
-            if (keywordInSynonyms) {
-              const score = 0.6;
-              if (score > bestScore) {
-                bestScore = score;
-                bestKeyword = keyword;
-              }
-            }
-          }
-        }
-      }
+    const averageTokenScore =
+      matchedScores.reduce((sum, score) => sum + score, 0) / matchedScores.length;
+    const compactInputPenalty = keywordTokens.length > inputTokens.length ? 0.92 : 1;
+    const finalScore = (coverage * 0.65 + averageTokenScore * 0.35) * compactInputPenalty;
+
+    if (finalScore > bestScore) {
+      bestScore = finalScore;
+      bestKeyword = keyword;
     }
   }
 
-  return { matched: bestScore > 0.3, score: bestScore, keyword: bestKeyword };
+  return {
+    matched: bestScore >= 0.78,
+    score: Number(bestScore.toFixed(3)),
+    keyword: bestKeyword
+  };
 }
 
 // ============================================
-// BASİT TÜRKÇE STEMMING
-// Yaygın ekleri kaldır
+// BASIT TURKCE STEMMING
 // ============================================
 
-export function stemTurkish(word) {
-  if (!word || word.length < 4) return word;
+export function stemTurkish(word, foldFirst = true) {
+  if (!word) return '';
+
+  const source = foldFirst ? foldTurkish(word) : word;
+  if (source.length < 4) return source;
 
   const suffixes = [
-    'ları', 'leri', 'ıyor', 'iyor', 'uyor', 'üyor',
-    'mış', 'miş', 'muş', 'müş',
-    'yor', 'yor', 'dır', 'dir', 'dur', 'dür',
-    'dan', 'den', 'tan', 'ten',
-    'lar', 'ler', 'ım', 'im', 'um', 'üm',
-    'ın', 'in', 'un', 'ün',
+    'siniz', 'siniz', 'lari', 'leri',
+    'iyor', 'uyor', 'mis', 'mus',
+    'dir', 'dur', 'dan', 'den', 'tan', 'ten',
+    'lar', 'ler', 'lik', 'luk',
+    'yor', 'mak', 'mek',
+    'im', 'in', 'um', 'un',
+    'si', 'su', 'yi', 'yu',
     'da', 'de', 'ta', 'te',
-    'mı', 'mi', 'mu', 'mü',
-    'la', 'le', 'sı', 'si'
+    'ma', 'me'
   ];
 
-  let stem = word;
   for (const suffix of suffixes) {
-    if (stem.endsWith(suffix) && stem.length - suffix.length >= 3) {
-      stem = stem.slice(0, -suffix.length);
-      break;
+    if (source.endsWith(suffix) && source.length - suffix.length >= 3) {
+      return source.slice(0, -suffix.length);
     }
   }
 
-  return stem;
+  return source;
 }

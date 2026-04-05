@@ -1,9 +1,42 @@
 // ============================================
-// SağlıkYön v2 – Main application logic
+// SağlıkYön – Main application logic
 // Connects UI with local algorithmic engine
 // ============================================
 
 import { analyzeSymptoms } from './engine/analyzer.js';
+import { RATE_LIMIT_CONFIG, getRateLimitState, recordRateLimitHit, formatCooldown } from './engine/rate-limit.js';
+
+const RATE_LIMIT_STORAGE_KEY = 'sy_rate_limit_timestamps';
+
+function readJsonStorage(key, fallback) {
+  try {
+    const rawValue = localStorage.getItem(key);
+    if (!rawValue) return fallback;
+
+    const parsed = JSON.parse(rawValue);
+    return parsed ?? fallback;
+  } catch {
+    return fallback;
+  }
+}
+
+function readArrayStorage(key) {
+  const value = readJsonStorage(key, []);
+  return Array.isArray(value) ? value : [];
+}
+
+function readNumberStorage(key, fallback = 0) {
+  const value = Number(localStorage.getItem(key));
+  return Number.isFinite(value) ? value : fallback;
+}
+
+function loadRateLimitState(now = Date.now()) {
+  return getRateLimitState(readJsonStorage(RATE_LIMIT_STORAGE_KEY, []), now, RATE_LIMIT_CONFIG);
+}
+
+function persistRateLimitState(timestamps) {
+  localStorage.setItem(RATE_LIMIT_STORAGE_KEY, JSON.stringify(timestamps));
+}
 
 // --- State ---
 const state = {
@@ -11,15 +44,18 @@ const state = {
   followUpQuestions: [],
   followUpAnswers: [],
   currentQuestionIndex: 0,
-  history: JSON.parse(localStorage.getItem('sy_history') || '[]'),
-  totalQueries: parseInt(localStorage.getItem('sy_total_queries') || '0'),
-  theme: localStorage.getItem('sy_theme') || 'light'
+  history: readArrayStorage('sy_history'),
+  totalQueries: readNumberStorage('sy_total_queries', 0),
+  theme: localStorage.getItem('sy_theme') || 'light',
+  rateLimit: loadRateLimitState(),
+  isLoading: false
 };
 
 // --- DOM Elements ---
 const DOM = {
   input: document.getElementById('symptomInput'),
   charCount: document.getElementById('charCount'),
+  rateLimitStatus: document.getElementById('rateLimitStatus'),
   analyzeBtn: document.getElementById('analyzeBtn'),
   voiceBtn: document.getElementById('voiceBtn'),
   voiceStatus: document.getElementById('voiceStatus'),
@@ -44,9 +80,29 @@ const DOM = {
 function init() {
   applyTheme(state.theme);
   updateStats();
+  refreshRateLimitUI();
   setupEventListeners();
   checkWelcomeModal();
   initBodyMap();
+  setInterval(refreshRateLimitUI, 1000);
+}
+
+function refreshRateLimitUI() {
+  state.rateLimit = loadRateLimitState();
+
+  if (DOM.rateLimitStatus) {
+    if (state.rateLimit.isLimited) {
+      DOM.rateLimitStatus.textContent = `Limit doldu. ${formatCooldown(state.rateLimit.resetInMs)} sonra tekrar deneyin.`;
+      DOM.rateLimitStatus.classList.add('is-warning');
+    } else {
+      DOM.rateLimitStatus.textContent = `Yeni analiz hakkı: ${state.rateLimit.remaining}/${state.rateLimit.limit}`;
+      DOM.rateLimitStatus.classList.remove('is-warning');
+    }
+  }
+
+  if (DOM.analyzeBtn) {
+    DOM.analyzeBtn.disabled = state.isLoading || state.rateLimit.isLimited;
+  }
 }
 
 function setupEventListeners() {
@@ -66,7 +122,7 @@ function setupEventListeners() {
       if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
          DOM.voiceBtn.addEventListener('click', toggleVoiceInput);
       } else {
-         DOM.voiceBtn.style.display = 'none';
+         DOM.voiceBtn.classList.add('hidden');
       }
   }
 
@@ -109,25 +165,28 @@ function toggleTheme() {
 }
 
 function applyTheme(theme) {
+  const themeIcon = DOM.themeToggle.querySelector('.theme-icon');
+
   if (theme === 'dark') {
     document.body.setAttribute('data-theme', 'dark');
-    DOM.themeToggle.innerHTML = '<span class="theme-icon">☀️</span>';
+    if (themeIcon) themeIcon.textContent = '☀️';
   } else {
     document.body.removeAttribute('data-theme');
-    DOM.themeToggle.innerHTML = '<span class="theme-icon">🌙</span>';
+    if (themeIcon) themeIcon.textContent = '🌙';
   }
 }
 
 function toggleElderlyMode() {
   const isElderly = document.body.classList.toggle('elderly-mode');
   if (isElderly) {
-    DOM.elderlyToggle.innerHTML = '👩‍🦳 Standart Mod';
-    DOM.elderlyToggle.style.borderColor = 'var(--accent)';
-    DOM.elderlyToggle.style.color = 'var(--accent)';
+    DOM.elderlyToggle.textContent = '👩‍🦳 Standart Mod';
+    DOM.elderlyToggle.classList.add('is-active');
   } else {
-    DOM.elderlyToggle.innerHTML = '👴 Yaşlı Modu';
-    DOM.elderlyToggle.removeAttribute('style');
+    DOM.elderlyToggle.textContent = '👴 Yaşlı Modu';
+    DOM.elderlyToggle.classList.remove('is-active');
   }
+
+  DOM.elderlyToggle.setAttribute('aria-pressed', String(isElderly));
 }
 
 // --- Analysis Logic ---
@@ -138,11 +197,23 @@ async function startAnalysis() {
     showError('Lütfen şikayetinizi daha detaylı açıklayın (en az 5 karakter).');
     return;
   }
+
+  const currentLimit = loadRateLimitState();
+  if (currentLimit.isLimited) {
+    refreshRateLimitUI();
+    showError(`Çok hızlı sorgu yaptınız. ${formatCooldown(currentLimit.resetInMs)} sonra tekrar deneyin.`);
+    return;
+  }
+
+  const updatedLimit = recordRateLimitHit(currentLimit.timestamps, Date.now(), RATE_LIMIT_CONFIG);
+  persistRateLimitState(updatedLimit.timestamps);
+  state.rateLimit = updatedLimit;
   
   DOM.error.classList.add('hidden');
   DOM.result.classList.add('hidden');
   DOM.loading.classList.remove('hidden');
-  DOM.analyzeBtn.disabled = true;
+  state.isLoading = true;
+  refreshRateLimitUI();
   
   // Simulate network delay for UX (loading animation)
   animateLoadingSteps();
@@ -164,8 +235,9 @@ async function startAnalysis() {
     console.error('Analiz hatası:', err);
     showError('Analiz sırasında bir hata oluştu. Lütfen tekrar deneyin.');
   } finally {
+    state.isLoading = false;
     DOM.loading.classList.add('hidden');
-    DOM.analyzeBtn.disabled = false;
+    refreshRateLimitUI();
   }
 }
 
@@ -179,10 +251,11 @@ function animateLoadingSteps() {
 }
 
 function showError(msg) {
-  DOM.error.innerHTML = `⚠️ ${msg}`;
+  DOM.error.textContent = `⚠️ ${msg}`;
   DOM.error.classList.remove('hidden');
   DOM.loading.classList.add('hidden');
-  DOM.analyzeBtn.disabled = false;
+  state.isLoading = false;
+  refreshRateLimitUI();
 }
 
 // --- Follow-Up Questions ---
@@ -324,6 +397,12 @@ function displayResult(result, originalText, fromFollowUp = false) {
         <div class="confidence-badge confidence-${result.confidence}">
           Güven Skoru: %${result.confidenceScore}
         </div>
+        ${result.careLabel ? `
+          <div class="care-banner care-${result.careLevel || 'routine'}">
+            <div class="care-banner-title">${result.careLabel}</div>
+            <div class="care-banner-text">${result.careAdvice || result.careSummary || ''}</div>
+          </div>
+        ` : ''}
         <div class="reasoning-box">
           ${result.reasoning}
         </div>
@@ -335,7 +414,7 @@ function displayResult(result, originalText, fromFollowUp = false) {
         ` : ''}
       </div>
       
-      <a href="https://mhrs.gov.tr" target="_blank" class="mhrs-btn">
+      <a href="https://mhrs.gov.tr" target="_blank" rel="noopener noreferrer" class="mhrs-btn">
         📅 MHRS Online Randevu
       </a>
       
@@ -381,6 +460,16 @@ function displayResult(result, originalText, fromFollowUp = false) {
 function generateDoctorNote(result, text) {
   const d = new Date().toLocaleDateString('tr-TR');
   let note = `Tarih: ${d}\nPlatform: SağlıkYön Algoritması\n\nHASTA ŞİKAYETİ:\n${text}\n`;
+  
+  if (result.isEmergency) {
+    note += `\nÖN DEĞERLENDİRME:\n- Acil durum uyarısı verildi\n- Mesaj: ${result.emergencyMessage}\n`;
+  } else {
+    note += `\nALGORİTMİK ÖNERİ:\n`;
+    note += `- Önerilen bölüm: ${result.primaryDepartmentName || 'Belirsiz'}\n`;
+    if (result.careLabel) note += `- Aciliyet seviyesi: ${result.careLabel}\n`;
+    if (result.careAdvice) note += `- Aksiyon: ${result.careAdvice}\n`;
+    if (result.confidenceScore) note += `- Güven skoru: %${result.confidenceScore}\n`;
+  }
   
   if (state.followUpAnswers.length > 0) {
     note += `\nEK BİLGİLER:\n`;
@@ -428,19 +517,41 @@ function toggleHistoryPanel() {
 
 function renderHistory() {
   if (state.history.length === 0) {
-    DOM.historyList.innerHTML = '<p class="history-empty">Henüz sorgulama yapılmadı.</p>';
+    DOM.historyList.innerHTML = '';
+    const empty = document.createElement('p');
+    empty.className = 'history-empty';
+    empty.textContent = 'Henüz sorgulama yapılmadı.';
+    DOM.historyList.appendChild(empty);
     return;
   }
-  
-  DOM.historyList.innerHTML = state.history.map(item => `
-    <div class="history-item">
-      <div class="history-symptom">"${item.text}"</div>
-      <div style="display:flex; justify-content:space-between;">
-        <span class="history-dept">${item.dept}</span>
-        <span class="history-date">${item.date}</span>
-      </div>
-    </div>
-  `).join('');
+
+  DOM.historyList.innerHTML = '';
+
+  state.history.forEach(item => {
+    const wrapper = document.createElement('div');
+    wrapper.className = 'history-item';
+
+    const symptom = document.createElement('div');
+    symptom.className = 'history-symptom';
+    symptom.textContent = `"${item.text}"`;
+
+    const metaRow = document.createElement('div');
+    metaRow.className = 'history-meta';
+
+    const department = document.createElement('span');
+    department.className = 'history-dept';
+    department.textContent = item.dept;
+
+    const date = document.createElement('span');
+    date.className = 'history-date';
+    date.textContent = item.date;
+
+    metaRow.appendChild(department);
+    metaRow.appendChild(date);
+    wrapper.appendChild(symptom);
+    wrapper.appendChild(metaRow);
+    DOM.historyList.appendChild(wrapper);
+  });
 }
 
 function clearHistory() {
@@ -548,14 +659,18 @@ function showPopup(region) {
   popup.innerHTML = `
     <div class="popup-header">
       <span class="popup-title">${region.toUpperCase()}</span>
-      <button class="popup-close" onclick="this.parentElement.parentElement.remove()">✕</button>
+      <button type="button" class="popup-close" aria-label="Pencereyi kapat">✕</button>
     </div>
-    <div class="problem-details" style="display:block">
+    <div class="problem-details popup-options">
       ${options.map(opt => `<div class="detail-option" data-sym="${opt}">${opt}</div>`).join('')}
     </div>
   `;
   
   document.getElementById('popupContainer').appendChild(popup);
+
+  popup.querySelector('.popup-close')?.addEventListener('click', () => {
+    popup.remove();
+  });
   
   popup.querySelectorAll('.detail-option').forEach(opt => {
     opt.addEventListener('click', (e) => {
