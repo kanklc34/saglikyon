@@ -2,3 +2,10 @@ dist/
 frontend/app.bundle.js
 frontend/engine/*-v2.js
 legacy/
+
+# wrangler files
+.wrangler
+.dev.vars*
+!.dev.vars.example
+.env*
+!.env.example
