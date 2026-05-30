@@ -28,3 +28,5 @@ node_modules/
 *.tar.gz
 *.egg-info/
 build/              
+add_keywords_en.py
+add_keywords_tr.py
