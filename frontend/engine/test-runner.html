@@ -1,0 +1,675 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SağlıkYön — NLP Test Koşucusu</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Syne:wght@400;600;800&display=swap');
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #0a0e14;
+    --surface: #111620;
+    --border: #1e2733;
+    --pass: #00e5a0;
+    --pass-bg: #00e5a010;
+    --fail: #ff4d6d;
+    --fail-bg: #ff4d6d10;
+    --warn: #ffb347;
+    --warn-bg: #ffb34710;
+    --text: #e2e8f0;
+    --muted: #64748b;
+    --accent: #38bdf8;
+    --accent2: #818cf8;
+  }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Syne', sans-serif;
+    min-height: 100vh;
+    padding: 2rem;
+  }
+
+  header {
+    display: flex;
+    align-items: flex-end;
+    gap: 1.5rem;
+    margin-bottom: 2.5rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 1px solid var(--border);
+  }
+
+  h1 {
+    font-size: 1.8rem;
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .subtitle {
+    font-size: 0.8rem;
+    color: var(--muted);
+    font-family: 'JetBrains Mono', monospace;
+    padding-bottom: 3px;
+  }
+
+  /* ── Scoreboard ── */
+  .scoreboard {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1rem;
+    margin-bottom: 2rem;
+  }
+
+  .score-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 1.2rem 1.4rem;
+  }
+
+  .score-card .label {
+    font-size: 0.7rem;
+    font-family: 'JetBrains Mono', monospace;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-bottom: 0.4rem;
+  }
+
+  .score-card .value {
+    font-size: 2rem;
+    font-weight: 800;
+    line-height: 1;
+  }
+
+  .score-card.pass .value  { color: var(--pass); }
+  .score-card.fail .value  { color: var(--fail); }
+  .score-card.total .value { color: var(--accent); }
+  .score-card.pct .value   { color: var(--accent2); }
+
+  /* ── Progress bar ── */
+  .progress-wrap {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 1rem 1.4rem;
+    margin-bottom: 2rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  .progress-bar {
+    flex: 1;
+    height: 6px;
+    background: var(--border);
+    border-radius: 3px;
+    overflow: hidden;
+  }
+
+  .progress-fill {
+    height: 100%;
+    border-radius: 3px;
+    background: linear-gradient(90deg, var(--pass), var(--accent));
+    transition: width 0.6s ease;
+  }
+
+  .progress-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.78rem;
+    color: var(--muted);
+    white-space: nowrap;
+  }
+
+  /* ── Category filter ── */
+  .filters {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+    margin-bottom: 1.5rem;
+  }
+
+  .filter-btn {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 0.35rem 0.9rem;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.72rem;
+    color: var(--muted);
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+
+  .filter-btn:hover, .filter-btn.active {
+    border-color: var(--accent);
+    color: var(--accent);
+  }
+
+  /* ── Table ── */
+  .table-wrap {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    overflow: hidden;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+
+  thead tr {
+    background: #0d1117;
+  }
+
+  th {
+    padding: 0.7rem 1rem;
+    text-align: left;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.68rem;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    border-bottom: 1px solid var(--border);
+  }
+
+  td {
+    padding: 0.65rem 1rem;
+    font-size: 0.8rem;
+    border-bottom: 1px solid var(--border);
+    vertical-align: top;
+  }
+
+  tr:last-child td { border-bottom: none; }
+
+  tr.pass-row { background: var(--pass-bg); }
+  tr.fail-row { background: var(--fail-bg); }
+  tr.warn-row { background: var(--warn-bg); }
+
+  tr.hidden { display: none; }
+
+  .badge {
+    display: inline-block;
+    padding: 0.2rem 0.55rem;
+    border-radius: 4px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.68rem;
+    font-weight: 600;
+  }
+
+  .badge-pass { background: var(--pass-bg); color: var(--pass); border: 1px solid var(--pass)33; }
+  .badge-fail { background: var(--fail-bg); color: var(--fail); border: 1px solid var(--fail)33; }
+  .badge-warn { background: var(--warn-bg); color: var(--warn); border: 1px solid var(--warn)33; }
+
+  .category-tag {
+    display: inline-block;
+    padding: 0.15rem 0.5rem;
+    border-radius: 4px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.65rem;
+    background: #1e2733;
+    color: var(--muted);
+  }
+
+  .input-text {
+    font-family: 'JetBrains Mono', monospace;
+    color: var(--accent);
+  }
+
+  .dept-match { color: var(--pass); font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; }
+  .dept-fail  { color: var(--fail); font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; }
+  .dept-na    { color: var(--muted); font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; }
+
+  .detail-small {
+    font-size: 0.68rem;
+    color: var(--muted);
+    font-family: 'JetBrains Mono', monospace;
+    margin-top: 0.2rem;
+  }
+
+  /* ── Run button ── */
+  .run-btn {
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    border: none;
+    border-radius: 8px;
+    padding: 0.6rem 1.4rem;
+    font-family: 'Syne', sans-serif;
+    font-weight: 600;
+    font-size: 0.85rem;
+    color: #0a0e14;
+    cursor: pointer;
+    margin-left: auto;
+    display: block;
+    margin-bottom: 1.5rem;
+    transition: opacity 0.15s;
+  }
+  .run-btn:hover { opacity: 0.85; }
+
+  /* ── Loading ── */
+  #loading {
+    text-align: center;
+    padding: 3rem;
+    font-family: 'JetBrains Mono', monospace;
+    color: var(--muted);
+    font-size: 0.85rem;
+  }
+
+  #error-box {
+    background: var(--fail-bg);
+    border: 1px solid var(--fail);
+    border-radius: 8px;
+    padding: 1rem 1.4rem;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.8rem;
+    color: var(--fail);
+    margin-bottom: 1.5rem;
+    display: none;
+    white-space: pre-wrap;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div>
+    <h1>SağlıkYön NLP Test Koşucusu</h1>
+    <div class="subtitle">analyzer.js + nlp.js v2 · gerçek semptom veritabanı</div>
+  </div>
+</header>
+
+<div id="error-box"></div>
+<div id="loading">Motor yükleniyor…</div>
+
+<div id="app" style="display:none">
+  <div class="scoreboard">
+    <div class="score-card total"><div class="label">Toplam Test</div><div class="value" id="s-total">0</div></div>
+    <div class="score-card pass"><div class="label">Geçti ✓</div><div class="value" id="s-pass">0</div></div>
+    <div class="score-card fail"><div class="label">Kaldı ✗</div><div class="value" id="s-fail">0</div></div>
+    <div class="score-card pct"><div class="label">Başarı Oranı</div><div class="value" id="s-pct">—</div></div>
+  </div>
+
+  <div class="progress-wrap">
+    <div class="progress-bar"><div class="progress-fill" id="progress-fill" style="width:0%"></div></div>
+    <div class="progress-label" id="progress-label">Hazır</div>
+  </div>
+
+  <div class="filters" id="filters">
+    <button class="filter-btn active" data-filter="all">Tümü</button>
+    <button class="filter-btn" data-filter="normal">Normal</button>
+    <button class="filter-btn" data-filter="negasyon">Negasyon</button>
+    <button class="filter-btn" data-filter="intensifier">Intensifier</button>
+    <button class="filter-btn" data-filter="yazim">Yazım Hatası</button>
+    <button class="filter-btn" data-filter="tibbi">Tıbbi Terim</button>
+    <button class="filter-btn" data-filter="sirali">Sıra Bağımsız</button>
+    <button class="filter-btn" data-filter="acil">Acil</button>
+    <button class="filter-btn" data-filter="fail">Sadece Hatalılar</button>
+  </div>
+
+  <button class="run-btn" id="run-btn">▶ Testleri Çalıştır</button>
+
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Girdi</th>
+          <th>Kategori</th>
+          <th>Beklenen</th>
+          <th>Gerçek Sonuç</th>
+          <th>Durum</th>
+        </tr>
+      </thead>
+      <tbody id="tbody"></tbody>
+    </table>
+  </div>
+</div>
+
+<script type="module">
+// ─────────────────────────────────────────────────────────
+// TEST VAKASI TANIMI
+// Her vaka: { input, category, expect }
+//
+// expect.type:
+//   'department'  → primaryDepartment expect.dept içinde olmalı
+//   'emergency'   → isEmergency: true olmalı
+//   'noMatch'     → noMatch: true olmalı
+//   'negated'     → hiç semptom eşleşmemeli (noMatch veya az semptom)
+//   'careLevel'   → careLevel expect.level olmalı
+// ─────────────────────────────────────────────────────────
+
+const TEST_CASES = [
+  // ── NORMAL ──────────────────────────────────────────────
+  { input: 'başım çok ağrıyor',           category: 'normal',      expect: { type: 'department', dept: ['noroloji','dahiliye','kbb'] } },
+  { input: 'migrenum var',                category: 'normal',      expect: { type: 'department', dept: ['noroloji'] } },
+  { input: 'baş dönmesi yaşıyorum',       category: 'normal',      expect: { type: 'department', dept: ['noroloji','kbb'] } },
+  { input: 'gözüm bulanık görüyor',       category: 'normal',      expect: { type: 'department', dept: ['goz','noroloji'] } },
+  { input: 'göz ağrısı var',              category: 'normal',      expect: { type: 'department', dept: ['goz'] } },
+  { input: 'kulağım ağrıyor',             category: 'normal',      expect: { type: 'department', dept: ['kbb'] } },
+  { input: 'dişim çok ağrıyor',           category: 'normal',      expect: { type: 'department', dept: ['dis'] } },
+  { input: 'boğazım ağrıyor',             category: 'normal',      expect: { type: 'department', dept: ['kbb','dahiliye','aile_hekimi'] } },
+  { input: 'göğüs ağrısı hissediyorum',   category: 'normal',      expect: { type: 'department', dept: ['kardiyoloji','gogus'] } },
+  { input: 'nefes alamıyorum',            category: 'normal',      expect: { type: 'department', dept: ['gogus','kardiyoloji'] } },
+  { input: 'karnım ağrıyor',              category: 'normal',      expect: { type: 'department', dept: ['gastroenteroloji','dahiliye','genel_cerrahi'] } },
+  { input: 'mide bulantım var',           category: 'normal',      expect: { type: 'department', dept: ['gastroenteroloji','dahiliye','aile_hekimi'] } },
+  { input: 'ishal oldum',                 category: 'normal',      expect: { type: 'department', dept: ['gastroenteroloji','dahiliye','aile_hekimi'] } },
+  { input: 'bel ağrısı çekiyorum',        category: 'normal',      expect: { type: 'department', dept: ['ortopedi','fizik_tedavi','noroloji'] } },
+  { input: 'dizim ağrıyor',               category: 'normal',      expect: { type: 'department', dept: ['ortopedi','fizik_tedavi'] } },
+  { input: 'ateşim var',                  category: 'normal',      expect: { type: 'department', dept: ['dahiliye','aile_hekimi'] } },
+  { input: 'çok yorgunum halsizim',       category: 'normal',      expect: { type: 'department', dept: ['dahiliye','endokrinoloji','aile_hekimi'] } },
+  { input: 'depresyon belirtileri var',   category: 'normal',      expect: { type: 'department', dept: ['psikiyatri'] } },
+  { input: 'adet düzensizliğim var',      category: 'normal',      expect: { type: 'department', dept: ['kadin_dogum'] } },
+  { input: 'şeker hastalığım var',        category: 'normal',      expect: { type: 'department', dept: ['endokrinoloji','dahiliye'] } },
+
+  // ── NEGASYON ────────────────────────────────────────────
+  { input: 'baş ağrım yok',              category: 'negasyon',    expect: { type: 'noMatch' } },
+  { input: 'göğsüm ağrımıyor',           category: 'negasyon',    expect: { type: 'noMatch' } },
+  { input: 'nefes darlığım yok',         category: 'negasyon',    expect: { type: 'noMatch' } },
+  { input: 'ishal olmadım',              category: 'negasyon',    expect: { type: 'noMatch' } },
+  { input: 'ateşim yok sadece öksürüğüm var', category: 'negasyon', expect: { type: 'department', dept: ['gogus','kbb'] } },
+
+  // ── INTENSIFIER ─────────────────────────────────────────
+  { input: 'çok şiddetli baş ağrısı',    category: 'intensifier', expect: { type: 'careLevel', level: ['soon','urgent','emergency'] } },
+  { input: 'aşırı nefes darlığı',        category: 'intensifier', expect: { type: 'careLevel', level: ['urgent','emergency'] } },
+  { input: 'dayanılmaz karın ağrısı',    category: 'intensifier', expect: { type: 'careLevel', level: ['soon','urgent','emergency'] } },
+  { input: 'hafif baş ağrısı var',       category: 'intensifier', expect: { type: 'careLevel', level: ['routine','soon'] } },
+  { input: 'biraz mide bulantısı',       category: 'intensifier', expect: { type: 'careLevel', level: ['routine','soon'] } },
+
+  // ── YAZIM HATASI ─────────────────────────────────────────
+  { input: 'bas agrim var',              category: 'yazim',       expect: { type: 'department', dept: ['noroloji','dahiliye','kbb'] } },
+  { input: 'gogsum agriyor',             category: 'yazim',       expect: { type: 'department', dept: ['kardiyoloji','gogus'] } },
+  { input: 'nefes daligim var',          category: 'yazim',       expect: { type: 'department', dept: ['gogus','kardiyoloji'] } },
+  { input: 'karnm agryor',               category: 'yazim',       expect: { type: 'department', dept: ['gastroenteroloji','dahiliye'] } },
+  { input: 'bel agrim var',              category: 'yazim',       expect: { type: 'department', dept: ['ortopedi','fizik_tedavi'] } },
+
+  // ── TIBBİ TERİM ──────────────────────────────────────────
+  { input: 'vertigo yaşıyorum',          category: 'tibbi',       expect: { type: 'department', dept: ['noroloji','kbb'] } },
+  { input: 'angina pectoris',            category: 'tibbi',       expect: { type: 'department', dept: ['kardiyoloji','gogus'] } },
+  { input: 'dispne var',                 category: 'tibbi',       expect: { type: 'department', dept: ['gogus','kardiyoloji'] } },
+  { input: 'diyabet şikayetlerim var',   category: 'tibbi',       expect: { type: 'department', dept: ['endokrinoloji','dahiliye'] } },
+  { input: 'konstipasyon sorunum var',   category: 'tibbi',       expect: { type: 'department', dept: ['gastroenteroloji','dahiliye'] } },
+  { input: 'palpitasyon hissediyorum',   category: 'tibbi',       expect: { type: 'department', dept: ['kardiyoloji'] } },
+  { input: 'artralji var eklemlerimde',  category: 'tibbi',       expect: { type: 'department', dept: ['ortopedi','fizik_tedavi'] } },
+
+  // ── SIRA BAĞIMSIZ ─────────────────────────────────────────
+  { input: 'ağrıyor kafam çok',          category: 'sirali',      expect: { type: 'department', dept: ['noroloji','dahiliye','kbb'] } },
+  { input: 'zonkluyor başım',            category: 'sirali',      expect: { type: 'department', dept: ['noroloji','dahiliye'] } },
+  { input: 'dönüyor başım sürekli',      category: 'sirali',      expect: { type: 'department', dept: ['noroloji','kbb'] } },
+  { input: 'ağrıyor bel çok',            category: 'sirali',      expect: { type: 'department', dept: ['ortopedi','fizik_tedavi'] } },
+
+  // ── ACİL ─────────────────────────────────────────────────
+  { input: 'ani görme kaybı yaşadım',    category: 'acil',        expect: { type: 'emergency' } },
+  { input: 'bayıldım az önce',           category: 'acil',        expect: { type: 'emergency' } },
+  { input: 'sara nöbeti geçirdim',       category: 'acil',        expect: { type: 'emergency' } },
+  { input: 'kan tükürüyorum',            category: 'acil',        expect: { type: 'emergency' } },
+  { input: 'göğüs ağrısı nefes darlığı terleme', category: 'acil', expect: { type: 'emergency' } },
+  { input: 'yüzüm düştü konuşamıyorum', category: 'acil',        expect: { type: 'emergency' } },
+  { input: 'hayatımın en kötü baş ağrısı', category: 'acil',     expect: { type: 'emergency' } },
+
+  // ── DERMATOLOJİ ──────────────────────────────────────────
+  { input: 'vücudum çok kaşınıyor',      category: 'normal',      expect: { type: 'department', dept: ['dermatoloji','dahiliye'] } },
+  { input: 'derimde döküntü var',        category: 'normal',      expect: { type: 'department', dept: ['dermatoloji','dahiliye'] } },
+  { input: 'kurdeşen çıktı',             category: 'normal',      expect: { type: 'department', dept: ['dermatoloji','dahiliye'] } },
+  { input: 'egzama sorunu var',          category: 'normal',      expect: { type: 'department', dept: ['dermatoloji'] } },
+  { input: 'sedef hastalığım var',       category: 'normal',      expect: { type: 'department', dept: ['dermatoloji'] } },
+  { input: 'sivilcelerim çıkıyor',       category: 'normal',      expect: { type: 'department', dept: ['dermatoloji'] } },
+  { input: 'ciltte leke oluştu',         category: 'normal',      expect: { type: 'department', dept: ['dermatoloji'] } },
+  { input: 'benim rengi değişti büyüdü', category: 'normal',      expect: { type: 'department', dept: ['dermatoloji'] } },
+  { input: 'tırnak mantarım var',        category: 'normal',      expect: { type: 'department', dept: ['dermatoloji'] } },
+
+  // ── ÜROLOJİ ──────────────────────────────────────────────
+  { input: 'idrar yaparken yanıyor',     category: 'normal',      expect: { type: 'department', dept: ['uroloji','dahiliye','kadin_dogum'] } },
+  { input: 'sık sık tuvalete gidiyorum', category: 'normal',      expect: { type: 'department', dept: ['uroloji','dahiliye'] } },
+  { input: 'idrarda kan var',            category: 'normal',      expect: { type: 'department', dept: ['uroloji'] } },
+  { input: 'böbrek taşı var sanırım',    category: 'normal',      expect: { type: 'department', dept: ['uroloji'] } },
+  { input: 'prostat şikayetim var',      category: 'normal',      expect: { type: 'department', dept: ['uroloji'] } },
+  { input: 'idrar yapamıyorum',          category: 'acil',        expect: { type: 'careLevel',  level: ['urgent','emergency'] } },
+
+  // ── PSİKİYATRİ ───────────────────────────────────────────
+  { input: 'panik atak geçiriyorum',     category: 'normal',      expect: { type: 'department', dept: ['psikiyatri','kardiyoloji'] } },
+  { input: 'takıntılı davranışlarım var', category: 'normal',     expect: { type: 'department', dept: ['psikiyatri'] } },
+  { input: 'yeme bozukluğu yaşıyorum',   category: 'normal',      expect: { type: 'department', dept: ['psikiyatri'] } },
+  { input: 'odaklanamıyorum dikkat sorunu', category: 'normal',   expect: { type: 'department', dept: ['psikiyatri','noroloji'] } },
+  { input: 'bipolar bozukluğum var',     category: 'tibbi',       expect: { type: 'department', dept: ['psikiyatri'] } },
+
+  // ── KADIN-DOĞUM ──────────────────────────────────────────
+  { input: 'vajinal akıntım var',        category: 'normal',      expect: { type: 'department', dept: ['kadin_dogum'] } },
+  { input: 'memede kitle hissettim',     category: 'normal',      expect: { type: 'department', dept: ['kadin_dogum','genel_cerrahi'] } },
+  { input: 'adet ağrısı çok şiddetli',   category: 'normal',      expect: { type: 'department', dept: ['kadin_dogum'] } },
+  { input: 'menopoz belirtileri var',    category: 'normal',      expect: { type: 'department', dept: ['kadin_dogum','endokrinoloji'] } },
+  { input: 'vajinal kanama regl dışı',   category: 'normal',      expect: { type: 'department', dept: ['kadin_dogum'] } },
+
+  // ── GASTROENTEROLOJİ ─────────────────────────────────────
+  { input: 'karaciğerim ağrıyor',        category: 'normal',      expect: { type: 'department', dept: ['gastroenteroloji','dahiliye'] } },
+  { input: 'safra taşı şüpheleyorum',    category: 'normal',      expect: { type: 'department', dept: ['gastroenteroloji','genel_cerrahi'] } },
+  { input: 'mide ülserim var',           category: 'normal',      expect: { type: 'department', dept: ['gastroenteroloji','dahiliye'] } },
+  { input: 'irritabl barsak sendromu var', category: 'tibbi',     expect: { type: 'department', dept: ['gastroenteroloji'] } },
+  { input: 'pankreatit geçirdim',        category: 'tibbi',       expect: { type: 'department', dept: ['gastroenteroloji','genel_cerrahi'] } },
+
+  // ── NÖROLOJİ ─────────────────────────────────────────────
+  { input: 'konuşmam aniden bozuldu',    category: 'acil',        expect: { type: 'emergency' } },
+  { input: 'hafızam gidiyor unutuyorum', category: 'normal',      expect: { type: 'department', dept: ['noroloji','psikiyatri'] } },
+  { input: 'parkinson belirtileri var',  category: 'tibbi',       expect: { type: 'department', dept: ['noroloji'] } },
+  { input: 'ellerde ayaklarda yanma uyuşma', category: 'normal',  expect: { type: 'department', dept: ['noroloji','dahiliye','endokrinoloji'] } },
+
+  // ── KARDİYOLOJİ ──────────────────────────────────────────
+  { input: 'tansiyonum çok yüksek',      category: 'normal',      expect: { type: 'department', dept: ['kardiyoloji','dahiliye'] } },
+  { input: 'kalbim düzensiz çarpıyor',   category: 'normal',      expect: { type: 'department', dept: ['kardiyoloji'] } },
+  { input: 'yatarken nefes alamıyorum',  category: 'normal',      expect: { type: 'department', dept: ['kardiyoloji','gogus'] } },
+  { input: 'bacakta pıhtı şüphesi var',  category: 'normal',      expect: { type: 'department', dept: ['kardiyoloji','genel_cerrahi'] } },
+
+  // ── DAHİLİYE ─────────────────────────────────────────────
+  { input: 'kansızlık var demir eksikliği', category: 'normal',   expect: { type: 'department', dept: ['dahiliye','aile_hekimi'] } },
+  { input: 'tüm vücudum ağrıyor miyalji', category: 'tibbi',      expect: { type: 'department', dept: ['dahiliye','fizik_tedavi'] } },
+  { input: 'gece aşırı terliyorum',      category: 'normal',      expect: { type: 'department', dept: ['dahiliye','endokrinoloji'] } },
+  { input: 'çok su içiyorum sürekli susuyorum', category: 'normal', expect: { type: 'department', dept: ['endokrinoloji','dahiliye'] } },
+];
+
+// ─────────────────────────────────────────────────────────
+// MOTOR YÜKLEME
+// ─────────────────────────────────────────────────────────
+
+let analyzeSymptoms;
+
+async function loadEngine() {
+  try {
+    // Dinamik import — aynı klasörde olmalı
+    const mod = await import('./analyzer.js');
+    analyzeSymptoms = mod.analyzeSymptoms;
+    return true;
+  } catch (e) {
+    return e;
+  }
+}
+
+// ─────────────────────────────────────────────────────────
+// TEST ÇALIŞTIRICI
+// ─────────────────────────────────────────────────────────
+
+function runTest(tc) {
+  let result;
+  try {
+    // needsMoreInfo durumunu bypass etmek için boş previousAnswers gönder
+    result = analyzeSymptoms(tc.input);
+    // Eğer daha fazla bilgi istiyorsa, boş cevaplarla tekrar çalıştır
+    // böylece department skorlarına ulaşabiliriz
+    if (result.needsMoreInfo) {
+      result = analyzeSymptoms(tc.input, []);
+    }
+  } catch (e) {
+    return { status: 'fail', reason: 'HATA: ' + e.message, result: null };
+  }
+
+  const exp = tc.expect;
+
+  if (exp.type === 'emergency') {
+    return result.isEmergency
+      ? { status: 'pass', reason: 'Acil tespit edildi', result }
+      : { status: 'fail', reason: `Acil bekleniyordu ama gelmedi (dept: ${result.primaryDepartment || '?'})`, result };
+  }
+
+  if (exp.type === 'noMatch') {
+    const noSym = result.noMatch || (!result.primaryDepartment && !result.isEmergency);
+    return noSym
+      ? { status: 'pass', reason: 'Doğru: eşleşme yok', result }
+      : { status: 'fail', reason: `Eşleşme yok bekleniyordu ama dept: ${result.primaryDepartment || '?'} geldi`, result };
+  }
+
+  if (exp.type === 'department') {
+    if (result.isEmergency) return { status: 'warn', reason: `Acil döndü (beklenenden farklı)`, result };
+    if (result.noMatch || !result.primaryDepartment) return { status: 'fail', reason: 'noMatch döndü, bölüm beklenilyordu', result };
+    const dept = result.primaryDepartment;
+    return exp.dept.includes(dept)
+      ? { status: 'pass', reason: `✓ ${dept}`, result }
+      : { status: 'fail', reason: `Beklenen: [${exp.dept.join('|')}] → Gelen: ${dept}`, result };
+  }
+
+  if (exp.type === 'careLevel') {
+    if (result.isEmergency) {
+      return exp.level.includes('emergency')
+        ? { status: 'pass', reason: 'emergency (acil)', result }
+        : { status: 'warn', reason: 'Acil geldi, careLevel beklenilyordu', result };
+    }
+    const lvl = result.careLevel;
+    return exp.level.includes(lvl)
+      ? { status: 'pass', reason: `careLevel: ${lvl}`, result }
+      : { status: 'fail', reason: `Beklenen: [${exp.level.join('|')}] → Gelen: ${lvl}`, result };
+  }
+
+  return { status: 'warn', reason: 'Bilinmeyen expect type', result };
+}
+
+// ─────────────────────────────────────────────────────────
+// UI RENDER
+// ─────────────────────────────────────────────────────────
+
+const CATEGORY_LABELS = {
+  normal: 'Normal', negasyon: 'Negasyon', intensifier: 'Intensifier',
+  yazim: 'Yazım Hatası', tibbi: 'Tıbbi Terim', sirali: 'Sıra Bağımsız', acil: 'Acil'
+};
+
+function renderResults(results) {
+  const tbody = document.getElementById('tbody');
+  tbody.innerHTML = '';
+
+  let pass = 0, fail = 0, warn = 0;
+
+  results.forEach((r, i) => {
+    const tc = TEST_CASES[i];
+    if (r.status === 'pass') pass++;
+    else if (r.status === 'fail') fail++;
+    else warn++;
+
+    const row = document.createElement('tr');
+    row.dataset.category = tc.category;
+    row.dataset.status = r.status;
+    row.className = r.status === 'pass' ? 'pass-row' : r.status === 'fail' ? 'fail-row' : 'warn-row';
+
+    const matched = r.result?.matchedSymptoms?.map(s => s.id || s).join(', ') || '—';
+    const dept = r.result?.primaryDepartment || (r.result?.isEmergency ? '🚨 ACİL' : '—');
+    const careLevel = r.result?.careLevel || '—';
+
+    row.innerHTML = `
+      <td style="color:var(--muted);font-family:'JetBrains Mono',monospace;font-size:0.72rem">${i + 1}</td>
+      <td>
+        <span class="input-text">${tc.input}</span>
+      </td>
+      <td><span class="category-tag">${CATEGORY_LABELS[tc.category] || tc.category}</span></td>
+      <td style="font-family:'JetBrains Mono',monospace;font-size:0.75rem;color:var(--muted)">
+        ${formatExpect(tc.expect)}
+      </td>
+      <td>
+        <span class="${r.result?.primaryDepartment ? 'dept-match' : 'dept-na'}">${dept}</span>
+        <div class="detail-small">care: ${careLevel} · semptom: ${matched}</div>
+      </td>
+      <td>
+        <span class="badge badge-${r.status}">${r.status === 'pass' ? '✓ GEÇTİ' : r.status === 'fail' ? '✗ KALDI' : '⚠ UYARI'}</span>
+        <div class="detail-small">${r.reason}</div>
+      </td>
+    `;
+    tbody.appendChild(row);
+  });
+
+  const total = pass + fail + warn;
+  const pct = total ? Math.round((pass / total) * 100) : 0;
+
+  document.getElementById('s-total').textContent = total;
+  document.getElementById('s-pass').textContent = pass;
+  document.getElementById('s-fail').textContent = fail;
+  document.getElementById('s-pct').textContent = pct + '%';
+  document.getElementById('progress-fill').style.width = pct + '%';
+  document.getElementById('progress-label').textContent = `${pass} / ${total} test geçti`;
+}
+
+function formatExpect(exp) {
+  if (exp.type === 'department') return exp.dept.join(' | ');
+  if (exp.type === 'emergency') return '🚨 ACİL';
+  if (exp.type === 'noMatch') return 'eşleşme yok';
+  if (exp.type === 'careLevel') return exp.level.join(' | ');
+  return exp.type;
+}
+
+// ─────────────────────────────────────────────────────────
+// FILTER
+// ─────────────────────────────────────────────────────────
+
+document.getElementById('filters').addEventListener('click', e => {
+  const btn = e.target.closest('.filter-btn');
+  if (!btn) return;
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  const filter = btn.dataset.filter;
+  document.querySelectorAll('#tbody tr').forEach(row => {
+    if (filter === 'all') { row.classList.remove('hidden'); return; }
+    if (filter === 'fail') {
+      row.classList.toggle('hidden', row.dataset.status !== 'fail');
+    } else {
+      row.classList.toggle('hidden', row.dataset.category !== filter);
+    }
+  });
+});
+
+// ─────────────────────────────────────────────────────────
+// BOOTSTRAP
+// ─────────────────────────────────────────────────────────
+
+document.getElementById('run-btn').addEventListener('click', () => {
+  const results = TEST_CASES.map(tc => runTest(tc));
+  renderResults(results);
+});
+
+(async () => {
+  const result = await loadEngine();
+  const loading = document.getElementById('loading');
+  const app = document.getElementById('app');
+  const errBox = document.getElementById('error-box');
+
+  if (result !== true) {
+    loading.style.display = 'none';
+    errBox.style.display = 'block';
+    errBox.textContent =
+      '⚠ Motor yüklenemedi.\n\n' +
+      'test-runner.html dosyasını analyzer.js ve nlp.js ile aynı klasöre koy,\n' +
+      'sonra bir local server ile aç (örn: python -m http.server 8080).\n\n' +
+      'Hata: ' + result.message;
+    return;
+  }
+
+  loading.style.display = 'none';
+  app.style.display = 'block';
+
+  // Otomatik çalıştır
+  const results = TEST_CASES.map(tc => runTest(tc));
+  renderResults(results);
+})();
+</script>
+
+</body>
+</html>
