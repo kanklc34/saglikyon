@@ -1,687 +1,614 @@
 // ============================================
-// SağlıkYön – Main application logic
-// Connects UI with local algorithmic engine
+// SağlıkYön – script.js v3
+// 4 ekranlı mimari: input → followup → result → emergency
 // ============================================
 
 import { analyzeSymptoms } from './engine/analyzer.js';
 import { RATE_LIMIT_CONFIG, getRateLimitState, recordRateLimitHit, formatCooldown } from './engine/rate-limit.js';
 
-const RATE_LIMIT_STORAGE_KEY = 'sy_rate_limit_timestamps';
+const RATE_KEY = 'sy_rl';
 
-function readJsonStorage(key, fallback) {
-  try {
-    const rawValue = localStorage.getItem(key);
-    if (!rawValue) return fallback;
+// ── Yardımcı ──────────────────────────────
+const $ = id => document.getElementById(id);
+function readJson(k, fb) { try { return JSON.parse(localStorage.getItem(k)) ?? fb; } catch { return fb; } }
+function saveJson(k, v) { localStorage.setItem(k, JSON.stringify(v)); }
+function loadRL(now = Date.now()) { return getRateLimitState(readJson(RATE_KEY, []), now, RATE_LIMIT_CONFIG); }
 
-    const parsed = JSON.parse(rawValue);
-    return parsed ?? fallback;
-  } catch {
-    return fallback;
-  }
-}
-
-function readArrayStorage(key) {
-  const value = readJsonStorage(key, []);
-  return Array.isArray(value) ? value : [];
-}
-
-function readNumberStorage(key, fallback = 0) {
-  const value = Number(localStorage.getItem(key));
-  return Number.isFinite(value) ? value : fallback;
-}
-
-function loadRateLimitState(now = Date.now()) {
-  return getRateLimitState(readJsonStorage(RATE_LIMIT_STORAGE_KEY, []), now, RATE_LIMIT_CONFIG);
-}
-
-function persistRateLimitState(timestamps) {
-  localStorage.setItem(RATE_LIMIT_STORAGE_KEY, JSON.stringify(timestamps));
-}
-
-// --- State ---
+// ── State ─────────────────────────────────
 const state = {
-  currentResult: null,
-  followUpQuestions: [],
-  followUpAnswers: [],
-  currentQuestionIndex: 0,
-  history: readArrayStorage('sy_history'),
-  totalQueries: readNumberStorage('sy_total_queries', 0),
   theme: localStorage.getItem('sy_theme') || 'light',
-  rateLimit: loadRateLimitState(),
-  isLoading: false
+  elderly: false,
+  history: readJson('sy_history', []),
+  queries: Number(localStorage.getItem('sy_queries') || 0),
+  rl: loadRL(),
+  isLoading: false,
+  followUp: {
+    questions: [],
+    answers: [],
+    index: 0,
+  },
 };
 
-// --- DOM Elements ---
+// ── DOM ───────────────────────────────────
 const DOM = {
-  input: document.getElementById('symptomInput'),
-  charCount: document.getElementById('charCount'),
-  rateLimitStatus: document.getElementById('rateLimitStatus'),
-  analyzeBtn: document.getElementById('analyzeBtn'),
-  voiceBtn: document.getElementById('voiceBtn'),
-  voiceStatus: document.getElementById('voiceStatus'),
-  loading: document.getElementById('loading'),
-  error: document.getElementById('error'),
-  result: document.getElementById('result'),
-  themeToggle: document.getElementById('themeToggle'),
-  elderlyToggle: document.getElementById('elderlyToggle'),
-  bodyMapParts: document.querySelectorAll('.body-part'),
-  popupContainer: document.getElementById('popupContainer'),
-  welcomeModal: document.getElementById('welcomeModal'),
-  welcomeBtn: document.getElementById('welcomeBtn'),
-  historyBtn: document.getElementById('historyBtn'),
-  historyPanel: document.getElementById('historyPanel'),
-  historyList: document.getElementById('historyList'),
-  closeHistoryBtn: document.getElementById('closeHistory'),
-  clearHistoryBtn: document.getElementById('clearHistory'),
-  statsBadge: document.getElementById('totalQueries')
+  input: $('symptomInput'),
+  charCount: $('charCount'),
+  rateStatus: $('rateLimitStatus'),
+  analyzeBtn: $('analyzeBtn'),
+  voiceBtn: $('voiceBtn'),
+  voiceStatus: $('voiceStatus'),
+  errorMsg: $('errorMsg'),
+  themeToggle: $('themeToggle'),
+  elderlyToggle: $('elderlyToggle'),
+  historyBtn: $('historyBtn'),
+  historyPanel: $('historyPanel'),
+  historyList: $('historyList'),
+  closeHistory: $('closeHistory'),
+  clearHistory: $('clearHistory'),
+  queriesBadge: $('totalQueries'),
+  // Screens
+  sInput: $('screenInput'),
+  sFollowup: $('screenFollowup'),
+  sResult: $('screenResult'),
+  sEmergency: $('screenEmergency'),
+  sLoading: $('loading'),
+  // Followup
+  followupBody: $('followupBody'),
+  progressFill: $('progressFill'),
+  progressLabel: $('progressLabel'),
+  backToInput: $('backToInput'),
+  // Result
+  resultContent: $('resultContent'),
+  backFromResult: $('backFromResult'),
+  // Emergency
+  emergencyMsg: $('emergencyMsg'),
+  backFromEmerg: $('backFromEmergency'),
 };
 
-// --- Initialization ---
+// ── Ekran yönetimi ────────────────────────
+const SCREENS = ['screenInput', 'screenFollowup', 'screenResult', 'screenEmergency', 'loading'];
+
+function showScreen(id) {
+  SCREENS.forEach(s => {
+    const el = $(s);
+    if (el) el.classList.toggle('hidden', s !== id);
+  });
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+// ── Init ──────────────────────────────────
 function init() {
   applyTheme(state.theme);
-  updateStats();
-  refreshRateLimitUI();
-  setupEventListeners();
-  checkWelcomeModal();
-  initBodyMap();
-  setInterval(refreshRateLimitUI, 1000);
+  updateBadge();
+  refreshRL();
+  setInterval(refreshRL, 1000);
+  bindEvents();
+  import('./engine/body-map.js')
+    .then(({ initBodyMap }) => initBodyMap(DOM.input, DOM.analyzeBtn))
+    .catch(e => console.warn('Body map yüklenemedi:', e));
 }
 
-function refreshRateLimitUI() {
-  state.rateLimit = loadRateLimitState();
-
-  if (DOM.rateLimitStatus) {
-    if (state.rateLimit.isLimited) {
-      DOM.rateLimitStatus.textContent = `Limit doldu. ${formatCooldown(state.rateLimit.resetInMs)} sonra tekrar deneyin.`;
-      DOM.rateLimitStatus.classList.add('is-warning');
+// ── Rate limit UI ─────────────────────────
+function refreshRL() {
+  state.rl = loadRL();
+  const { isLimited, remaining, limit, resetInMs } = state.rl;
+  if (DOM.rateStatus) {
+    if (isLimited) {
+      DOM.rateStatus.textContent = `Limit: ${formatCooldown(resetInMs)} bekleyin`;
+      DOM.rateStatus.classList.add('warn');
     } else {
-      DOM.rateLimitStatus.textContent = `Yeni analiz hakkı: ${state.rateLimit.remaining}/${state.rateLimit.limit}`;
-      DOM.rateLimitStatus.classList.remove('is-warning');
+      DOM.rateStatus.textContent = `Kalan: ${remaining}/${limit}`;
+      DOM.rateStatus.classList.remove('warn');
     }
   }
-
-  if (DOM.analyzeBtn) {
-    DOM.analyzeBtn.disabled = state.isLoading || state.rateLimit.isLimited;
-  }
+  if (DOM.analyzeBtn) DOM.analyzeBtn.disabled = state.isLoading || isLimited;
 }
 
-function setupEventListeners() {
-  DOM.input.addEventListener('input', handleInput);
+// ── Event listeners ───────────────────────
+function bindEvents() {
+  DOM.input.addEventListener('input', onInput);
+  DOM.input.addEventListener('keydown', e => {
+    if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); startAnalysis(); }
+  });
   DOM.analyzeBtn.addEventListener('click', startAnalysis);
   DOM.themeToggle.addEventListener('click', toggleTheme);
-  DOM.elderlyToggle.addEventListener('click', toggleElderlyMode);
-  DOM.welcomeBtn.addEventListener('click', closeWelcomeModal);
-  
-  // History panel
-  DOM.historyBtn.addEventListener('click', toggleHistoryPanel);
-  DOM.closeHistoryBtn.addEventListener('click', () => DOM.historyPanel.classList.add('hidden'));
-  DOM.clearHistoryBtn.addEventListener('click', clearHistory);
-  
-  // Voice input
-  if (DOM.voiceBtn) {
-      if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
-         DOM.voiceBtn.addEventListener('click', toggleVoiceInput);
-      } else {
-         DOM.voiceBtn.classList.add('hidden');
-      }
-  }
+  DOM.elderlyToggle.addEventListener('click', toggleElderly);
+  DOM.historyBtn.addEventListener('click', toggleHistory);
+  DOM.closeHistory.addEventListener('click', () => DOM.historyPanel.classList.add('hidden'));
+  DOM.clearHistory.addEventListener('click', clearHistory);
+  DOM.backToInput.addEventListener('click', () => showScreen('screenInput'));
+  DOM.backFromResult.addEventListener('click', () => { showScreen('screenInput'); DOM.input.focus(); });
+  DOM.backFromEmerg.addEventListener('click', () => showScreen('screenInput'));
 
-  // Global click to close popups
-  document.addEventListener('click', (e) => {
-    if (!e.target.closest('.symptom-popup') && !e.target.closest('.body-part')) {
-      closeAllPopups();
+  // Chips
+  document.querySelectorAll('.chip').forEach(c => {
+    c.addEventListener('click', () => {
+      DOM.input.value = c.textContent.replace(' + ', ', ');
+      onInput(); DOM.input.focus();
+    });
+  });
+
+  // Dışarı tıklayınca history kapat
+  document.addEventListener('click', e => {
+    if (!e.target.closest('#historyPanel') && !e.target.closest('#historyBtn')) {
+      DOM.historyPanel.classList.add('hidden');
     }
   });
-}
 
-function checkWelcomeModal() {
-  const seen = localStorage.getItem('sy_welcome_seen');
-  if (!seen) {
-    DOM.welcomeModal.classList.remove('hidden');
+  // Voice
+  if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
+    DOM.voiceBtn.addEventListener('click', toggleVoice);
   } else {
-    DOM.welcomeModal.classList.add('hidden');
+    DOM.voiceBtn.classList.add('hidden');
   }
 }
 
-function closeWelcomeModal() {
-  DOM.welcomeModal.classList.add('hidden');
-  localStorage.setItem('sy_welcome_seen', 'true');
+function onInput() {
+  const len = Math.min(DOM.input.value.length, 500);
+  if (DOM.input.value.length > 500) DOM.input.value = DOM.input.value.slice(0, 500);
+  DOM.charCount.textContent = len;
+  DOM.input.style.height = 'auto';
+  DOM.input.style.height = Math.min(DOM.input.scrollHeight, 180) + 'px';
+  DOM.errorMsg.classList.add('hidden');
 }
 
-// --- UI Logic ---
-function handleInput() {
-  const count = DOM.input.value.length;
-  DOM.charCount.textContent = count;
-  if (count > 500) {
-    DOM.input.value = DOM.input.value.substring(0, 500);
-    DOM.charCount.textContent = 500;
-  }
-}
-
+// ── Theme ─────────────────────────────────
 function toggleTheme() {
   state.theme = state.theme === 'light' ? 'dark' : 'light';
   applyTheme(state.theme);
   localStorage.setItem('sy_theme', state.theme);
 }
-
-function applyTheme(theme) {
-  const themeIcon = DOM.themeToggle.querySelector('.theme-icon');
-
-  if (theme === 'dark') {
-    document.body.setAttribute('data-theme', 'dark');
-    if (themeIcon) themeIcon.textContent = '☀️';
-  } else {
-    document.body.removeAttribute('data-theme');
-    if (themeIcon) themeIcon.textContent = '🌙';
-  }
+function applyTheme(t) {
+  document.documentElement.setAttribute('data-theme', t);
+  const icon = DOM.themeToggle.querySelector('.theme-icon');
+  if (icon) icon.textContent = t === 'dark' ? 'light_mode' : 'dark_mode';
 }
 
-function toggleElderlyMode() {
-  const isElderly = document.body.classList.toggle('elderly-mode');
-  if (isElderly) {
-    DOM.elderlyToggle.textContent = '👩‍🦳 Standart Mod';
-    DOM.elderlyToggle.classList.add('is-active');
-  } else {
-    DOM.elderlyToggle.textContent = '👴 Yaşlı Modu';
-    DOM.elderlyToggle.classList.remove('is-active');
-  }
-
-  DOM.elderlyToggle.setAttribute('aria-pressed', String(isElderly));
+function toggleElderly() {
+  state.elderly = !state.elderly;
+  document.body.classList.toggle('elderly-mode', state.elderly);
+  const lbl = DOM.elderlyToggle.querySelector('.hbtn-label');
+  if (lbl) lbl.textContent = state.elderly ? 'Standart' : 'Yaşlı Modu';
+  DOM.elderlyToggle.setAttribute('aria-pressed', String(state.elderly));
 }
 
-// --- Analysis Logic ---
+// ── Analysis ──────────────────────────────
 async function startAnalysis() {
   const text = DOM.input.value.trim();
-  
   if (text.length < 5) {
-    showError('Lütfen şikayetinizi daha detaylı açıklayın (en az 5 karakter).');
+    showError('Lütfen şikayetinizi en az 5 karakter ile açıklayın.');
     return;
   }
 
-  const currentLimit = loadRateLimitState();
-  if (currentLimit.isLimited) {
-    refreshRateLimitUI();
-    showError(`Çok hızlı sorgu yaptınız. ${formatCooldown(currentLimit.resetInMs)} sonra tekrar deneyin.`);
+  const rl = loadRL();
+  if (rl.isLimited) {
+    showError(`Çok hızlı sorgu. ${formatCooldown(rl.resetInMs)} sonra tekrar deneyin.`);
     return;
   }
 
-  const updatedLimit = recordRateLimitHit(currentLimit.timestamps, Date.now(), RATE_LIMIT_CONFIG);
-  persistRateLimitState(updatedLimit.timestamps);
-  state.rateLimit = updatedLimit;
-  
-  DOM.error.classList.add('hidden');
-  DOM.result.classList.add('hidden');
-  DOM.loading.classList.remove('hidden');
+  const updated = recordRateLimitHit(rl.timestamps, Date.now(), RATE_LIMIT_CONFIG);
+  saveJson(RATE_KEY, updated.timestamps);
+
+  DOM.errorMsg.classList.add('hidden');
   state.isLoading = true;
-  refreshRateLimitUI();
-  
-  // Simulate network delay for UX (loading animation)
-  animateLoadingSteps();
-  await new Promise(r => setTimeout(r, 1500));
-  
+  refreshRL();
+  showScreen('loading');
+  animateSteps();
+
+  await new Promise(r => setTimeout(r, 1200));
+
   try {
     const result = analyzeSymptoms(text);
-    
+
     if (result.error) {
+      showScreen('screenInput');
       showError(result.error);
     } else if (result.noMatch) {
-      showError(result.message);
+      showScreen('screenInput');
+      showError(result.message || 'Şikayetinizi anlayamadım. Lütfen daha detaylı yazın.');
+    } else if (result.isEmergency) {
+      showEmergency(result);
     } else if (result.needsMoreInfo) {
-      startFollowUp(result);
+      startFollowUp(result, text);
     } else {
-      displayResult(result, text);
+      showResult(result, text);
     }
   } catch (err) {
-    console.error('Analiz hatası:', err);
-    showError('Analiz sırasında bir hata oluştu. Lütfen tekrar deneyin.');
+    console.error(err);
+    showScreen('screenInput');
+    showError('Analiz hatası. Lütfen tekrar deneyin.');
   } finally {
     state.isLoading = false;
-    DOM.loading.classList.add('hidden');
-    refreshRateLimitUI();
+    refreshRL();
   }
 }
 
-function animateLoadingSteps() {
-  const steps = document.querySelectorAll('.loading-steps .step');
-  steps.forEach(s => s.classList.remove('active'));
-  
-  setTimeout(() => steps[0] && steps[0].classList.add('active'), 100);
-  setTimeout(() => steps[1] && steps[1].classList.add('active'), 600);
-  setTimeout(() => steps[2] && steps[2].classList.add('active'), 1100);
+function animateSteps() {
+  [0, 1, 2].forEach(i => $('ls' + i)?.classList.remove('active'));
+  setTimeout(() => $('ls0')?.classList.add('active'), 100);
+  setTimeout(() => $('ls1')?.classList.add('active'), 500);
+  setTimeout(() => $('ls2')?.classList.add('active'), 900);
 }
 
 function showError(msg) {
-  DOM.error.textContent = `⚠️ ${msg}`;
-  DOM.error.classList.remove('hidden');
-  DOM.loading.classList.add('hidden');
-  state.isLoading = false;
-  refreshRateLimitUI();
+  DOM.errorMsg.innerHTML = `<span class="material-symbols-outlined">warning</span><span>${msg}</span>`;
+  DOM.errorMsg.classList.remove('hidden');
 }
 
-// --- Follow-Up Questions ---
-function startFollowUp(result) {
-  state.followUpQuestions = result.followUpQuestions;
-  state.followUpAnswers = [];
-  state.currentQuestionIndex = 0;
-  state.currentResult = result;
-  
-  renderChatUI();
+// ── Emergency ─────────────────────────────
+function showEmergency(result) {
+  DOM.emergencyMsg.textContent = result.emergencyMessage || 'Belirtileriniz acil müdahale gerektirebilir.';
+  showScreen('screenEmergency');
+  saveToHistory(DOM.input.value, result);
 }
 
-function renderChatUI() {
-  DOM.result.innerHTML = `
-    <div class="chat-container">
-      <div class="chat-header">
-        <h3>💬 Birkaç Ek Soru</h3>
-        <p class="chat-hint">Algoritmanın daha doğru karar vermesi için lütfen cevaplayın</p>
-      </div>
-      <div class="chat-messages" id="chatMessages"></div>
+// ── Follow-up ─────────────────────────────
+function startFollowUp(result, text) {
+  state.followUp.questions = result.followUpQuestions || [];
+  state.followUp.answers = [];
+  state.followUp.index = 0;
+  state._originalText = text;
+  state._partialResult = result;
+  showScreen('screenFollowup');
+  renderFollowUp();
+}
+
+function renderFollowUp() {
+  const { questions, index } = state.followUp;
+  const total = questions.length;
+
+  // Progress
+  const pct = total > 0 ? (index / total) * 100 : 0;
+  DOM.progressFill.style.width = pct + '%';
+  DOM.progressLabel.textContent = `${index + 1} / ${total}`;
+
+  if (index >= total) { finishFollowUp(); return; }
+
+  const q = questions[index];
+  const type = q.type || 'yesno'; // yesno | duration | severity
+
+  const card = document.createElement('div');
+  card.className = 'fq-card';
+  card.innerHTML = `
+    <div class="fq-symptom-tag">
+      <span class="material-symbols-outlined" style="font-size:12px">clinical_notes</span>
+      ${q.symptomId || 'Ek Bilgi'}
     </div>
+    <div class="fq-question">${q.question}</div>
+    ${renderQuestionInputs(q, type)}
   `;
-  DOM.result.classList.remove('hidden');
-  DOM.result.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-  
-  showNextQuestion();
+
+  DOM.followupBody.innerHTML = '';
+  DOM.followupBody.appendChild(card);
+
+  // Event'leri bağla
+  bindQuestionEvents(card, q, type);
 }
 
-function showNextQuestion() {
-  if (state.currentQuestionIndex >= state.followUpQuestions.length) {
-    finishFollowUp();
-    return;
+function renderQuestionInputs(q, type) {
+  if (type === 'duration') {
+    const opts = ['Bugün başladı', '2-3 gündür', '1 haftadır', '1 aydan uzun'];
+    return `<div class="fq-options">${opts.map(o => `
+      <button class="fq-option" data-val="${o}">
+        <span class="fq-option-dot"></span>${o}
+      </button>`).join('')}</div>`;
   }
-  
-  const q = state.followUpQuestions[state.currentQuestionIndex];
-  const chatMessages = document.getElementById('chatMessages');
-  
-  const qDiv = document.createElement('div');
-  qDiv.className = 'chat-message ai-message';
-  qDiv.innerHTML = `
-    <div class="message-avatar">🤖</div>
-    <div class="message-content">
-      <p>${q.question}</p>
-      <div class="message-buttons">
-        <button class="chat-btn chat-btn-yes" data-ans="Evet">Evet</button>
-        <button class="chat-btn chat-btn-no" data-ans="Hayır">Hayır</button>
-        <button class="chat-btn chat-btn-skip" data-ans="Emin Değilim">Emin Değilim</button>
-      </div>
-    </div>
-  `;
-  
-  chatMessages.appendChild(qDiv);
-  chatMessages.scrollTop = chatMessages.scrollHeight;
-  
-  // Event listeners for buttons
-  qDiv.querySelectorAll('.chat-btn').forEach(btn => {
-    btn.addEventListener('click', (e) => {
-      const ans = e.target.getAttribute('data-ans');
-      const allBtns = qDiv.querySelectorAll('.chat-btn');
-      allBtns.forEach(b => b.disabled = true);
-      e.target.classList.add('selected');
-      
-      handleAnswer(ans, q);
+
+  if (type === 'severity') {
+    const opts = ['Hafif', 'Orta', 'Şiddetli', 'Dayanılmaz'];
+    return `<div class="fq-options">${opts.map(o => `
+      <button class="fq-option" data-val="${o}">
+        <span class="fq-option-dot"></span>${o}
+      </button>`).join('')}</div>`;
+  }
+
+  // Varsayılan: yesno
+  return `
+    <div class="fq-yesno">
+      <button class="fq-btn" data-val="Evet">
+        <span class="material-symbols-outlined">check</span>Evet
+      </button>
+      <button class="fq-btn" data-val="Hayır">
+        <span class="material-symbols-outlined">close</span>Hayır
+      </button>
+      <button class="fq-btn" data-val="Emin Değilim">
+        <span class="material-symbols-outlined">help</span>Emin Değilim
+      </button>
+    </div>`;
+}
+
+function bindQuestionEvents(card, q, type) {
+  const btns = card.querySelectorAll('.fq-btn, .fq-option');
+  btns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      btns.forEach(b => b.disabled = true);
+      const val = btn.getAttribute('data-val');
+
+      // Görsel seçim
+      if (type === 'yesno') {
+        btn.classList.add(val === 'Evet' ? 'selected-yes' : val === 'Hayır' ? 'selected-no' : 'selected-skip');
+      } else {
+        btn.classList.add('selected');
+      }
+
+      // Cevabı kaydet
+      state.followUp.answers.push({
+        question: q.question,
+        answer: val,
+        impact: q.impact || {},
+      });
+
+      state.followUp.index++;
+      setTimeout(renderFollowUp, 350);
     });
   });
-}
-
-function handleAnswer(answer, questionObj) {
-  state.followUpAnswers.push({
-    question: questionObj.question,
-    answer: answer,
-    impact: questionObj.impact
-  });
-  
-  const chatMessages = document.getElementById('chatMessages');
-  const uDiv = document.createElement('div');
-  uDiv.className = 'chat-message user-message';
-  uDiv.innerHTML = `
-    <div class="message-content"><p>${answer}</p></div>
-    <div class="message-avatar">👤</div>
-  `;
-  
-  chatMessages.appendChild(uDiv);
-  chatMessages.scrollTop = chatMessages.scrollHeight;
-  
-  state.currentQuestionIndex++;
-  setTimeout(showNextQuestion, 400);
 }
 
 async function finishFollowUp() {
-  const chatMessages = document.getElementById('chatMessages');
-  const loadingDiv = document.createElement('div');
-  loadingDiv.className = 'chat-message ai-message';
-  loadingDiv.innerHTML = `
-    <div class="message-avatar">🤖</div>
-    <div class="message-content"><p>Cevaplarınız analiz ediliyor...</p></div>
-  `;
-  chatMessages.appendChild(loadingDiv);
-  chatMessages.scrollTop = chatMessages.scrollHeight;
-  
-  await new Promise(r => setTimeout(r, 800));
-  
-  const originalText = DOM.input.value;
-  const finalResult = analyzeSymptoms(originalText, state.followUpAnswers);
-  displayResult(finalResult, originalText, true);
-}
+  // Tüm cevaplarla yeniden analiz
+  DOM.followupBody.innerHTML = `
+    <div class="fq-card" style="text-align:center;padding:40px">
+      <div class="loading-ring" style="margin:0 auto 16px"><div class="ring-track"></div>
+        <span class="material-symbols-outlined loading-icon">biotech</span></div>
+      <p style="font-weight:600;color:var(--text-2)">Cevaplarınız değerlendiriliyor…</p>
+    </div>`;
 
-// --- Show Final Result ---
-function displayResult(result, originalText, fromFollowUp = false) {
-  let html = '';
-  
+  await new Promise(r => setTimeout(r, 600));
+
+  const result = analyzeSymptoms(state._originalText, state.followUp.answers);
+
   if (result.isEmergency) {
-    html = `
-      <div class="emergency-card">
-        <h2>⚠️ DİKKAT!</h2>
-        <p>${result.emergencyMessage}</p>
-        <a href="tel:112" class="emergency-call">📞 112'yi Ara</a>
-      </div>
-    `;
-  } else if (result.isFamilyDoctor) {
-    html = `
-      <div class="family-card">
-        <h3>👨‍⚕️ Aile Hekiminize Başvurabilirsiniz</h3>
-        <p>${result.familyDoctorMessage}</p>
-        <div class="family-benefits">
-          <div class="benefit-item">⏱️ Daha hızlı</div>
-          <div class="benefit-item">📍 Daha yakın</div>
-        </div>
-      </div>
-    `;
+    showEmergency(result);
   } else {
-    html = `
-      <div class="dept-card">
-        <div class="dept-label">Önerilen Bölüm</div>
-        <div class="dept-name">
-          <span class="dept-icon">${result.primaryDepartmentIcon}</span>
-          ${result.primaryDepartmentName}
-        </div>
-        <div class="confidence-badge confidence-${result.confidence}">
-          Güven Skoru: %${result.confidenceScore}
-        </div>
-        ${result.careLabel ? `
-          <div class="care-banner care-${result.careLevel || 'routine'}">
-            <div class="care-banner-title">${result.careLabel}</div>
-            <div class="care-banner-text">${result.careAdvice || result.careSummary || ''}</div>
-          </div>
-        ` : ''}
-        <div class="reasoning-box">
-          ${result.reasoning}
-        </div>
-        
-        ${result.matchedSymptoms && result.matchedSymptoms.length > 0 ? `
-          <div class="matched-symptoms">
-            ${result.matchedSymptoms.map(s => `<span class="symptom-tag">🔍 ${s.keyword}</span>`).join('')}
-          </div>
-        ` : ''}
-      </div>
-      
-      <a href="https://mhrs.gov.tr" target="_blank" rel="noopener noreferrer" class="mhrs-btn">
-        📅 MHRS Online Randevu
-      </a>
-      
-      ${result.alternatives && result.alternatives.length > 0 ? `
-        <div class="alt-section">
-          <div class="alt-title">Alternatif Bölümler</div>
-          <div class="alt-tags">
-            ${result.alternatives.map(alt => `<span class="alt-tag">${alt.icon} ${alt.name}</span>`).join('')}
-          </div>
-        </div>
-      ` : ''}
-      
-      <div class="note-box">
-        ${result.note}
-      </div>
-    `;
+    showResult(result, state._originalText, true);
   }
-  
-  // Doctor note button
-  html += `
-    <button class="doctor-note-btn" id="generateNoteBtn">
-      📝 Doktora Göstermek İçin Özet Kopyala
-    </button>
-  `;
-  
-  DOM.result.innerHTML = html;
-  
-  if (!fromFollowUp) {
-    DOM.result.classList.remove('hidden');
-  }
-  
-  DOM.result.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-  
-  // Add logical event listeners inside
-  document.getElementById('generateNoteBtn')?.addEventListener('click', () => {
-    generateDoctorNote(result, originalText);
-  });
-  
-  // Save to history
-  saveToHistory(originalText, result);
 }
 
-function generateDoctorNote(result, text) {
-  const d = new Date().toLocaleDateString('tr-TR');
-  let note = `Tarih: ${d}\nPlatform: SağlıkYön Algoritması\n\nHASTA ŞİKAYETİ:\n${text}\n`;
-  
-  if (result.isEmergency) {
-    note += `\nÖN DEĞERLENDİRME:\n- Acil durum uyarısı verildi\n- Mesaj: ${result.emergencyMessage}\n`;
-  } else {
-    note += `\nALGORİTMİK ÖNERİ:\n`;
-    note += `- Önerilen bölüm: ${result.primaryDepartmentName || 'Belirsiz'}\n`;
-    if (result.careLabel) note += `- Aciliyet seviyesi: ${result.careLabel}\n`;
-    if (result.careAdvice) note += `- Aksiyon: ${result.careAdvice}\n`;
-    if (result.confidenceScore) note += `- Güven skoru: %${result.confidenceScore}\n`;
-  }
-  
-  if (state.followUpAnswers.length > 0) {
-    note += `\nEK BİLGİLER:\n`;
-    state.followUpAnswers.forEach(ans => {
-      note += `- ${ans.question} -> ${ans.answer}\n`;
-    });
-  }
-  
-  navigator.clipboard.writeText(note).then(() => {
-    alert('✅ Doktor notu kopyalandı!');
-  }).catch(() => {
-    alert('Kopyalama başarısız, lütfen manuel yapın.');
+// ── Result ────────────────────────────────
+function showResult(result, text, fromFollowUp = false) {
+  DOM.resultContent.innerHTML = result.isFamilyDoctor
+    ? renderFamilyCard(result)
+    : renderDeptCard(result);
+
+  showScreen('screenResult');
+
+  // Confidence bar animate
+  requestAnimationFrame(() => {
+    const bar = document.getElementById('confFill');
+    if (bar) bar.style.width = (result.confidenceScore || 0) + '%';
   });
+
+  document.getElementById('copyBtn')?.addEventListener('click', () => copyNote(result, text));
+  saveToHistory(text, result);
 }
 
-// --- History & Stats ---
-function saveToHistory(text, result) {
-  const deptName = result.isEmergency ? 'ACİL' : 
-                   result.isFamilyDoctor ? 'Aile Hekimi' : 
-                   result.primaryDepartmentName;
-                   
-  const item = {
-    text: text.substring(0, 50) + (text.length > 50 ? '...' : ''),
-    dept: deptName,
-    date: new Date().toLocaleDateString('tr-TR', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' })
+function renderTriageBanner(result) {
+  const level = result.careLevel || 'routine';
+  const map = {
+    emergency: { cls: 'emergency', icon: 'emergency', label: result.careLabel || 'Acil değerlendirme' },
+    urgent: { cls: 'urgent', icon: 'schedule', label: result.careLabel || 'Aynı gün randevu' },
+    soon: { cls: 'soon', icon: 'event', label: result.careLabel || 'Kısa sürede randevu' },
+    routine: { cls: 'routine', icon: 'calendar_month', label: result.careLabel || 'Rutin poliklinik' },
   };
-  
-  state.history.unshift(item);
+  const { cls, icon, label } = map[level] || map.routine;
+  return `
+    <div class="triage-banner ${cls}">
+      <div class="triage-icon"><span class="material-symbols-outlined">${icon}</span></div>
+      <div>
+        <div class="triage-label">${label}</div>
+        ${result.careAdvice ? `<div class="triage-desc">${result.careAdvice}</div>` : ''}
+      </div>
+    </div>`;
+}
+
+function renderDeptCard(result) {
+  const score = result.confidenceScore || 0;
+  const confText = score >= 72 ? 'Yüksek güven' : score >= 55 ? 'Orta güven' : 'Düşük güven';
+
+  const symptoms = result.matchedSymptoms?.length ? `
+    <div class="dept-symptoms-section">
+      <div class="dept-symptoms-label">Tespit edilen belirtiler</div>
+      <div class="symptom-tags">
+        ${result.matchedSymptoms.map(s => `
+          <span class="symptom-tag">
+            <span class="material-symbols-outlined">check_circle</span>
+            ${s.keyword || s}
+          </span>`).join('')}
+      </div>
+    </div>` : '';
+
+  const alts = result.alternatives?.length ? `
+    <div class="alt-section">
+      <span class="alt-label">Diğer olasılıklar:</span>
+      ${result.alternatives.map(a => `<span class="alt-tag">${a.icon || ''} ${a.name}</span>`).join('')}
+    </div>` : '';
+
+  return `
+    ${renderTriageBanner(result)}
+    <div class="dept-card">
+      <div class="dept-card-glow"></div>
+      <div class="dept-card-body">
+        <div class="dept-overline">
+          <span class="material-symbols-outlined">stethoscope</span>
+          Önerilen Bölüm
+        </div>
+        <div class="dept-name">${result.primaryDepartmentName || '—'}</div>
+        <p class="dept-reasoning">${result.reasoning || ''}</p>
+        <div class="conf-row">
+          <div class="conf-track">
+            <div class="conf-fill" id="confFill" style="width:0%"></div>
+          </div>
+          <span class="conf-label">${confText} · %${score}</span>
+        </div>
+      </div>
+      ${symptoms}
+      ${alts}
+      <div class="dept-card-footer">
+        <a href="https://mhrs.gov.tr" target="_blank" rel="noopener" class="btn-mhrs">
+          <span class="material-symbols-outlined">calendar_month</span>
+          MHRS Randevu
+        </a>
+        <button class="btn-copy" id="copyBtn">
+          <span class="material-symbols-outlined">content_copy</span>
+          Özet Kopyala
+        </button>
+      </div>
+    </div>
+    <div class="result-disclaimer">
+      <span class="material-symbols-outlined">info</span>
+      <span>${result.note || 'Bu öneri teşhis değildir. Kesin tanı için doktora gidiniz.'}</span>
+    </div>`;
+}
+
+function renderFamilyCard(result) {
+  return `
+    ${renderTriageBanner(result)}
+    <div class="family-card">
+      <div class="family-top">
+        <div class="family-icon"><span class="material-symbols-outlined">stethoscope</span></div>
+        <div>
+          <div class="family-title">Aile Hekiminize Başvurun</div>
+          <div class="family-sub">Belirtileriniz aile hekimi düzeyinde değerlendirilebilir.</div>
+        </div>
+      </div>
+      <div class="family-body">
+        <p class="family-msg">${result.familyDoctorMessage || 'Gerekirse doğru branşa yönlendirme yapılabilir.'}</p>
+        <div class="family-benefits">
+          <div class="benefit-item"><span class="material-symbols-outlined">schedule</span><span>Daha hızlı randevu</span></div>
+          <div class="benefit-item"><span class="material-symbols-outlined">location_on</span><span>Daha yakın konum</span></div>
+          <div class="benefit-item"><span class="material-symbols-outlined">swap_horiz</span><span>Sevk kolaylığı</span></div>
+        </div>
+      </div>
+      <div class="family-footer">
+        <a href="https://mhrs.gov.tr" target="_blank" rel="noopener" class="btn-mhrs">
+          <span class="material-symbols-outlined">calendar_month</span>MHRS Randevu
+        </a>
+        <button class="btn-copy" id="copyBtn">
+          <span class="material-symbols-outlined">content_copy</span>Özet Kopyala
+        </button>
+      </div>
+    </div>
+    <div class="result-disclaimer">
+      <span class="material-symbols-outlined">info</span>
+      <span>${result.note || 'Bu öneri teşhis değildir. Kesin tanı için doktora gidiniz.'}</span>
+    </div>`;
+}
+
+// ── Copy note ─────────────────────────────
+function copyNote(result, text) {
+  const d = new Date().toLocaleDateString('tr-TR');
+  let note = `SağlıkYön – ${d}\n\nŞikayet: ${text}\n\n`;
+  if (result.isEmergency) {
+    note += `⚠️ Acil: ${result.emergencyMessage}`;
+  } else {
+    note += `Önerilen Bölüm: ${result.primaryDepartmentName || 'Aile Hekimi'}\n`;
+    note += `Aciliyet: ${result.careLabel || ''}\n`;
+    if (result.confidenceScore) note += `Güven: %${result.confidenceScore}\n`;
+    if (result.matchedSymptoms?.length)
+      note += `Belirtiler: ${result.matchedSymptoms.map(s => s.keyword || s).join(', ')}\n`;
+  }
+  if (state.followUp.answers.length) {
+    note += `\nEk Bilgiler:\n`;
+    state.followUp.answers.forEach(a => { note += `- ${a.question}: ${a.answer}\n`; });
+  }
+  note += `\nBu öneri teşhis değildir.`;
+
+  navigator.clipboard.writeText(note).then(() => {
+    const btn = document.getElementById('copyBtn');
+    if (btn) {
+      btn.innerHTML = '<span class="material-symbols-outlined">check</span>Kopyalandı';
+      btn.style.color = 'var(--green)';
+      setTimeout(() => {
+        btn.innerHTML = '<span class="material-symbols-outlined">content_copy</span>Özet Kopyala';
+        btn.style.color = '';
+      }, 2500);
+    }
+  }).catch(() => alert('Kopyalanamadı.'));
+}
+
+// ── History ───────────────────────────────
+function saveToHistory(text, result) {
+  const dept = result.isEmergency ? '🚨 ACİL'
+    : result.isFamilyDoctor ? '👨‍⚕️ Aile Hekimi'
+      : result.primaryDepartmentName || '—';
+  state.history.unshift({
+    text: text.slice(0, 60) + (text.length > 60 ? '…' : ''),
+    dept,
+    date: new Date().toLocaleDateString('tr-TR', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' }),
+  });
   if (state.history.length > 10) state.history.pop();
-  
-  localStorage.setItem('sy_history', JSON.stringify(state.history));
-  
-  state.totalQueries++;
-  localStorage.setItem('sy_total_queries', state.totalQueries.toString());
-  updateStats();
+  saveJson('sy_history', state.history);
+  state.queries++;
+  localStorage.setItem('sy_queries', state.queries);
+  updateBadge();
   renderHistory();
 }
-
-function toggleHistoryPanel() {
-  DOM.historyPanel.classList.toggle('hidden');
-  if (!DOM.historyPanel.classList.contains('hidden')) {
-    renderHistory();
-  }
+function updateBadge() {
+  if (DOM.queriesBadge) DOM.queriesBadge.textContent = state.queries;
 }
-
+function toggleHistory() {
+  const hidden = DOM.historyPanel.classList.toggle('hidden');
+  if (!hidden) renderHistory();
+}
 function renderHistory() {
-  if (state.history.length === 0) {
-    DOM.historyList.innerHTML = '';
-    const empty = document.createElement('p');
-    empty.className = 'history-empty';
-    empty.textContent = 'Henüz sorgulama yapılmadı.';
-    DOM.historyList.appendChild(empty);
+  if (!state.history.length) {
+    DOM.historyList.innerHTML = '<p class="hp-empty">Henüz sorgulama yok.</p>';
     return;
   }
-
-  DOM.historyList.innerHTML = '';
-
-  state.history.forEach(item => {
-    const wrapper = document.createElement('div');
-    wrapper.className = 'history-item';
-
-    const symptom = document.createElement('div');
-    symptom.className = 'history-symptom';
-    symptom.textContent = `"${item.text}"`;
-
-    const metaRow = document.createElement('div');
-    metaRow.className = 'history-meta';
-
-    const department = document.createElement('span');
-    department.className = 'history-dept';
-    department.textContent = item.dept;
-
-    const date = document.createElement('span');
-    date.className = 'history-date';
-    date.textContent = item.date;
-
-    metaRow.appendChild(department);
-    metaRow.appendChild(date);
-    wrapper.appendChild(symptom);
-    wrapper.appendChild(metaRow);
-    DOM.historyList.appendChild(wrapper);
+  DOM.historyList.innerHTML = state.history.map(item => `
+    <div class="hp-item" data-text="${item.text.replace(/"/g, '&quot;')}">
+      <div class="hp-symptom">"${item.text}"</div>
+      <div class="hp-meta">
+        <span class="hp-dept">${item.dept}</span>
+        <span class="hp-date">${item.date}</span>
+      </div>
+    </div>`).join('');
+  DOM.historyList.querySelectorAll('.hp-item').forEach(el => {
+    el.addEventListener('click', () => {
+      DOM.input.value = el.dataset.text.replace('…', '');
+      onInput();
+      DOM.historyPanel.classList.add('hidden');
+      showScreen('screenInput');
+      DOM.input.focus();
+    });
   });
 }
-
 function clearHistory() {
   state.history = [];
   localStorage.removeItem('sy_history');
   renderHistory();
 }
 
-function updateStats() {
-  if (DOM.statsBadge) {
-    DOM.statsBadge.textContent = state.totalQueries;
-  }
-}
-
-// --- Voice Recognition ---
-let recognition = null;
-let isListening = false;
-
-function toggleVoiceInput() {
-  if (!('webkitSpeechRecognition' in window || 'SpeechRecognition' in window)) {
-    return;
-  }
-  const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-  
-  if (!recognition) {
-    recognition = new SpeechRecognition();
-    recognition.lang = 'tr-TR';
-    recognition.continuous = false;
-    
-    recognition.onstart = () => {
-      isListening = true;
+// ── Voice ─────────────────────────────────
+let recog = null, listening = false;
+function toggleVoice() {
+  const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+  if (!SR) return;
+  if (!recog) {
+    recog = new SR();
+    recog.lang = 'tr-TR';
+    recog.onstart = () => {
+      listening = true;
       DOM.voiceBtn.classList.add('listening');
-      DOM.voiceStatus.textContent = '🎤 Dinliyorum...';
+      DOM.voiceStatus.textContent = 'Dinliyorum…';
       DOM.voiceStatus.classList.remove('hidden', 'error');
     };
-    
-    recognition.onresult = (event) => {
-      const transcript = event.results[0][0].transcript;
-      if (DOM.input.value.trim()) {
-        DOM.input.value += ' ' + transcript;
-      } else {
-        DOM.input.value = transcript;
-      }
-      handleInput();
-      DOM.voiceStatus.textContent = `✅ "${transcript}" eklendi`;
+    recog.onresult = e => {
+      const t = e.results[0][0].transcript;
+      DOM.input.value = DOM.input.value.trim() ? DOM.input.value + ' ' + t : t;
+      onInput();
+      DOM.voiceStatus.textContent = `✓ "${t}" eklendi`;
       setTimeout(() => DOM.voiceStatus.classList.add('hidden'), 3000);
     };
-    
-    recognition.onerror = (event) => {
-      DOM.voiceStatus.textContent = '⚠️ Hata: Ses anlaşılamadı veya izin yok.';
+    recog.onerror = () => {
+      DOM.voiceStatus.textContent = 'Ses anlaşılamadı.';
       DOM.voiceStatus.classList.add('error');
       setTimeout(() => DOM.voiceStatus.classList.add('hidden'), 3000);
     };
-    
-    recognition.onend = () => {
-      isListening = false;
-      DOM.voiceBtn.classList.remove('listening');
-    };
+    recog.onend = () => { listening = false; DOM.voiceBtn.classList.remove('listening'); };
   }
-  
-  if (isListening) recognition.stop();
-  else recognition.start();
+  if (listening) recog.stop(); else recog.start();
 }
 
-// --- Body Map Interactions ---
-function initBodyMap() {
-  DOM.bodyMapParts.forEach(part => {
-    part.addEventListener('click', function(e) {
-      e.stopPropagation();
-      const region = this.getAttribute('data-region');
-      
-      // Close others
-      DOM.bodyMapParts.forEach(p => p.classList.remove('active'));
-      closeAllPopups();
-      
-      this.classList.add('active');
-      showPopup(region);
-    });
-  });
-}
-
-function closeAllPopups() {
-  const container = document.getElementById('popupContainer');
-  if (container) container.innerHTML = '';
-  DOM.bodyMapParts.forEach(p => p.classList.remove('active'));
-}
-
-function showPopup(region) {
-  const symptomsByRegion = {
-    'baş': ['Baş ağrısı', 'Gözlerim bulanık', 'Kulak ağrısı', 'Baş dönmesi'],
-    'boyun': ['Boyun ağrısı', 'Boğaz ağrısı', 'Yutkunma güçlüğü'],
-    'göğüs': ['Göğüs ağrısı', 'Nefes darlığı', 'Çarpıntı', 'Öksürük'],
-    'karın': ['Karın ağrısı', 'Mide bulantısı', 'İshal'],
-    'sol kol': ['Sol kol ağrısı', 'Sol el uyuşması'],
-    'sağ kol': ['Sağ kol ağrısı', 'Sağ el uyuşması'],
-    'sol bacak': ['Sol bacak ağrısı', 'Sol diz ağrısı'],
-    'sağ bacak': ['Sağ bacak ağrısı', 'Sağ diz ağrısı']
-  };
-  
-  const options = symptomsByRegion[region];
-  if (!options) return;
-  
-  const popup = document.createElement('div');
-  popup.className = `symptom-popup`;
-  popup.innerHTML = `
-    <div class="popup-header">
-      <span class="popup-title">${region.toUpperCase()}</span>
-      <button type="button" class="popup-close" aria-label="Pencereyi kapat">✕</button>
-    </div>
-    <div class="problem-details popup-options">
-      ${options.map(opt => `<div class="detail-option" data-sym="${opt}">${opt}</div>`).join('')}
-    </div>
-  `;
-  
-  document.getElementById('popupContainer').appendChild(popup);
-
-  popup.querySelector('.popup-close')?.addEventListener('click', () => {
-    popup.remove();
-  });
-  
-  popup.querySelectorAll('.detail-option').forEach(opt => {
-    opt.addEventListener('click', (e) => {
-      const sym = e.target.getAttribute('data-sym');
-      const current = DOM.input.value.trim();
-      DOM.input.value = current ? `${current}, ${sym}` : sym;
-      handleInput();
-      closeAllPopups();
-    });
-  });
-}
-
-// Start app
+// ── Start ─────────────────────────────────
 document.addEventListener('DOMContentLoaded', init);

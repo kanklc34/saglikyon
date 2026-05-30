@@ -1,187 +1,297 @@
 <!DOCTYPE html>
-<html lang="tr">
+<html lang="tr" data-theme="light">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>SağlıkYön – Akıllı Sağlık Yönlendirme</title>
-  <meta name="description" content="Algoritmik analiz ile hangi sağlık bölümüne gitmeniz gerektiğini ücretsiz öğrenin.">
-  <meta name="theme-color" content="#1d4ed8">
-  <meta name="referrer" content="strict-origin-when-cross-origin">
+  <title>SağlıkYön – Doğru Bölüme, Doğru Zamanda</title>
+  <meta name="description" content="Şikayetinizi yazın, hangi sağlık bölümüne gitmeniz gerektiğini öğrenin.">
+  <meta name="theme-color" content="#0f4c81">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" rel="stylesheet">
   <link rel="manifest" href="manifest.json">
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <button id="themeToggle" class="theme-toggle" title="Tema Değiştir" aria-label="Tema değiştir">
-    <span class="theme-icon">🌙</span>
-  </button>
 
-  <!-- Welcome Modal -->
-  <div id="welcomeModal" class="welcome-overlay">
-    <div class="welcome-modal">
-      <div class="welcome-glow"></div>
-      <div class="welcome-content">
-        <div class="welcome-badge">Açık Kaynak • Ücretsiz</div>
-        <h1 class="welcome-title"><span class="welcome-logo-icon">🏥</span> SağlıkYön</h1>
-        <p class="welcome-subtitle">Hangi sağlık bölümüne gitmeniz gerektiğini<br><strong>algoritmik analiz</strong> ile öğrenin</p>
-        <div class="welcome-features">
-          <div class="welcome-feature"><div class="feature-icon-circle">🎤</div><span>Sesli Anlatın</span></div>
-          <div class="welcome-feature"><div class="feature-icon-circle">🫀</div><span>Vücut Haritası</span></div>
-          <div class="welcome-feature"><div class="feature-icon-circle">✍️</div><span>Yazarak Anlatın</span></div>
-        </div>
-        <div class="welcome-disclaimer"><span>💡</span> Bu platform teşhis koymaz, sadece yönlendirme yapar.</div>
-        <button id="welcomeBtn" class="welcome-start-btn">Başlayalım →</button>
+  <header class="header">
+    <div class="header-inner">
+      <a class="brand" href="#">
+        <div class="brand-icon"><span class="material-symbols-outlined">clinical_notes</span></div>
+        <span class="brand-name">SağlıkYön</span>
+      </a>
+      <div class="header-actions">
+        <button id="elderlyToggle" class="hbtn hbtn-ghost" aria-pressed="false">
+          <span class="material-symbols-outlined">accessibility</span>
+          <span class="hbtn-label">Yaşlı Modu</span>
+        </button>
+        <button id="historyBtn" class="hbtn hbtn-ghost">
+          <span class="material-symbols-outlined">history</span>
+          <span class="hbtn-badge" id="totalQueries">0</span>
+        </button>
+        <button id="themeToggle" class="hbtn hbtn-icon" aria-label="Tema">
+          <span class="material-symbols-outlined theme-icon">dark_mode</span>
+        </button>
       </div>
     </div>
-  </div>
+  </header>
 
-  <!-- Main App -->
-  <div class="app-container" id="appContainer">
-    <header class="app-header">
-      <div class="header-left">
-        <h1 class="app-logo"><span class="logo-icon">🏥</span><span class="logo-text">SağlıkYön</span></h1>
-        <p class="app-tagline">Açık Kaynak Bölüm Yönlendirme • Gizlilik Odaklı</p>
+  <main class="main">
+
+    <!-- EKRAN 1: GİRİŞ -->
+    <div id="screenInput" class="screen">
+
+      <div class="hero">
+        <div class="hero-eyebrow">
+          <span class="dot"></span>
+          Türkiye'nin açık kaynak sağlık yönlendirme sistemi
+        </div>
+        <h1 class="hero-h1">Nasıl hissediyorsunuz?</h1>
+        <p class="hero-sub">Şikayetinizi doğal dilde yazın. Sistem analiz ederek doğru bölümü ve aciliyet düzeyini belirler.</p>
       </div>
-      <div class="header-right">
-        <button id="elderlyToggle" class="btn-secondary btn-sm">👴 Yaşlı Modu</button>
-        <button id="historyBtn" class="btn-secondary btn-sm">📋 Geçmiş</button>
-      </div>
-    </header>
 
-    <section class="hero-panel">
-      <div class="hero-copy">
-        <div class="hero-kicker">Açık kaynak • ücretsiz • veriniz cihazda kalır</div>
-        <h2 class="hero-title">Şikayetinizi yazın, doğru bölüme daha sakin bir başlangıç yapın.</h2>
-        <p class="hero-desc">
-          SağlıkYön; yazı, ses ve vücut haritası girişlerini birlikte değerlendirir. Önce risk seviyesini çıkarır,
-          sonra en uygun branşı önerir. Emin olmadığı durumda paniğe yöneltmek yerine ek bilgi ister.
-        </p>
-        <div class="hero-trust">
-          <div class="hero-trust-card">
-            <strong>4 seviyeli ön değerlendirme</strong>
-            <span>Rutin, yakın zamanda, aynı gün ve acil ayrımı yapar.</span>
-          </div>
-          <div class="hero-trust-card">
-            <strong>Veri cihazda kalır</strong>
-            <span>Şikayet metni varsayılan olarak uzak bir sunucuya gönderilmez.</span>
-          </div>
-          <div class="hero-trust-card">
-            <strong>Takip soruları sorar</strong>
-            <span>Gerektiğinde bölüm önerisini netleştirmek için ek soru sorar.</span>
-          </div>
+      <div class="input-card">
+        <div class="input-wrap" id="inputWrap">
+          <span class="material-symbols-outlined input-search-icon">edit_note</span>
+          <textarea id="symptomInput" class="symptom-textarea"
+            placeholder="Örn: Üç gündür başım ağrıyor, bulantım var ve ışığa bakınca artıyor…"
+            rows="1" maxlength="500" aria-label="Şikayet girişi"></textarea>
+          <button id="voiceBtn" class="voice-btn" type="button" aria-label="Sesli giriş">
+            <span class="material-symbols-outlined">mic</span>
+          </button>
         </div>
-      </div>
-      <div class="hero-side">
-        <div class="hero-side-card">
-          <div class="hero-side-label">Kısa Bakış</div>
-          <h3 class="hero-side-title">İlk temas için tasarlanmış sade bir yönlendirme aracı.</h3>
-          <p class="hero-side-intro">Uygulamanın ne sunduğunu ve neyi özellikle yapmadığını ilk bakışta netleştirir.</p>
-          <div class="hero-side-list">
-            <div class="hero-side-item">
-              <strong>Bölüm önerir</strong>
-              <p>Şikayetleri tek tek değil, birlikte değerlendirip en uygun başlangıç noktasını bulur.</p>
-            </div>
-            <div class="hero-side-item">
-              <strong>Aciliyeti ayıklar</strong>
-              <p>Güçlü kırmızı bayraklarda 112 veya acil servis yönlendirmesi verir.</p>
-            </div>
-            <div class="hero-side-item">
-              <strong>Teşhis koymaz</strong>
-              <p>Doktor muayenesinin yerini almaz; amacı güvenli bir ilk yönlendirme sağlamaktır.</p>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <div class="info-banner">
-      <div class="banner-icon">💡</div>
-      <div class="banner-text"><strong>Not:</strong> Bu ürün teşhis koymaz. Amaç, şikayetinizi daha doğru branşa ve daha uygun hızda yönlendirmektir. <span class="banner-highlight">Acil görünen kombinasyonlarda uyarır, belirsiz durumlarda ek soru sorar.</span></div>
-    </div>
-
-    <div class="intake-grid">
-      <!-- Body Map -->
-      <section class="section body-map-section" id="bodyMapSection">
-        <div class="section-head">
-          <div>
-            <h2 class="section-title"><span class="section-icon">🫀</span> Vücut Haritası</h2>
-            <p class="section-desc">Rahatsızlık hissettiğiniz bölgeye tıklayıp örnek semptom seçin.</p>
-          </div>
-          <span class="section-pill">Hızlı seçim</span>
-        </div>
-        <div class="body-map-wrapper">
-          <svg id="bodyMapSVG" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 400" width="180" height="360">
-            <ellipse class="body-part" data-region="baş" cx="100" cy="40" rx="35" ry="40"/>
-            <rect class="body-part" data-region="boyun" x="85" y="75" width="30" height="25" rx="5"/>
-            <ellipse class="body-part" data-region="göğüs" cx="100" cy="130" rx="50" ry="40"/>
-            <ellipse class="body-part" data-region="karın" cx="100" cy="195" rx="45" ry="35"/>
-            <rect class="body-part" data-region="sol kol" x="35" y="100" width="20" height="100" rx="10"/>
-            <rect class="body-part" data-region="sağ kol" x="145" y="100" width="20" height="100" rx="10"/>
-            <rect class="body-part" data-region="sol bacak" x="70" y="230" width="25" height="150" rx="12"/>
-            <rect class="body-part" data-region="sağ bacak" x="105" y="230" width="25" height="150" rx="12"/>
-            <text x="100" y="45" text-anchor="middle" font-size="20">😊</text>
-          </svg>
-          <div id="popupContainer"></div>
-        </div>
-      </section>
-
-      <!-- Input -->
-      <section class="section input-section">
-        <div class="section-head">
-          <div>
-            <h2 class="section-title"><span class="section-icon">✍️</span> Şikayetinizi Anlatın</h2>
-            <p class="section-desc">Semptomu olabildiğince doğal yazın. Sistem metni ayrıştırıp gerekirse takip soruları sorar.</p>
-          </div>
-          <span class="section-pill">Ön değerlendirme</span>
-        </div>
-        <div class="textarea-container">
-          <textarea id="symptomInput" placeholder="Örnek: Başım ağrıyor, mide bulantım var ve ışığa bakınca artıyor..." rows="5" maxlength="500" aria-label="Şikayet girişi"></textarea>
-          <button type="button" id="voiceBtn" class="voice-btn" title="Sesli giriş">🎤</button>
-        </div>
-        <div class="input-meta">
+        <div class="input-footer">
           <span id="voiceStatus" class="voice-status hidden"></span>
-          <span id="rateLimitStatus" class="rate-limit-status" aria-live="polite"></span>
-          <span class="char-counter"><span id="charCount">0</span> / 500</span>
+          <span id="rateLimitStatus" class="rate-status" aria-live="polite"></span>
+          <span class="char-count"><span id="charCount">0</span>/500</span>
         </div>
-        <div class="example-row" aria-hidden="true">
-          <span class="example-chip">Baş ağrısı + bulantı</span>
-          <span class="example-chip">Boğaz ağrısı + ateş</span>
-          <span class="example-chip">Göğüs ağrısı + nefes darlığı</span>
+        <div class="chips-row">
+          <span class="chip">Baş ağrısı + bulantı</span>
+          <span class="chip">Göğüs ağrısı + nefes darlığı</span>
+          <span class="chip">Bel ağrısı</span>
+          <span class="chip">Ateş + boğaz ağrısı</span>
         </div>
-        <button id="analyzeBtn" class="btn-primary btn-analyze"><span class="btn-icon">🔍</span> Hangi Bölüme Gitmeliyim?</button>
-      </section>
-    </div>
-
-    <!-- Loading -->
-    <div id="loading" class="loading-container hidden">
-      <div class="loading-animation">
-        <div class="pulse-ring"></div>
-        <div class="pulse-ring delay-1"></div>
-        <div class="pulse-ring delay-2"></div>
-        <span class="loading-icon">🔬</span>
+        <button id="analyzeBtn" class="btn-analyze" type="button">
+          <span class="material-symbols-outlined">search</span>
+          Hangi Bölüme Gitmeliyim?
+        </button>
+        <div id="errorMsg" class="error-msg hidden"></div>
       </div>
-      <p class="loading-text">Semptomlar analiz ediliyor...</p>
+
+      <div class="body-map-section">
+        <div class="section-label">
+          <span class="material-symbols-outlined">touch_app</span>
+          Vücut haritasından da seçebilirsiniz
+        </div>
+        <div class="body-map-card">
+          <div class="body-map-inner">
+            <div class="bm-svg-col">
+              <div class="bm-tabs">
+                <button class="bm-tab bm-tab-active" id="tabFront" onclick="switchView('front')">Ön</button>
+                <button class="bm-tab" id="tabBack" onclick="switchView('back')">Arka</button>
+              </div>
+              <svg id="svgFront" class="bm-svg" viewBox="0 0 200 380" xmlns="http://www.w3.org/2000/svg">
+                <!-- Baş -->
+                <ellipse class="bp" data-region="baş" cx="100" cy="26" rx="24" ry="24"/>
+                <!-- Boyun -->
+                <rect class="bp" data-region="boyun" x="88" y="48" width="24" height="14" rx="4"/>
+                <!-- Sol omuz — gövdeden uzakta -->
+                <ellipse class="bp" data-region="sol omuz" cx="52" cy="72" rx="16" ry="11"/>
+                <!-- Sağ omuz -->
+                <ellipse class="bp" data-region="sağ omuz" cx="148" cy="72" rx="16" ry="11"/>
+                <!-- Göğüs — ortada dar -->
+                <rect class="bp" data-region="göğüs" x="72" y="62" width="56" height="40" rx="6"/>
+                <!-- Karın üst -->
+                <rect class="bp" data-region="karın üst" x="72" y="102" width="56" height="24" rx="4"/>
+                <!-- Karın alt -->
+                <rect class="bp" data-region="karın alt" x="72" y="126" width="56" height="24" rx="4"/>
+                <!-- Kasık sol -->
+                <rect class="bp" data-region="kasık sol" x="72" y="150" width="26" height="18" rx="4"/>
+                <!-- Kasık sağ -->
+                <rect class="bp" data-region="kasık sağ" x="102" y="150" width="26" height="18" rx="4"/>
+                <!-- Sol üst kol — gövdeden boşluklu -->
+                <rect class="bp" data-region="sol kol üst" x="34" y="82" width="15" height="38" rx="7"/>
+                <!-- Sol ön kol -->
+                <rect class="bp" data-region="sol ön kol" x="35" y="124" width="13" height="32" rx="6"/>
+                <!-- Sol el -->
+                <ellipse class="bp" data-region="sol el" cx="42" cy="168" rx="10" ry="10"/>
+                <!-- Sağ üst kol -->
+                <rect class="bp" data-region="sağ kol üst" x="151" y="82" width="15" height="38" rx="7"/>
+                <!-- Sağ ön kol -->
+                <rect class="bp" data-region="sağ ön kol" x="152" y="124" width="13" height="32" rx="6"/>
+                <!-- Sağ el -->
+                <ellipse class="bp" data-region="sağ el" cx="159" cy="168" rx="10" ry="10"/>
+                <!-- Sol uyluk -->
+                <rect class="bp" data-region="sol uyluk" x="74" y="170" width="22" height="46" rx="7"/>
+                <!-- Sağ uyluk -->
+                <rect class="bp" data-region="sağ uyluk" x="104" y="170" width="22" height="46" rx="7"/>
+                <!-- Sol diz -->
+                <rect class="bp" data-region="sol diz" x="75" y="216" width="20" height="16" rx="4"/>
+                <!-- Sağ diz -->
+                <rect class="bp" data-region="sağ diz" x="105" y="216" width="20" height="16" rx="4"/>
+                <!-- Sol baldır -->
+                <rect class="bp" data-region="sol baldır" x="76" y="234" width="18" height="42" rx="6"/>
+                <!-- Sağ baldır -->
+                <rect class="bp" data-region="sağ baldır" x="106" y="234" width="18" height="42" rx="6"/>
+                <!-- Sol ayak -->
+                <ellipse class="bp" data-region="sol ayak" cx="85" cy="288" rx="12" ry="9"/>
+                <!-- Sağ ayak -->
+                <ellipse class="bp" data-region="sağ ayak" cx="115" cy="288" rx="12" ry="9"/>
+                <!-- Yüz (dekoratif) -->
+                <circle cx="93" cy="22" r="2.5" fill="none" stroke="var(--bm-face)" stroke-width="1" pointer-events="none"/>
+                <circle cx="107" cy="22" r="2.5" fill="none" stroke="var(--bm-face)" stroke-width="1" pointer-events="none"/>
+                <path d="M95 32 Q100 36 105 32" fill="none" stroke="var(--bm-face)" stroke-width="1" stroke-linecap="round" pointer-events="none"/>
+              </svg>
+              <svg id="svgBack" class="bm-svg" viewBox="0 0 200 380" xmlns="http://www.w3.org/2000/svg" style="display:none">
+                <!-- Kafa arka -->
+                <ellipse class="bp" data-region="kafa arka" cx="100" cy="26" rx="24" ry="24"/>
+                <!-- Boyun arka -->
+                <rect class="bp" data-region="boyun arka" x="88" y="48" width="24" height="14" rx="4"/>
+                <!-- Sol omuz arka -->
+                <ellipse class="bp" data-region="sol omuz arka" cx="52" cy="72" rx="16" ry="11"/>
+                <!-- Sağ omuz arka -->
+                <ellipse class="bp" data-region="sağ omuz arka" cx="148" cy="72" rx="16" ry="11"/>
+                <!-- Üst sırt -->
+                <rect class="bp" data-region="üst sırt" x="72" y="62" width="56" height="36" rx="6"/>
+                <!-- Bel -->
+                <rect class="bp" data-region="bel" x="72" y="98" width="56" height="32" rx="4"/>
+                <!-- Kalça sol -->
+                <rect class="bp" data-region="kalça sol" x="72" y="130" width="26" height="24" rx="4"/>
+                <!-- Kalça sağ -->
+                <rect class="bp" data-region="kalça sağ" x="102" y="130" width="26" height="24" rx="4"/>
+                <!-- Sol kol arka -->
+                <rect class="bp" data-region="sol kol arka" x="34" y="82" width="15" height="70" rx="7"/>
+                <!-- Sol el arka -->
+                <ellipse class="bp" data-region="sol el arka" cx="42" cy="163" rx="10" ry="10"/>
+                <!-- Sağ kol arka -->
+                <rect class="bp" data-region="sağ kol arka" x="151" y="82" width="15" height="70" rx="7"/>
+                <!-- Sağ el arka -->
+                <ellipse class="bp" data-region="sağ el arka" cx="159" cy="163" rx="10" ry="10"/>
+                <!-- Sol bacak arka -->
+                <rect class="bp" data-region="sol bacak arka" x="74" y="156" width="22" height="100" rx="7"/>
+                <!-- Sağ bacak arka -->
+                <rect class="bp" data-region="sağ bacak arka" x="104" y="156" width="22" height="100" rx="7"/>
+                <!-- Sol ayak arka -->
+                <ellipse class="bp" data-region="sol ayak arka" cx="85" cy="268" rx="12" ry="9"/>
+                <!-- Sağ ayak arka -->
+                <ellipse class="bp" data-region="sağ ayak arka" cx="115" cy="268" rx="12" ry="9"/>
+              </svg>
+            </div>
+            <div class="bm-panel" id="bmPanel">
+              <div class="bm-hint">
+                <span class="material-symbols-outlined">touch_app</span>
+                <span>Bir bölgeye tıklayın</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="trust-row">
+        <div class="trust-item"><span class="material-symbols-outlined">lock</span><span>Veri cihazda kalır</span></div>
+        <div class="trust-item"><span class="material-symbols-outlined">fact_check</span><span>4 seviyeli triage</span></div>
+        <div class="trust-item"><span class="material-symbols-outlined">forum</span><span>Takip soruları</span></div>
+        <div class="trust-item"><span class="material-symbols-outlined">emergency</span><span>Acil tespiti</span></div>
+      </div>
+
     </div>
 
-    <div id="error" class="error-container hidden"></div>
-    <div id="result" class="result-container hidden"></div>
-
-    <!-- History -->
-    <div id="historyPanel" class="history-panel hidden">
-      <div class="history-header"><h3>📋 Sorgu Geçmişi</h3><button id="closeHistory" class="btn-icon-only">&times;</button></div>
-      <div id="historyList" class="history-list"><p class="history-empty">Henüz sorgulama yapılmadı.</p></div>
-      <button id="clearHistory" class="btn-secondary btn-sm">🗑️ Geçmişi Temizle</button>
+    <!-- EKRAN 2: TAKİP SORULARI -->
+    <div id="screenFollowup" class="screen hidden">
+      <div class="followup-wrap">
+        <div class="followup-top">
+          <button class="back-btn" id="backToInput">
+            <span class="material-symbols-outlined">arrow_back</span>
+          </button>
+          <div class="progress-wrap">
+            <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+            <span class="progress-label" id="progressLabel">1 / 4</span>
+          </div>
+        </div>
+        <div id="followupBody" class="followup-body"></div>
+      </div>
     </div>
 
-    <footer class="app-footer">
-      <p class="footer-disclaimer">⚠️ Bu platform teşhis koymaz. Kesin tanı için mutlaka doktora gidin.</p>
-      <p class="footer-tech">Algoritmik Analiz Motoru • 500+ Semptom • Sıfır API Maliyeti</p>
-      <p class="footer-links"><a href="https://mhrs.gov.tr" target="_blank" rel="noopener noreferrer">MHRS Randevu</a> <span>•</span> <span>MIT Lisans</span></p>
-    </footer>
-  </div>
+    <!-- EKRAN 3: SONUÇ -->
+    <div id="screenResult" class="screen hidden">
+      <div class="result-wrap">
+        <button class="back-btn result-back-btn" id="backFromResult">
+          <span class="material-symbols-outlined">arrow_back</span>
+          Yeni sorgulama
+        </button>
+        <div id="resultContent"></div>
+      </div>
+    </div>
 
-  <script src="app.bundle.js" defer></script>
+    <!-- EKRAN 4: ACİL -->
+    <div id="screenEmergency" class="screen emergency-screen hidden">
+      <div class="emergency-inner">
+        <div class="emergency-pulse">
+          <span class="material-symbols-outlined">emergency</span>
+        </div>
+        <h2 class="emergency-title">Acil Müdahale Gerekebilir</h2>
+        <p class="emergency-msg" id="emergencyMsg"></p>
+        <a href="tel:112" class="btn-112">
+          <span class="material-symbols-outlined">phone_in_talk</span>
+          112'yi Ara
+        </a>
+        <p class="emergency-note">veya en yakın acil servise gidin — sürüş güvensizse ambulans isteyin</p>
+        <button class="btn-ghost-sm" id="backFromEmergency">
+          <span class="material-symbols-outlined">arrow_back</span>
+          Geri dön
+        </button>
+      </div>
+    </div>
+
+    <!-- LOADING -->
+    <div id="loading" class="screen loading-screen hidden">
+      <div class="loading-inner">
+        <div class="loading-ring">
+          <div class="ring-track"></div>
+          <span class="material-symbols-outlined loading-icon">biotech</span>
+        </div>
+        <p class="loading-title">Analiz ediliyor…</p>
+        <div class="loading-steps">
+          <div class="ls" id="ls0">Metin ayrıştırılıyor</div>
+          <div class="ls" id="ls1">Semptomlar eşleştiriliyor</div>
+          <div class="ls" id="ls2">Aciliyet hesaplanıyor</div>
+        </div>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- History -->
+  <aside id="historyPanel" class="history-panel hidden">
+    <div class="hp-header">
+      <h3>Geçmiş</h3>
+      <button class="hbtn hbtn-icon" id="closeHistory"><span class="material-symbols-outlined">close</span></button>
+    </div>
+    <div id="historyList" class="hp-list"><p class="hp-empty">Henüz sorgulama yok.</p></div>
+    <button class="hbtn hbtn-danger" id="clearHistory">
+      <span class="material-symbols-outlined">delete</span> Temizle
+    </button>
+  </aside>
+
+  <footer class="footer">
+    <span>⚠️ Bu platform teşhis koymaz — sadece yönlendirir.</span>
+    <div class="footer-links">
+      <a href="https://mhrs.gov.tr" target="_blank" rel="noopener">MHRS</a>
+      <span>·</span><span>MIT Lisans</span><span>·</span><span>155+ Semptom</span>
+    </div>
+  </footer>
+
+  <script>
+    function switchView(v) {
+      document.getElementById('svgFront').style.display = v==='front'?'':'none';
+      document.getElementById('svgBack').style.display  = v==='back' ?'':'none';
+      document.getElementById('tabFront').classList.toggle('bm-tab-active', v==='front');
+      document.getElementById('tabBack').classList.toggle('bm-tab-active',  v==='back');
+      document.getElementById('bmPanel').innerHTML = '<div class="bm-hint"><span class="material-symbols-outlined">touch_app</span><span>Bir bölgeye tıklayın</span></div>';
+      document.querySelectorAll('.bp').forEach(p=>p.classList.remove('bp-active'));
+    }
+  </script>
+  <script type="module" src="script.js"></script>
 </body>
 </html>

@@ -1,17 +1,26 @@
 // ============================================
-// SağlıkYön - Geliştirilmiş analiz motoru
-// Daha seçici eşleştirme, katmanlı aciliyet ve daha net bölüm önerisi
+// SağlıkYön - Analiz Motoru v2
+//
+// nlp.js v2 ile uyumlu değişiklikler:
+//  1. import: isNegated + analyzeIntensifiers eklendi
+//  2. extractSymptoms: negasyon filtrelemesi + urgency boost
+//  3. evaluateTriage: boostedUrgency ile careLevel hesabı
 // ============================================
 
 import { SYMPTOM_DATABASE, DEPARTMENTS, FOLLOW_UP_TEMPLATES } from './symptom-db.js';
-import { matchKeywords, normalizeForSearch } from './nlp.js';
+import { matchKeywords, normalizeForSearch, isNegated, analyzeIntensifiers } from './nlp.js';
 
 const IMMEDIATE_RED_FLAG_IDS = new Set([
   'felc',
   'gorme_kaybi',
   'hemoptizi',
   'bayilma',
-  'nöbet'
+  'nöbet',
+  'inme_belirtisi',
+  'siddetli_bas_agrisi',
+  'inme_belirtisi',
+  'siddetli_bas_agrisi',
+  'anevrizma_belirti'
 ]);
 
 const HIGH_RISK_IDS = new Set([
@@ -106,20 +115,38 @@ export function analyzeSymptoms(inputText, previousAnswers = null) {
 // ============================================
 // SEMPTOM ÇIKARMA
 // ============================================
+//
+// DEĞİŞİKLİKLER:
+//  - analyzeIntensifiers ile metnin yoğunluk skoru hesaplanır
+//  - Her eşleşen semptom için isNegated kontrolü yapılır;
+//    "baş ağrım yok" / "ağrımıyor" gibi ifadeler elenir
+//  - Elenmeyen semptomların urgency'si intensifier boost ile
+//    çarpılır (örn. "çok şiddetli" → urgency * 1.3)
+//    Boost 10 tavanını aşmaz (urgency zaten 1-10 skalası)
 
 function extractSymptoms(inputText) {
   const matched = [];
 
-  for (const symptom of SYMPTOM_DATABASE) {
-    const result = matchKeywords(inputText, symptom.keywords);
+  // Metindeki yoğunluk belirteçlerini bir kez hesapla
+  const { boost: intensifierBoost } = analyzeIntensifiers(inputText);
 
-    if (result.matched) {
-      matched.push({
-        ...symptom,
-        matchScore: result.score,
-        matchedKeyword: result.keyword
-      });
-    }
+  for (const symptom of SYMPTOM_DATABASE) {
+    const kwAll = symptom.keywords_en
+      ? [...symptom.keywords, ...symptom.keywords_en]
+      : symptom.keywords;
+    const result = matchKeywords(inputText, kwAll);
+    if (!result.matched) continue;
+
+    // Negasyon kontrolü: "başım ağrımıyor" → bu semptomu atla
+    if (isNegated(inputText, result.keyword)) continue;
+
+    matched.push({
+      ...symptom,
+      // Urgency'yi boost ile çarp, 10 tavanını koru
+      urgency: Math.min(10, symptom.urgency * intensifierBoost),
+      matchScore: result.score,
+      matchedKeyword: result.keyword
+    });
   }
 
   if (matched.length === 0) return [];
@@ -238,6 +265,14 @@ function generateFollowUpQuestions(extractedSymptoms) {
 // ============================================
 // TRIAGE
 // ============================================
+//
+// DEĞİŞİKLİK:
+//  - avgUrgency hesabında extractedSymptoms.urgency kullanılıyor;
+//    bu urgency değerleri zaten intensifier boost uygulanmış
+//    halde geliyor (extractSymptoms'tan). Ekstra bir şey yapmana
+//    gerek yok — boost otomatik olarak careLevel kararını etkiler.
+//    Örn: "çok şiddetli baş ağrısı" → urgency 4 → 4 * 1.3 = 5.2
+//    → careLevel 'soon' yerine 'urgent' olabilir.
 
 function evaluateTriage(extractedSymptoms, previousAnswers) {
   const symptomIds = new Set(extractedSymptoms.map(symptom => symptom.id));
