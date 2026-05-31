@@ -259,7 +259,6 @@ textarea {
   color: var(--text-1);
 }
 
-.hbtn-ghost {}
 
 .hbtn-icon {
   padding: 6px;
@@ -663,8 +662,7 @@ textarea {
   flex: 1;
   min-width: 0;
   min-height: 240px;
-  display: flex;
-  align-items: flex-start;
+  display: block;
 }
 
 .bm-hint {

@@ -750,10 +750,13 @@ function openDrillDown(region, breadcrumb, container, inputEl, analyzeBtn) {
         choices: allChoices,
         onSelect: (choice) => {
             const newBreadcrumb = [...breadcrumb, choice];
-            const childNode = (node.seçenekler || {})[choice];
+            let childNode = (node.seçenekler || {})[choice];
+            console.log('choice:', choice);
+            console.log('childNode:', childNode);
+            console.log('childNode.seçenekler:', childNode?.seçenekler);
 
             if (childNode && childNode.seçenekler) {
-                // Daha derin seviye var
+                console.log('opening drill down with breadcrumb:', newBreadcrumb);
                 openDrillDown(region, newBreadcrumb, container, inputEl, analyzeBtn);
             } else {
                 // Son seçim — metin kutusuna yaz, paneli AÇIK tut
@@ -774,6 +777,7 @@ function openDrillDown(region, breadcrumb, container, inputEl, analyzeBtn) {
     container.innerHTML = '';
     container.appendChild(popup);
     container.style.display = 'block';
+    console.log('container after update:', container.innerHTML.substring(0, 100));
 }
 
 function showAddedBanner(region, breadcrumb, container, inputEl, analyzeBtn, regionLabel, addedChoice) {
@@ -800,19 +804,21 @@ function showAddedBanner(region, breadcrumb, container, inputEl, analyzeBtn, reg
     </div>
   `;
 
-    panel.querySelector('.drill-close-btn').addEventListener('click', () => {
+    panel.querySelector('.drill-close-btn').addEventListener('click', (e) => {
+        e.stopPropagation();
         closePopup(container);
         document.querySelectorAll('.bp').forEach(p => p.classList.remove('active'));
     });
-    panel.querySelector('#drillAddMore').addEventListener('click', () => {
+    panel.querySelector('#drillAddMore').addEventListener('click', (e) => {
+        e.stopPropagation();
         openDrillDown(region, [], container, inputEl, analyzeBtn);
     });
-    panel.querySelector('#drillAnalyze').addEventListener('click', () => {
+    panel.querySelector('#drillAnalyze').addEventListener('click', (e) => {
+        e.stopPropagation();
         closePopup(container);
         document.querySelectorAll('.bp').forEach(p => p.classList.remove('active'));
         analyzeBtn.click();
     });
-
     container.innerHTML = '';
     container.appendChild(panel);
 }
@@ -820,6 +826,7 @@ function showAddedBanner(region, breadcrumb, container, inputEl, analyzeBtn, reg
 function getNode(rootNode, breadcrumb) {
     let current = rootNode;
     for (const step of breadcrumb) {
+        console.log('step:', step, 'current.seçenekler:', current.seçenekler);
         if (!current.seçenekler || !current.seçenekler[step]) return null;
         current = current.seçenekler[step];
     }
@@ -856,17 +863,27 @@ function buildPopup({ regionLabel, breadcrumb, question, choices, onSelect, onBa
     <div class="drill-question">${question}</div>
     <div class="drill-options">
       ${choices.map(c => `
-        <button class="drill-opt" data-choice="${c}">
+        <button class="drill-opt" data-choice="${c.replace(/"/g, '&quot;')}">
           <span>${c}</span>
           <span class="material-symbols-outlined">chevron_right</span>
         </button>`).join('')}
     </div>
   `;
 
-    panel.querySelector('.drill-close-btn')?.addEventListener('click', onClose);
-    panel.querySelector('.drill-back-btn')?.addEventListener('click', onBack);
+    panel.querySelector('.drill-close-btn')?.addEventListener('click', (e) => {
+        e.stopPropagation();
+        onClose();
+    });
+    panel.querySelector('.drill-back-btn')?.addEventListener('click', (e) => {
+        e.stopPropagation();
+        onBack();
+    });
     panel.querySelectorAll('.drill-opt').forEach(btn => {
-        btn.addEventListener('click', () => onSelect(btn.getAttribute('data-choice')));
+        const choice = btn.getAttribute('data-choice');
+        btn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            onSelect(choice);
+        });
     });
 
     return panel;
@@ -918,8 +935,8 @@ function buildSymptomText(breadcrumb, regionLabel) {
 }
 
 function closePopup(container) {
-    container.innerHTML = '';
-    container.style.display = 'none';
+    container.innerHTML = '<div class="bm-hint"><span class="material-symbols-outlined">touch_app</span><span>Bir bölgeye tıklayın</span></div>';
+    container.style.display = '';
 }
 
 // ── POPUP CSS ─────────────────────────────────
