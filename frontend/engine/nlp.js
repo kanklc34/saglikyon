@@ -375,16 +375,44 @@ export function tokenize(text) {
   return tokenizeForMatching(text).map(t => t.original).filter(Boolean);
 }
 
+function stemEnglish(word) {
+  if (word.length < 4) return word;
+  const rules = [
+    [/aching$/, 'ache'],
+    [/ing$/, ''],
+    [/ness$/, ''],
+    [/tion$/, ''],
+    [/ment$/, ''],
+    [/ful$/, ''],
+    [/less$/, ''],
+    [/ous$/, ''],
+    [/ive$/, ''],
+    [/ly$/, ''],
+    [/ed$/, ''],
+    [/er$/, ''],
+    [/est$/, ''],
+    [/s$/, ''],
+  ];
+  for (const [pattern, replacement] of rules) {
+    const stemmed = word.replace(pattern, replacement);
+    if (stemmed.length >= 3 && stemmed !== word) return stemmed;
+  }
+  return word;
+}
+
+function isEnglishToken(token) {
+  return /^[a-z]+$/.test(token);
+}
+
 function tokenizeForMatching(text) {
   const folded = foldTurkish(text);
   if (!folded) return [];
-
   return folded
     .split(/\s+/)
     .filter(t => t.length > 1 && !FOLDED_STOP_WORDS.has(t))
     .map(token => ({
       original: token,
-      stem: stemTurkish(token, false),
+      stem: isEnglishToken(token) ? stemEnglish(token) : stemTurkish(token, false),
       canonical: canonicalizeToken(token)
     }));
 }
@@ -483,6 +511,29 @@ function minimumCoverage(keywordLength) {
 //     Sıra bağımsız + geliştirilmiş skor hesabı
 // ─────────────────────────────────────────────
 
+// ── Performans: statik anahtar kelime önbelleği ──────────
+// Semptom veritabanı sabittir (kullanıcı etkileşimiyle değişmez), ama
+// matchKeywords() her çağrıldığında binlerce anahtar kelimeyi sıfırdan
+// tokenize ediyordu. Veritabanı büyüdükçe (özellikle 142 semptomun
+// anahtar kelime listeleri zenginleştirildikten sonra) bu, her analizi
+// gözle görülür şekilde yavaşlattı. Çözüm: aynı keyword dizisi için
+// tokenize sonucunu bir kere hesaplayıp WeakMap'te saklamak — algoritma
+// veya eşleşme mantığı hiç değişmiyor, sadece tekrar eden iş tekrar
+// hesaplanmıyor.
+const _keywordTokenCache = new WeakMap();
+
+function getCachedKeywordData(keywords) {
+  let cached = _keywordTokenCache.get(keywords);
+  if (cached) return cached;
+  cached = keywords.map(keyword => ({
+    keyword,
+    normalized: foldTurkish(keyword),
+    tokens: tokenizeForMatching(keyword),
+  }));
+  _keywordTokenCache.set(keywords, cached);
+  return cached;
+}
+
 export function matchKeywords(inputText, keywords) {
   const normalizedInput = foldTurkish(inputText);
   const inputTokens = tokenizeForMatching(inputText);
@@ -494,9 +545,9 @@ export function matchKeywords(inputText, keywords) {
   let bestScore = 0;
   let bestKeyword = null;
 
-  for (const keyword of keywords) {
-    const normalizedKeyword = foldTurkish(keyword);
-    const keywordTokens = tokenizeForMatching(keyword);
+  const keywordData = getCachedKeywordData(keywords);
+
+  for (const { keyword, normalized: normalizedKeyword, tokens: keywordTokens } of keywordData) {
     if (!normalizedKeyword || keywordTokens.length === 0) continue;
 
     // ── Hızlı tam eşleşme ──────────────────────

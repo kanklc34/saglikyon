@@ -1,0 +1,584 @@
+{
+  "createdAt": "2026-06-08T14:41:55Z",
+  "generator": "gemini-3.1-flash-lite",
+  "symptomCount": 16,
+  "totalExamples": 64,
+  "examples": [
+    {
+      "symptomId": "inme_belirtisi",
+      "symptomLabel": "inme_belirtisi",
+      "expectedDepartment": "noroloji",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Bir anda ağzımın bir tarafının kaydığını ve konuşmamın bozulduğunu fark ettim.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "inme_belirtisi",
+      "symptomLabel": "inme_belirtisi",
+      "expectedDepartment": "noroloji",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Sol kolumu ve bacağımı şu an hiç hareket ettiremiyorum, sanki vücudumun yarısı tamamen boşaldı.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "inme_belirtisi",
+      "symptomLabel": "inme_belirtisi",
+      "expectedDepartment": "noroloji",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Az önce aniden kelimeleri birbirine karıştırmaya başladım ve sağ tarafımda ciddi bir his kaybı oluştu.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "inme_belirtisi",
+      "symptomLabel": "inme_belirtisi",
+      "expectedDepartment": "noroloji",
+      "mode": "negation",
+      "expectNoMatch": true,
+      "text": "Vücudumda herhangi bir uyuşma veya konuşma bozukluğu yok, sadece şiddetli bir baş ağrısı çekiyorum.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "anevrizma_belirti",
+      "symptomLabel": "anevrizma_belirti",
+      "expectedDepartment": "kardiyoloji",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Karnımın tam ortasında sanki bir kalp atıyormuş gibi sürekli bir hareketlilik ve zonklama hissediyorum.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "anevrizma_belirti",
+      "symptomLabel": "anevrizma_belirti",
+      "expectedDepartment": "kardiyoloji",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Göğsümün içinden sırtıma doğru yayılan, sanki bir şeylerin parçalandığını hissettiren çok şiddetli bir sancı başladı.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "anevrizma_belirti",
+      "symptomLabel": "anevrizma_belirti",
+      "expectedDepartment": "kardiyoloji",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Karnımda derinlerde bir yerlerde sanki bir damar atıyor ve bu durum beni çok endişelendiriyor.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "anevrizma_belirti",
+      "symptomLabel": "anevrizma_belirti",
+      "expectedDepartment": "kardiyoloji",
+      "mode": "negation",
+      "expectNoMatch": true,
+      "text": "Karnımda herhangi bir atma veya göğsümde yırtılma gibi bir ağrı hissetmiyorum.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "siddetli_bas_agrisi",
+      "symptomLabel": "siddetli_bas_agrisi",
+      "expectedDepartment": "noroloji",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Kafamın içinde sanki bir bomba patladı, acıdan gözlerimi bile açamıyorum.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "siddetli_bas_agrisi",
+      "symptomLabel": "siddetli_bas_agrisi",
+      "expectedDepartment": "noroloji",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Bir anda başlayan ve dayanılmaz bir seviyeye ulaşan, zonklayıcı bir ağrı hissediyorum.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "siddetli_bas_agrisi",
+      "symptomLabel": "siddetli_bas_agrisi",
+      "expectedDepartment": "noroloji",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Ensemden başlayıp tüm kafama yayılan, daha önce hiç yaşamadığım kadar keskin bir sızı var.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "siddetli_bas_agrisi",
+      "symptomLabel": "siddetli_bas_agrisi",
+      "expectedDepartment": "noroloji",
+      "mode": "negation",
+      "expectNoMatch": true,
+      "text": "Başımda herhangi bir ağrı yok, sadece hafif bir halsizlik hissediyorum.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "felc",
+      "symptomLabel": "felc",
+      "expectedDepartment": "noroloji",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Sabah uyandığımda sağ tarafımı hiç hissedemiyordum ve hareket ettiremiyorum.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "felc",
+      "symptomLabel": "felc",
+      "expectedDepartment": "noroloji",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Bir anda ağzım yana kaydı ve kelimeleri düzgün telaffuz edemez hale geldim.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "felc",
+      "symptomLabel": "felc",
+      "expectedDepartment": "noroloji",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Sol bacağım ve kolum aniden boşaldı, şu an hiçbir şekilde yerinden oynatamıyorum.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "felc",
+      "symptomLabel": "felc",
+      "expectedDepartment": "noroloji",
+      "mode": "negation",
+      "expectNoMatch": true,
+      "text": "Vücudumun herhangi bir yerinde his kaybı veya hareket kısıtlılığı gibi bir durum yaşamıyorum.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "gorme_kaybi",
+      "symptomLabel": "gorme_kaybi",
+      "expectedDepartment": "goz",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Bir anda etrafımdaki her şey silikleşti ve hiçbir şeyi seçemez oldum.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "gorme_kaybi",
+      "symptomLabel": "gorme_kaybi",
+      "expectedDepartment": "goz",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Sağ gözümün önünde sanki siyah bir tül varmış gibi hiçbir detayı ayırt edemiyorum.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "gorme_kaybi",
+      "symptomLabel": "gorme_kaybi",
+      "expectedDepartment": "goz",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Bakış alanım tamamen karanlığa gömüldü, hiçbir nesneyi fark edemiyorum.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "gorme_kaybi",
+      "symptomLabel": "gorme_kaybi",
+      "expectedDepartment": "goz",
+      "mode": "negation",
+      "expectNoMatch": true,
+      "text": "Görüşümde herhangi bir bulanıklık veya karanlık yok, her şeyi net bir şekilde seçebiliyorum.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "derin_ven_trombozu",
+      "symptomLabel": "derin_ven_trombozu",
+      "expectedDepartment": "kardiyoloji",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Sol bacağımda aniden başlayan şiddetli bir hassasiyet ve gözle görülür bir şişkinlik fark ettim.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "derin_ven_trombozu",
+      "symptomLabel": "derin_ven_trombozu",
+      "expectedDepartment": "kardiyoloji",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Uzun süreli otobüs yolculuğumdan sonra sağ alt ekstremitemde zonklayıcı bir sızı ve gerginlik hissetmeye başladım.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "derin_ven_trombozu",
+      "symptomLabel": "derin_ven_trombozu",
+      "expectedDepartment": "kardiyoloji",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Baldırımda sanki bir kütle varmış gibi bir dolgunluk ve üzerine bastığımda ciddi bir acı hissediyorum.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "derin_ven_trombozu",
+      "symptomLabel": "derin_ven_trombozu",
+      "expectedDepartment": "kardiyoloji",
+      "mode": "negation",
+      "expectNoMatch": true,
+      "text": "Bacaklarımda herhangi bir şişlik, kızarıklık veya damar tıkanıklığını düşündürecek bir ağrı şikayetim bulunmuyor.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "tansiyon_krizi",
+      "symptomLabel": "tansiyon_krizi",
+      "expectedDepartment": "kardiyoloji",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Tansiyon aletim büyük değerin 20'nin üzerinde olduğunu gösteriyor, kendimi çok kötü hissediyorum.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "tansiyon_krizi",
+      "symptomLabel": "tansiyon_krizi",
+      "expectedDepartment": "kardiyoloji",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Şiddetli bir ense ağrısıyla beraber kan basıncım tehlikeli seviyelere ulaştı.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "tansiyon_krizi",
+      "symptomLabel": "tansiyon_krizi",
+      "expectedDepartment": "kardiyoloji",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Tansiyonum aniden aşırı yükseldi ve şu an kontrol altına alamıyorum.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "tansiyon_krizi",
+      "symptomLabel": "tansiyon_krizi",
+      "expectedDepartment": "kardiyoloji",
+      "mode": "negation",
+      "expectNoMatch": true,
+      "text": "Tansiyon değerlerim normal seviyelerde seyrediyor, herhangi bir yükselme durumu yok.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "kalp_yetmezligi",
+      "symptomLabel": "kalp_yetmezligi",
+      "expectedDepartment": "kardiyoloji",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Geceleri düz bir şekilde yatamıyorum, nefesim kesildiği için hemen doğrulup oturma ihtiyacı hissediyorum.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "kalp_yetmezligi",
+      "symptomLabel": "kalp_yetmezligi",
+      "expectedDepartment": "kardiyoloji",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Son zamanlarda ayak bileklerimde ciddi bir şişlik oluştu ve merdiven çıkarken nefes nefese kalıyorum.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "kalp_yetmezligi",
+      "symptomLabel": "kalp_yetmezligi",
+      "expectedDepartment": "kardiyoloji",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Yastıksız yattığımda sanki göğsüme bir ağırlık çöküyor ve nefes almakta çok zorlanıyorum.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "kalp_yetmezligi",
+      "symptomLabel": "kalp_yetmezligi",
+      "expectedDepartment": "kardiyoloji",
+      "mode": "negation",
+      "expectNoMatch": true,
+      "text": "Nefes darlığı veya bacaklarımda herhangi bir şişlik gibi bir şikayetim kesinlikle yok.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "konusma_bozuklugu",
+      "symptomLabel": "konusma_bozuklugu",
+      "expectedDepartment": "noroloji",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Düşüncelerimi ifade etmekte zorlanıyorum, ağzımdan çıkanlar sanki birbirine karışıyor.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "konusma_bozuklugu",
+      "symptomLabel": "konusma_bozuklugu",
+      "expectedDepartment": "noroloji",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Bir şeyler anlatmaya çalışırken doğru ifadeleri seçemiyorum, cümlelerim yarım kalıyor.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "konusma_bozuklugu",
+      "symptomLabel": "konusma_bozuklugu",
+      "expectedDepartment": "noroloji",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Sesim çıkıyor ama kurduğum cümleler karşımdaki kişi tarafından hiç anlaşılmıyor.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "konusma_bozuklugu",
+      "symptomLabel": "konusma_bozuklugu",
+      "expectedDepartment": "noroloji",
+      "mode": "negation",
+      "expectNoMatch": true,
+      "text": "Konuşmamda herhangi bir aksaklık veya ifade güçlüğü yaşamıyorum.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "idrar_yapamama",
+      "symptomLabel": "idrar_yapamama",
+      "expectedDepartment": "uroloji",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Mesanem tamamen dolu olmasına rağmen bir türlü boşaltamıyorum.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "idrar_yapamama",
+      "symptomLabel": "idrar_yapamama",
+      "expectedDepartment": "uroloji",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Saatlerdir tuvalete gitme ihtiyacı hissediyorum ama ne kadar zorlasam da idrar çıkışı olmuyor.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "idrar_yapamama",
+      "symptomLabel": "idrar_yapamama",
+      "expectedDepartment": "uroloji",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Alt tarafımda ciddi bir baskı var, tuvalete oturduğumda ise hiçbir şekilde idrar akışı gerçekleşmiyor.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "idrar_yapamama",
+      "symptomLabel": "idrar_yapamama",
+      "expectedDepartment": "uroloji",
+      "mode": "negation",
+      "expectNoMatch": true,
+      "text": "İdrarımı yaparken herhangi bir zorluk yaşamıyorum, gayet rahat bir şekilde tuvaletimi yapabiliyorum.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "nöbet",
+      "symptomLabel": "nöbet",
+      "expectedDepartment": "noroloji",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Vücudumda istemsiz hareketler başladı ve bir an için bilincimi kaybettim.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "nöbet",
+      "symptomLabel": "nöbet",
+      "expectedDepartment": "noroloji",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Aniden yere yığıldım ve tüm vücudumda şiddetli bir titreme hissettim.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "nöbet",
+      "symptomLabel": "nöbet",
+      "expectedDepartment": "noroloji",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Gözlerim kaydı ve vücudumun kontrolünü tamamen yitirerek yere düştüm.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "nöbet",
+      "symptomLabel": "nöbet",
+      "expectedDepartment": "noroloji",
+      "mode": "negation",
+      "expectNoMatch": true,
+      "text": "Herhangi bir bilinç kaybı veya vücudumda istemsiz bir hareketlenme yaşamadım.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "bayilma",
+      "symptomLabel": "bayilma",
+      "expectedDepartment": "noroloji",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Bir anda etrafımdaki her şey döndü ve yere düştüğümü hatırlıyorum.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "bayilma",
+      "symptomLabel": "bayilma",
+      "expectedDepartment": "noroloji",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Aniden bilincim kapandı ve kendimi yerde buldum.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "bayilma",
+      "symptomLabel": "bayilma",
+      "expectedDepartment": "noroloji",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Ayaktayken bir anlık boşluk yaşadım ve ne olduğunu anlamadan yere serildim.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "bayilma",
+      "symptomLabel": "bayilma",
+      "expectedDepartment": "noroloji",
+      "mode": "negation",
+      "expectNoMatch": true,
+      "text": "Herhangi bir şekilde bilincimi yitirme veya yere düşme gibi bir durum yaşamadım.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "hemoptizi",
+      "symptomLabel": "hemoptizi",
+      "expectedDepartment": "gogus",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Öksürdüğüm zaman mendilime parlak kırmızı lekeler bulaşıyor.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "hemoptizi",
+      "symptomLabel": "hemoptizi",
+      "expectedDepartment": "gogus",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Birkaç gündür boğazımı temizlediğimde gelen sıvının içinde yoğun bir kızıllık fark ediyorum.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "hemoptizi",
+      "symptomLabel": "hemoptizi",
+      "expectedDepartment": "gogus",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Nefes darlığıyla birlikte soluk borumdan sanki kan geliyormuş gibi bir his yaşıyorum.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "hemoptizi",
+      "symptomLabel": "hemoptizi",
+      "expectedDepartment": "gogus",
+      "mode": "negation",
+      "expectNoMatch": true,
+      "text": "Öksürük şikayetim var ama herhangi bir renk değişikliği veya kanama durumu söz konusu değil.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "ben_degisimi",
+      "symptomLabel": "ben_degisimi",
+      "expectedDepartment": "dermatoloji",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Vücudumdaki bir lekenin son zamanlarda giderek genişlediğini ve sınırlarının bozulduğunu fark ettim.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "ben_degisimi",
+      "symptomLabel": "ben_degisimi",
+      "expectedDepartment": "dermatoloji",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Sırtımdaki kahverengi noktanın tonunun koyulaştığını ve eskiye göre daha kabarık durduğunu görüyorum.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "ben_degisimi",
+      "symptomLabel": "ben_degisimi",
+      "expectedDepartment": "dermatoloji",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Cildimdeki bir oluşumun yapısının bozulduğunu ve kenarlarının düzensizleştiğini gözlemliyorum.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "ben_degisimi",
+      "symptomLabel": "ben_degisimi",
+      "expectedDepartment": "dermatoloji",
+      "mode": "negation",
+      "expectNoMatch": true,
+      "text": "Vücudumdaki mevcut lekelerin hiçbirinde herhangi bir büyüme veya renk farklılığı gözlemlemedim.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "bobrek_tasi",
+      "symptomLabel": "bobrek_tasi",
+      "expectedDepartment": "uroloji",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Belimin sağ tarafında aniden başlayan ve kasıklarıma doğru vuran çok şiddetli bir sızı var, yerimde duramıyorum.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "bobrek_tasi",
+      "symptomLabel": "bobrek_tasi",
+      "expectedDepartment": "uroloji",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "İdrar yaparken zorlanıyorum ve yan tarafımda bıçak saplanır gibi keskin bir ağrı hissediyorum.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "bobrek_tasi",
+      "symptomLabel": "bobrek_tasi",
+      "expectedDepartment": "uroloji",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Sırtımın alt kısmında kıvrandıran bir acı var, sanki içeride bir şey hareket ediyor ve aşağıya doğru baskı yapıyor.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "bobrek_tasi",
+      "symptomLabel": "bobrek_tasi",
+      "expectedDepartment": "uroloji",
+      "mode": "negation",
+      "expectNoMatch": true,
+      "text": "Belimdeki ağrının böbreklerimle bir ilgisi olmadığını, sadece yanlış bir hareket sonucu kaslarımı incittiğimi düşünüyorum.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "gogus_agrisi",
+      "symptomLabel": "gogus_agrisi",
+      "expectedDepartment": "kardiyoloji",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Sol tarafımda sanki bir ağırlık var ve sanki bir şey kalbimi sıkıştırıyor.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "gogus_agrisi",
+      "symptomLabel": "gogus_agrisi",
+      "expectedDepartment": "kardiyoloji",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Kaburgalarımın hemen altında zonklayan bir sızı hissediyorum.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "gogus_agrisi",
+      "symptomLabel": "gogus_agrisi",
+      "expectedDepartment": "kardiyoloji",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Göğüs kafesimin ortasında sanki bir el kalbimi kavrıyormuş gibi bir acı var.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "gogus_agrisi",
+      "symptomLabel": "gogus_agrisi",
+      "expectedDepartment": "kardiyoloji",
+      "mode": "negation",
+      "expectNoMatch": true,
+      "text": "Kalbimde veya göğüs bölgemde herhangi bir sızı ya da rahatsızlık hissetmiyorum.",
+      "lang": "tr"
+    }
+  ]
+}

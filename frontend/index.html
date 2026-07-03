@@ -1,18 +1,23 @@
 <!DOCTYPE html>
 <html lang="tr" data-theme="light">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>SağlıkYön – Doğru Bölüme, Doğru Zamanda</title>
   <meta name="description" content="Şikayetinizi yazın, hangi sağlık bölümüne gitmeniz gerektiğini öğrenin.">
-  <meta name="theme-color" content="#0f4c81">
+  <meta name="theme-color" content="#2f5048">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet">
-  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" rel="stylesheet">
+  <link
+    href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500&display=swap"
+    rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0"
+    rel="stylesheet">
   <link rel="manifest" href="manifest.json">
   <link rel="stylesheet" href="style.css">
 </head>
+
 <body>
 
   <header class="header">
@@ -22,6 +27,10 @@
         <span class="brand-name">SağlıkYön</span>
       </a>
       <div class="header-actions">
+        <button id="langToggle" class="hbtn hbtn-ghost">
+          <span class="material-symbols-outlined">translate</span>
+          <span class="hbtn-label">English</span>
+        </button>
         <button id="elderlyToggle" class="hbtn hbtn-ghost" aria-pressed="false">
           <span class="material-symbols-outlined">accessibility</span>
           <span class="hbtn-label">Yaşlı Modu</span>
@@ -42,48 +51,47 @@
     <!-- EKRAN 1: GİRİŞ -->
     <div id="screenInput" class="screen">
 
-      <div class="hero">
-        <div class="hero-eyebrow">
-          <span class="dot"></span>
-          Türkiye'nin açık kaynak sağlık yönlendirme sistemi
-        </div>
-        <h1 class="hero-h1">Nasıl hissediyorsunuz?</h1>
-        <p class="hero-sub">Şikayetinizi doğal dilde yazın. Sistem analiz ederek doğru bölümü ve aciliyet düzeyini belirler.</p>
+      <div class="hero-eyebrow">
+        <span id="eyebrowText">Ön Değerlendirme</span>
       </div>
+      <h1 class="hero-h1">Nasıl hissediyorsunuz?</h1>
+      <p class="hero-sub">Şikayetinizi doğal dilde yazın. Sistem analiz ederek doğru bölümü ve aciliyet düzeyini
+        belirler.</p>
+    </div>
 
-      <div class="input-card">
-        <div class="input-wrap" id="inputWrap">
-          <span class="material-symbols-outlined input-search-icon">edit_note</span>
-          <textarea id="symptomInput" class="symptom-textarea"
-            placeholder="Örn: Üç gündür başım ağrıyor, bulantım var ve ışığa bakınca artıyor…"
-            rows="1" maxlength="500" aria-label="Şikayet girişi"></textarea>
-          <button id="voiceBtn" class="voice-btn" type="button" aria-label="Sesli giriş">
-            <span class="material-symbols-outlined">mic</span>
-          </button>
-        </div>
-        <div class="input-footer">
-          <span id="voiceStatus" class="voice-status hidden"></span>
-          <span id="rateLimitStatus" class="rate-status" aria-live="polite"></span>
-          <span class="char-count"><span id="charCount">0</span>/500</span>
-        </div>
-        <div class="chips-row">
-          <span class="chip">Baş ağrısı + bulantı</span>
-          <span class="chip">Göğüs ağrısı + nefes darlığı</span>
-          <span class="chip">Bel ağrısı</span>
-          <span class="chip">Ateş + boğaz ağrısı</span>
-        </div>
-        <button id="analyzeBtn" class="btn-analyze" type="button">
-          <span class="material-symbols-outlined">search</span>
-          Hangi Bölüme Gitmeliyim?
+    <div class="input-card">
+      <div class="input-wrap" id="inputWrap">
+        <span class="material-symbols-outlined input-search-icon">edit_note</span>
+        <textarea id="symptomInput" class="symptom-textarea"
+          placeholder="Örn: Üç gündür başım ağrıyor, bulantım var ve ışığa bakınca artıyor…" rows="1" maxlength="500"
+          aria-label="Şikayet girişi"></textarea>
+        <button id="voiceBtn" class="voice-btn" type="button" aria-label="Sesli giriş">
+          <span class="material-symbols-outlined">mic</span>
         </button>
-        <div id="errorMsg" class="error-msg hidden"></div>
       </div>
+      <div class="input-footer">
+        <span id="voiceStatus" class="voice-status hidden"></span>
+        <span id="rateLimitStatus" class="rate-status" aria-live="polite"></span>
+        <span class="char-count"><span id="charCount">0</span>/500</span>
+      </div>
+      <div class="chips-row">
+        <span class="chip">Baş ağrısı + bulantı</span>
+        <span class="chip">Göğüs ağrısı + nefes darlığı</span>
+        <span class="chip">Bel ağrısı</span>
+        <span class="chip">Ateş + boğaz ağrısı</span>
+      </div>
+      <button id="analyzeBtn" class="btn-analyze" type="button">
+        <span class="material-symbols-outlined">search</span>
+        <span>Hangi Bölüme Gitmeliyim?</span>
+      </button>
+      <div id="errorMsg" class="error-msg hidden"></div>
 
-      <div class="body-map-section">
-        <div class="section-label">
-          <span class="material-symbols-outlined">touch_app</span>
-          Vücut haritasından da seçebilirsiniz
-        </div>
+      <button class="section-label" id="bmToggle" type="button" aria-expanded="false" aria-controls="bmCollapse">
+        <span><span class="material-symbols-outlined">touch_app</span> Anlatmakta zorlanıyorsanız vücut haritasından
+          işaretleyin</span>
+        <span class="material-symbols-outlined bm-chevron">expand_more</span>
+      </button>
+      <div class="bm-collapse" id="bmCollapse">
         <div class="body-map-card">
           <div class="body-map-inner">
             <div class="bm-svg-col">
@@ -91,91 +99,85 @@
                 <button class="bm-tab bm-tab-active" id="tabFront" onclick="switchView('front')">Ön</button>
                 <button class="bm-tab" id="tabBack" onclick="switchView('back')">Arka</button>
               </div>
-              <svg id="svgFront" class="bm-svg" viewBox="0 0 200 380" xmlns="http://www.w3.org/2000/svg">
-                <!-- Baş -->
-                <ellipse class="bp" data-region="baş" cx="100" cy="26" rx="24" ry="24"/>
-                <!-- Boyun -->
-                <rect class="bp" data-region="boyun" x="88" y="48" width="24" height="14" rx="4"/>
-                <!-- Sol omuz — gövdeden uzakta -->
-                <ellipse class="bp" data-region="sol omuz" cx="52" cy="72" rx="16" ry="11"/>
-                <!-- Sağ omuz -->
-                <ellipse class="bp" data-region="sağ omuz" cx="148" cy="72" rx="16" ry="11"/>
-                <!-- Göğüs — ortada dar -->
-                <rect class="bp" data-region="göğüs" x="72" y="62" width="56" height="40" rx="6"/>
-                <!-- Karın üst -->
-                <rect class="bp" data-region="karın üst" x="72" y="102" width="56" height="24" rx="4"/>
-                <!-- Karın alt -->
-                <rect class="bp" data-region="karın alt" x="72" y="126" width="56" height="24" rx="4"/>
-                <!-- Kasık sol -->
-                <rect class="bp" data-region="kasık sol" x="72" y="150" width="26" height="18" rx="4"/>
-                <!-- Kasık sağ -->
-                <rect class="bp" data-region="kasık sağ" x="102" y="150" width="26" height="18" rx="4"/>
-                <!-- Sol üst kol — gövdeden boşluklu -->
-                <rect class="bp" data-region="sol kol üst" x="34" y="82" width="15" height="38" rx="7"/>
-                <!-- Sol ön kol -->
-                <rect class="bp" data-region="sol ön kol" x="35" y="124" width="13" height="32" rx="6"/>
-                <!-- Sol el -->
-                <ellipse class="bp" data-region="sol el" cx="42" cy="168" rx="10" ry="10"/>
-                <!-- Sağ üst kol -->
-                <rect class="bp" data-region="sağ kol üst" x="151" y="82" width="15" height="38" rx="7"/>
-                <!-- Sağ ön kol -->
-                <rect class="bp" data-region="sağ ön kol" x="152" y="124" width="13" height="32" rx="6"/>
-                <!-- Sağ el -->
-                <ellipse class="bp" data-region="sağ el" cx="159" cy="168" rx="10" ry="10"/>
-                <!-- Sol uyluk -->
-                <rect class="bp" data-region="sol uyluk" x="74" y="170" width="22" height="46" rx="7"/>
-                <!-- Sağ uyluk -->
-                <rect class="bp" data-region="sağ uyluk" x="104" y="170" width="22" height="46" rx="7"/>
-                <!-- Sol diz -->
-                <rect class="bp" data-region="sol diz" x="75" y="216" width="20" height="16" rx="4"/>
-                <!-- Sağ diz -->
-                <rect class="bp" data-region="sağ diz" x="105" y="216" width="20" height="16" rx="4"/>
-                <!-- Sol baldır -->
-                <rect class="bp" data-region="sol baldır" x="76" y="234" width="18" height="42" rx="6"/>
-                <!-- Sağ baldır -->
-                <rect class="bp" data-region="sağ baldır" x="106" y="234" width="18" height="42" rx="6"/>
-                <!-- Sol ayak -->
-                <ellipse class="bp" data-region="sol ayak" cx="85" cy="288" rx="12" ry="9"/>
-                <!-- Sağ ayak -->
-                <ellipse class="bp" data-region="sağ ayak" cx="115" cy="288" rx="12" ry="9"/>
-                <!-- Yüz (dekoratif) -->
-                <circle cx="93" cy="22" r="2.5" fill="none" stroke="var(--bm-face)" stroke-width="1" pointer-events="none"/>
-                <circle cx="107" cy="22" r="2.5" fill="none" stroke="var(--bm-face)" stroke-width="1" pointer-events="none"/>
-                <path d="M95 32 Q100 36 105 32" fill="none" stroke="var(--bm-face)" stroke-width="1" stroke-linecap="round" pointer-events="none"/>
+              <svg id="svgFront" class="bm-svg" viewBox="0 0 200 400" xmlns="http://www.w3.org/2000/svg">
+                <circle class="bp" data-region="baş" cx="100" cy="31" r="21" />
+                <path class="bp" data-region="boyun"
+                  d="M 90.5,50.0 Q 88.9,57.5 88.5,65.0 L 111.5,65.0 Q 111.1,57.5 109.5,50.0 Z" />
+                <path class="bp" data-region="sol omuz"
+                  d="M 44.0,62.0 Q 37.4,73.0 36.0,84.0 Q 33.2,91.5 34.0,99.0 L 58.0,99.0 Q 62.8,91.5 64.0,84.0 Q 68.6,73.0 68.0,62.0 Z" />
+                <path class="bp" data-region="sağ omuz"
+                  d="M 132.0,62.0 Q 131.4,73.0 136.0,84.0 Q 137.2,91.5 142.0,99.0 L 166.0,99.0 Q 166.8,91.5 164.0,84.0 Q 162.6,73.0 156.0,62.0 Z" />
+                <path class="bp" data-region="göğüs"
+                  d="M 61.0,62.0 Q 59.7,75.0 62.5,88.0 Q 64.2,101.0 70.0,114.0 L 130.0,114.0 Q 135.8,101.0 137.5,88.0 Q 140.3,75.0 139.0,62.0 Z" />
+                <path class="bp" data-region="karın üst"
+                  d="M 70.0,114.0 Q 70.0,122.5 73.0,131.0 Q 72.5,139.5 75.0,148.0 L 125.0,148.0 Q 127.5,139.5 127.0,131.0 Q 130.0,122.5 130.0,114.0 Z" />
+                <path class="bp" data-region="karın alt"
+                  d="M 75.0,148.0 Q 73.8,156.0 74.5,164.0 Q 73.0,170.5 73.0,177.0 L 127.0,177.0 Q 127.0,170.5 125.5,164.0 Q 126.2,156.0 125.0,148.0 Z" />
+                <path class="bp" data-region="kasık sol"
+                  d="M 73.0,177.0 Q 67.9,188.5 67.0,200.0 L 100,200.0 L 100,177.0 Z" />
+                <path class="bp" data-region="kasık sağ"
+                  d="M 127.0,177.0 Q 132.1,188.5 133.0,200.0 L 100,200.0 L 100,177.0 Z" />
+                <path class="bp" data-region="sol kol üst"
+                  d="M 30.5,99.0 Q 24.8,125.5 27.5,152.0 L 48.5,152.0 Q 57.2,125.5 57.5,99.0 Z" />
+                <path class="bp" data-region="sağ kol üst"
+                  d="M 142.5,99.0 Q 142.8,125.5 151.5,152.0 L 172.5,152.0 Q 175.2,125.5 169.5,99.0 Z" />
+                <path class="bp" data-region="sol ön kol"
+                  d="M 28.0,152.0 Q 27.5,173.0 32.0,194.0 L 48.0,194.0 Q 50.5,173.0 48.0,152.0 Z" />
+                <path class="bp" data-region="sağ ön kol"
+                  d="M 152.0,152.0 Q 149.5,173.0 152.0,194.0 L 168.0,194.0 Q 172.5,173.0 172.0,152.0 Z" />
+                <path class="bp" data-region="sol el"
+                  d="M 31.5,207.0 Q 31.5,195.5 39.0,195.5 Q 46.5,195.5 46.5,207.0 Q 46.5,216.8 42.4,218.5 L 35.6,218.5 Q 31.5,216.8 31.5,207.0 Z" />
+                <path class="bp" data-region="sağ el"
+                  d="M 153.5,207.0 Q 153.5,195.5 161.0,195.5 Q 168.5,195.5 168.5,207.0 Q 168.5,216.8 164.4,218.5 L 157.6,218.5 Q 153.5,216.8 153.5,207.0 Z" />
+                <path class="bp" data-region="sol uyluk"
+                  d="M 68.0,200.0 Q 63.7,230.0 69.0,260.0 L 95.0,260.0 Q 102.3,230.0 100.0,200.0 Z" />
+                <path class="bp" data-region="sağ uyluk"
+                  d="M 100.0,200.0 Q 97.7,230.0 105.0,260.0 L 131.0,260.0 Q 136.3,230.0 132.0,200.0 Z" />
+                <path class="bp" data-region="sol diz"
+                  d="M 69.0,260.0 Q 68.3,267.0 68.5,274.0 L 93.5,274.0 Q 94.7,267.0 95.0,260.0 Z" />
+                <path class="bp" data-region="sağ diz"
+                  d="M 105.0,260.0 Q 105.3,267.0 106.5,274.0 L 131.5,274.0 Q 131.7,267.0 131.0,260.0 Z" />
+                <path class="bp" data-region="sol baldır"
+                  d="M 68.5,274.0 Q 64.0,302.0 69.5,330.0 L 86.5,330.0 Q 95.0,302.0 93.5,274.0 Z" />
+                <path class="bp" data-region="sağ baldır"
+                  d="M 106.5,274.0 Q 105.0,302.0 113.5,330.0 L 130.5,330.0 Q 136.0,302.0 131.5,274.0 Z" />
+                <path class="bp" data-region="sol ayak"
+                  d="M 85.2,340.0 A 9.2,7.0 0 0,0 76.0,333.0 A 13.8,4.5 0 0,0 62.2,340.0 A 13.8,4.5 0 0,0 76.0,347.0 A 9.2,7.0 0 0,0 85.2,340.0 Z" />
+                <path class="bp" data-region="sağ ayak"
+                  d="M 114.8,340.0 A 9.2,7.0 0 0,1 124.0,333.0 A 13.8,4.5 0 0,1 137.8,340.0 A 13.8,4.5 0 0,1 124.0,347.0 A 9.2,7.0 0 0,1 114.8,340.0 Z" />
               </svg>
-              <svg id="svgBack" class="bm-svg" viewBox="0 0 200 380" xmlns="http://www.w3.org/2000/svg" style="display:none">
-                <!-- Kafa arka -->
-                <ellipse class="bp" data-region="kafa arka" cx="100" cy="26" rx="24" ry="24"/>
-                <!-- Boyun arka -->
-                <rect class="bp" data-region="boyun arka" x="88" y="48" width="24" height="14" rx="4"/>
-                <!-- Sol omuz arka -->
-                <ellipse class="bp" data-region="sol omuz arka" cx="52" cy="72" rx="16" ry="11"/>
-                <!-- Sağ omuz arka -->
-                <ellipse class="bp" data-region="sağ omuz arka" cx="148" cy="72" rx="16" ry="11"/>
-                <!-- Üst sırt -->
-                <rect class="bp" data-region="üst sırt" x="72" y="62" width="56" height="36" rx="6"/>
-                <!-- Bel -->
-                <rect class="bp" data-region="bel" x="72" y="98" width="56" height="32" rx="4"/>
-                <!-- Kalça sol -->
-                <rect class="bp" data-region="kalça sol" x="72" y="130" width="26" height="24" rx="4"/>
-                <!-- Kalça sağ -->
-                <rect class="bp" data-region="kalça sağ" x="102" y="130" width="26" height="24" rx="4"/>
-                <!-- Sol kol arka -->
-                <rect class="bp" data-region="sol kol arka" x="34" y="82" width="15" height="70" rx="7"/>
-                <!-- Sol el arka -->
-                <ellipse class="bp" data-region="sol el arka" cx="42" cy="163" rx="10" ry="10"/>
-                <!-- Sağ kol arka -->
-                <rect class="bp" data-region="sağ kol arka" x="151" y="82" width="15" height="70" rx="7"/>
-                <!-- Sağ el arka -->
-                <ellipse class="bp" data-region="sağ el arka" cx="159" cy="163" rx="10" ry="10"/>
-                <!-- Sol bacak arka -->
-                <rect class="bp" data-region="sol bacak arka" x="74" y="156" width="22" height="100" rx="7"/>
-                <!-- Sağ bacak arka -->
-                <rect class="bp" data-region="sağ bacak arka" x="104" y="156" width="22" height="100" rx="7"/>
-                <!-- Sol ayak arka -->
-                <ellipse class="bp" data-region="sol ayak arka" cx="85" cy="268" rx="12" ry="9"/>
-                <!-- Sağ ayak arka -->
-                <ellipse class="bp" data-region="sağ ayak arka" cx="115" cy="268" rx="12" ry="9"/>
+              <svg id="svgBack" class="bm-svg hidden" viewBox="0 0 200 400" xmlns="http://www.w3.org/2000/svg">
+                <circle class="bp" data-region="kafa arka" cx="100" cy="31" r="21" />
+                <path class="bp" data-region="boyun arka"
+                  d="M 90.5,50.0 Q 88.9,57.5 88.5,65.0 L 111.5,65.0 Q 111.1,57.5 109.5,50.0 Z" />
+                <path class="bp" data-region="sol omuz arka"
+                  d="M 44.0,62.0 Q 37.4,73.0 36.0,84.0 Q 33.2,91.5 34.0,99.0 L 58.0,99.0 Q 62.8,91.5 64.0,84.0 Q 68.6,73.0 68.0,62.0 Z" />
+                <path class="bp" data-region="sağ omuz arka"
+                  d="M 132.0,62.0 Q 131.4,73.0 136.0,84.0 Q 137.2,91.5 142.0,99.0 L 166.0,99.0 Q 166.8,91.5 164.0,84.0 Q 162.6,73.0 156.0,62.0 Z" />
+                <path class="bp" data-region="üst sırt"
+                  d="M 61.0,62.0 Q 59.7,75.0 62.5,88.0 Q 63.4,102.5 69.0,117.0 L 131.0,117.0 Q 136.6,102.5 137.5,88.0 Q 140.3,75.0 139.0,62.0 Z" />
+                <path class="bp" data-region="bel"
+                  d="M 69.0,117.0 Q 69.2,132.5 75.0,148.0 Q 71.4,162.5 73.0,177.0 L 127.0,177.0 Q 128.6,162.5 125.0,148.0 Q 130.8,132.5 131.0,117.0 Z" />
+                <path class="bp" data-region="kalça sol"
+                  d="M 73.0,177.0 Q 67.9,188.5 67.0,200.0 L 100,200.0 L 100,177.0 Z" />
+                <path class="bp" data-region="kalça sağ"
+                  d="M 127.0,177.0 Q 132.1,188.5 133.0,200.0 L 100,200.0 L 100,177.0 Z" />
+                <path class="bp" data-region="sol kol arka"
+                  d="M 30.5,99.0 Q 24.8,125.5 27.5,152.0 Q 26.4,173.0 32.0,194.0 L 48.0,194.0 Q 51.6,173.0 48.5,152.0 Q 57.2,125.5 57.5,99.0 Z" />
+                <path class="bp" data-region="sağ kol arka"
+                  d="M 142.5,99.0 Q 142.8,125.5 151.5,152.0 Q 148.4,173.0 152.0,194.0 L 168.0,194.0 Q 173.6,173.0 172.5,152.0 Q 175.2,125.5 169.5,99.0 Z" />
+                <path class="bp" data-region="sol el arka"
+                  d="M 31.5,207.0 Q 31.5,195.5 39.0,195.5 Q 46.5,195.5 46.5,207.0 Q 46.5,216.8 42.4,218.5 L 35.6,218.5 Q 31.5,216.8 31.5,207.0 Z" />
+                <path class="bp" data-region="sağ el arka"
+                  d="M 153.5,207.0 Q 153.5,195.5 161.0,195.5 Q 168.5,195.5 168.5,207.0 Q 168.5,216.8 164.4,218.5 L 157.6,218.5 Q 153.5,216.8 153.5,207.0 Z" />
+                <path class="bp" data-region="sol bacak arka"
+                  d="M 68.0,200.0 Q 63.1,230.0 69.0,260.0 Q 63.0,295.0 69.5,330.0 L 86.5,330.0 Q 97.0,295.0 95.0,260.0 Q 102.9,230.0 100.0,200.0 Z" />
+                <path class="bp" data-region="sağ bacak arka"
+                  d="M 100.0,200.0 Q 97.1,230.0 105.0,260.0 Q 103.0,295.0 113.5,330.0 L 130.5,330.0 Q 137.1,295.0 131.0,260.0 Q 136.9,230.0 132.0,200.0 Z" />
+                <path class="bp" data-region="sol ayak arka"
+                  d="M 85.2,340.0 A 9.2,7.0 0 0,0 76.0,333.0 A 13.8,4.5 0 0,0 62.2,340.0 A 13.8,4.5 0 0,0 76.0,347.0 A 9.2,7.0 0 0,0 85.2,340.0 Z" />
+                <path class="bp" data-region="sağ ayak arka"
+                  d="M 114.8,340.0 A 9.2,7.0 0 0,1 124.0,333.0 A 13.8,4.5 0 0,1 137.8,340.0 A 13.8,4.5 0 0,1 124.0,347.0 A 9.2,7.0 0 0,1 114.8,340.0 Z" />
               </svg>
             </div>
             <div class="bm-panel" id="bmPanel">
@@ -188,13 +190,19 @@
         </div>
       </div>
 
+      <div class="severity-row">
+        <div class="sev sev-red">Acil</div>
+        <div class="sev sev-amber">Yakın zamanda görün</div>
+        <div class="sev sev-green">Rutin takip</div>
+      </div>
+
       <div class="trust-row">
         <div class="trust-item"><span class="material-symbols-outlined">lock</span><span>Veri cihazda kalır</span></div>
-        <div class="trust-item"><span class="material-symbols-outlined">fact_check</span><span>4 seviyeli triage</span></div>
+        <div class="trust-item"><span class="material-symbols-outlined">fact_check</span><span>4 seviyeli triage</span>
+        </div>
         <div class="trust-item"><span class="material-symbols-outlined">forum</span><span>Takip soruları</span></div>
         <div class="trust-item"><span class="material-symbols-outlined">emergency</span><span>Acil tespiti</span></div>
       </div>
-
     </div>
 
     <!-- EKRAN 2: TAKİP SORULARI -->
@@ -205,14 +213,15 @@
             <span class="material-symbols-outlined">arrow_back</span>
           </button>
           <div class="progress-wrap">
-            <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+            <div class="progress-track">
+              <div class="progress-fill" id="progressFill"></div>
+            </div>
             <span class="progress-label" id="progressLabel">1 / 4</span>
           </div>
         </div>
         <div id="followupBody" class="followup-body"></div>
       </div>
     </div>
-
     <!-- EKRAN 3: SONUÇ -->
     <div id="screenResult" class="screen hidden">
       <div class="result-wrap">
@@ -237,6 +246,17 @@
           112'yi Ara
         </a>
         <p class="emergency-note">veya en yakın acil servise gidin — sürüş güvensizse ambulans isteyin</p>
+
+        <div id="emergencyVerify" class="emergency-verify hidden">
+          <div class="emergency-verify-divider"></div>
+          <p class="emergency-verify-label">Bu durumu netleştirmemize yardımcı olun:</p>
+          <p class="emergency-verify-question" id="emergencyVerifyQuestion"></p>
+          <div class="emergency-verify-actions">
+            <button class="btn-verify-confirm" id="emergencyVerifyConfirm"></button>
+            <button class="btn-verify-reassure" id="emergencyVerifyReassure"></button>
+          </div>
+        </div>
+
         <button class="btn-ghost-sm" id="backFromEmergency">
           <span class="material-symbols-outlined">arrow_back</span>
           Geri dön
@@ -268,7 +288,9 @@
       <h3>Geçmiş</h3>
       <button class="hbtn hbtn-icon" id="closeHistory"><span class="material-symbols-outlined">close</span></button>
     </div>
-    <div id="historyList" class="hp-list"><p class="hp-empty">Henüz sorgulama yok.</p></div>
+    <div id="historyList" class="hp-list">
+      <p class="hp-empty">Henüz sorgulama yok.</p>
+    </div>
     <button class="hbtn hbtn-danger" id="clearHistory">
       <span class="material-symbols-outlined">delete</span> Temizle
     </button>
@@ -284,14 +306,15 @@
 
   <script>
     function switchView(v) {
-      document.getElementById('svgFront').style.display = v==='front'?'':'none';
-      document.getElementById('svgBack').style.display  = v==='back' ?'':'none';
-      document.getElementById('tabFront').classList.toggle('bm-tab-active', v==='front');
-      document.getElementById('tabBack').classList.toggle('bm-tab-active',  v==='back');
+      document.getElementById('svgFront').classList.toggle('hidden', v !== 'front');
+      document.getElementById('svgBack').classList.toggle('hidden', v !== 'back');
+      document.getElementById('tabFront').classList.toggle('bm-tab-active', v === 'front');
+      document.getElementById('tabBack').classList.toggle('bm-tab-active', v === 'back');
       document.getElementById('bmPanel').innerHTML = '<div class="bm-hint"><span class="material-symbols-outlined">touch_app</span><span>Bir bölgeye tıklayın</span></div>';
-      document.querySelectorAll('.bp').forEach(p=>p.classList.remove('bp-active'));
+      document.querySelectorAll('.bp').forEach(p => p.classList.remove('bp-active'));
     }
   </script>
   <script type="module" src="script.js"></script>
 </body>
+
 </html>
