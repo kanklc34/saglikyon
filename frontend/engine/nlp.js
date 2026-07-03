@@ -404,7 +404,11 @@ function isEnglishToken(token) {
   return /^[a-z]+$/.test(token);
 }
 
-function tokenizeForMatching(text) {
+// Not: tokenizeForMatching, Adım 2'de eklenen keyword-index.js modülünün
+// motorla AYNI normalizasyonu (fold + stem + eşanlamlı çözümleme) kullanarak
+// indeks kurabilmesi için export edildi. Sadece görünürlük değişti, iç
+// mantığa dokunulmadı.
+export function tokenizeForMatching(text) {
   const folded = foldTurkish(text);
   if (!folded) return [];
   return folded

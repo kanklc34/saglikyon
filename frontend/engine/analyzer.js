@@ -5,6 +5,7 @@
 
 import { SYMPTOM_DATABASE, DEPARTMENTS, FOLLOW_UP_TEMPLATES } from './symptom-db.js';
 import { matchKeywords, normalizeForSearch, isNegated, analyzeIntensifiers } from './nlp.js';
+import { getCandidateSymptomIds } from './keyword-index.js';
 
 const IMMEDIATE_RED_FLAG_IDS = new Set([
   'felc', 'gorme_kaybi', 'hemoptizi', 'bayilma', 'nöbet',
@@ -226,11 +227,31 @@ function getCombinedKeywords(symptom) {
   return kwAll;
 }
 
+// ─────────────────────────────────────────────────────────────────
+// ADIM 6 — İNDEKSLİ YOL ASIL YOL OLDU
+// ─────────────────────────────────────────────────────────────────
+// Adım 3-5'te, keyword-index.js'teki aday daraltma gölge modda (üretim
+// sonucunu etkilemeden) 508 vakalık bir regresyon korpusunda eski tam
+// tarama yoluyla birebir karşılaştırıldı: 0 fark, %47.9 hızlanma
+// (bkz. tools/regression_baseline.json, tools/shadow_merged_report.json).
+// Bu doğrulamadan sonra eski tam-tarama kodu ve gölge karşılaştırma
+// altyapısı kaldırıldı; aşağıdaki extractSymptoms artık DOĞRUDAN
+// indeksli yolu kullanıyor.
+//
+// GÜVENLİK AĞI KORUNDU: getCandidateSymptomIds() girdi çok genel/
+// ayırt edici değilse NULL döner, bu durumda aşağıdaki kod eskisi gibi
+// TÜM 142 semptomu tarar — hiçbir girdi "filtrelenip kaybolma" riski
+// taşımaz.
 function extractSymptoms(inputText) {
   const matched = [];
   const { boost: intensifierBoost } = analyzeIntensifiers(inputText);
 
-  for (const symptom of SYMPTOM_DATABASE) {
+  const candidateIds = getCandidateSymptomIds(inputText);
+  const symptomsToScan = candidateIds
+    ? SYMPTOM_DATABASE.filter(s => candidateIds.has(s.id))
+    : SYMPTOM_DATABASE; // aday yoksa (güvenlik ağı) tam tarama
+
+  for (const symptom of symptomsToScan) {
     const kwAll = getCombinedKeywords(symptom);
     const result = matchKeywords(inputText, kwAll);
     if (!result.matched) continue;
@@ -475,4 +496,8 @@ function generateReasoning(symptoms, primaryId, triage, lang) {
   return symptoms.length === 1 ? `"${joined}" şikayeti en çok ${deptName} ile uyumlu görünüyor. ${triage.summary}` : `${joined} belirtileri birlikte değerlendirildiğinde en uygun bölüm ${deptName} görünüyor. ${triage.summary}`;
 }
 
-export { DEPARTMENTS, SYMPTOM_DATABASE };
+// Not: extractSymptoms sadece regresyon test script'i (tools/regression_*)
+// tarafından gerçek eşleştirme çekirdeğini doğrudan ölçmek için export
+// edildi. Motorun davranışında hiçbir değişiklik yapmaz, sadece mevcut
+// (zaten var olan) iç fonksiyonu dışarıya açar.
+export { DEPARTMENTS, SYMPTOM_DATABASE, extractSymptoms };
