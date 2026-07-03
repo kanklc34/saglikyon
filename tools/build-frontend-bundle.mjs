@@ -11,6 +11,7 @@ const distDir = path.join(repoRoot, 'dist');
 const sources = [
   'frontend/engine/symptom-db.js',
   'frontend/engine/nlp.js',
+  'frontend/engine/keyword-index.js',
   'frontend/engine/analyzer.js',
   'frontend/engine/rate-limit.js',
   'frontend/script.js'
@@ -49,6 +50,16 @@ fs.mkdirSync(distDir, { recursive: true });
 for (const fileName of staticFiles) {
   fs.copyFileSync(path.join(frontendDir, fileName), path.join(distDir, fileName));
 }
+
+// index.html, yerel geliştirme için (ES modülleriyle) 'script.js'i
+// çağırıyor. Ama dist'e sadece derlenmiş 'app.bundle.js' konuyor,
+// 'script.js' KOPYALANMIYOR — bu yüzden GitHub Pages'te index.html
+// var olmayan bir dosyayı çağırıp 404 alıyordu. dist'teki kopyada
+// bu referansı bundle dosyasına çeviriyoruz.
+const distIndexPath = path.join(distDir, 'index.html');
+const distIndexHtml = fs.readFileSync(distIndexPath, 'utf8')
+  .replace('<script type="module" src="script.js"></script>', '<script type="module" src="app.bundle.js"></script>');
+fs.writeFileSync(distIndexPath, distIndexHtml, 'utf8');
 
 fs.writeFileSync(path.join(distDir, 'app.bundle.js'), bundle, 'utf8');
 console.log('frontend/app.bundle.js and dist/app.bundle.js generated successfully.');
