@@ -2968,6 +2968,13 @@ function openDrillDown(region, breadcrumb, container, inputEl, analyzeBtn) {
     container.innerHTML = '';
     container.appendChild(popup);
     container.style.display = 'block';
+
+    // NOT: Kullanıcı bir bölgeye tıkladığında panel (soru/seçenekler)
+    // özellikle mobilde ekranın altında kalabiliyordu — kullanıcı elle
+    // aşağı kaydırmak zorunda kalıyordu. block:'nearest' sayesinde panel
+    // zaten görünürdeyse HİÇBİR ŞEY olmuyor (gereksiz zıplama yok), sadece
+    // görünür alanın dışındaysa nazikçe kaydırıyor.
+    container.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
 }
 
 function showAddedBanner(region, breadcrumb, container, inputEl, analyzeBtn, regionLabel, addedChoice) {
@@ -3012,6 +3019,7 @@ function showAddedBanner(region, breadcrumb, container, inputEl, analyzeBtn, reg
 
     container.innerHTML = '';
     container.appendChild(panel);
+    container.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
 }
 
 // ── DÜZELTME 5: back butonu null-safe querySelector ──
@@ -3093,7 +3101,14 @@ function finalizeSelection(breadcrumb, regionLabel, inputEl, analyzeBtn) {
         setTimeout(() => analyzeBtn.classList.remove('btn-highlight'), 2000);
     }
 
-    inputEl.focus();
+    // NOT: Daha önce inputEl.focus() sade çağrılıyordu. Mobil tarayıcılar
+    // odaklanan bir input'u görünür kılmak için sayfayı KENDİLİĞİNDEN
+    // kaydırıyor — bu da hemen ardından görünen "Analizi Başlat" panelinin
+    // konumunu değiştirip kullanıcıya rastgele bir "zıplama" hissi
+    // veriyordu (vücut haritasından seçim → beklenmedik kayma). preventScroll
+    // ile input yine odaklanıyor (yazı imleci doğru yerde duruyor) ama
+    // tarayıcı artık sayfayı kendiliğinden kaydırmıyor.
+    inputEl.focus({ preventScroll: true });
     inputEl.setSelectionRange(inputEl.value.length, inputEl.value.length);
 }
 

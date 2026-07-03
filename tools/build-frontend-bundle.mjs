@@ -14,6 +14,7 @@ const sources = [
   'frontend/engine/keyword-index.js',
   'frontend/engine/analyzer.js',
   'frontend/engine/rate-limit.js',
+  'frontend/engine/i18n.js',
   'frontend/script.js'
 ];
 
@@ -49,6 +50,28 @@ fs.mkdirSync(distDir, { recursive: true });
 
 for (const fileName of staticFiles) {
   fs.copyFileSync(path.join(frontendDir, fileName), path.join(distDir, fileName));
+}
+
+// script.js içinde STATİK değil DİNAMİK import() kullanılan dosyalar var
+// (örn. import('./engine/body-map.js') — vücut haritası, ilk yüklemede
+// değil tıklandığında yükleniyor). transformModuleSource() sadece
+// üst-seviye 'import ... from ...;' İFADELERİNİ siliyor/bundluyor;
+// import(...) bir FONKSİYON ÇAĞRISI olduğu için bundle'a hiç dahil
+// edilmiyor ve tarayıcı bunu çalışma anında GERÇEK bir dosya olarak
+// (sayfanın URL'sine göre) çekmeye çalışıyor. dist/ klasöründe
+// 'engine/' alt klasörü hiç yoktu — bu da vücut haritasına tıklanınca
+// ayrı bir 404'e yol açıyordu. Bu dosyaları (ve onların kendi ES modül
+// import'larını) gerçek dosyalar olarak dist/engine/ altına kopyalıyoruz.
+const dynamicallyImportedEngineFiles = [
+  'body-map.js', // script.js içinde import('./engine/body-map.js') ile çağrılıyor
+  'i18n.js',      // body-map.js kendi içinde bunu gerçek bir import ile çekiyor
+];
+fs.mkdirSync(path.join(distDir, 'engine'), { recursive: true });
+for (const fileName of dynamicallyImportedEngineFiles) {
+  fs.copyFileSync(
+    path.join(frontendDir, 'engine', fileName),
+    path.join(distDir, 'engine', fileName)
+  );
 }
 
 // index.html, yerel geliştirme için (ES modülleriyle) 'script.js'i
