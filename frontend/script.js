@@ -64,7 +64,7 @@ const DOM = {
 };
 
 // ── Ekran yönetimi ────────────────────────
-const SCREENS = ['screenInput', 'screenFollowup', 'screenResult', 'screenEmergency', 'loading'];
+const SCREENS = ['screenInput', 'screenBodyMap', 'screenFollowup', 'screenResult', 'screenEmergency', 'loading'];
 function showScreen(id) {
   SCREENS.forEach(s => { const el = $(s); if (el) el.classList.toggle('hidden', s !== id); });
   window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -106,6 +106,8 @@ function applyLang() {
   if (hint) hint.textContent = s.bodyMapHint;
   const bmToggleLabel = document.querySelector('#bmToggle > span:first-child');
   if (bmToggleLabel) bmToggleLabel.lastChild.textContent = ' ' + s.bmToggleLabel;
+  const bodyMapScreenTitle = document.getElementById('bodyMapScreenTitle');
+  if (bodyMapScreenTitle) bodyMapScreenTitle.textContent = s.bodyMapScreenTitle;
 
   const sevEls = document.querySelectorAll('.severity-row .sev');
   if (sevEls.length === 3) {
@@ -144,13 +146,13 @@ function applyLang() {
 
   // Back buttons
   const backResult = DOM.backFromResult;
-  if (backResult) backResult.innerHTML = `<span class="material-symbols-outlined">arrow_back</span>${s.newQuery}`;
+  if (backResult) backResult.innerHTML = `<span class="material-symbols-outlined">arrow_back</span> ${s.newQuery}`;
 
   // Emergency
   const emergTitle = document.querySelector('.emergency-title');
   if (emergTitle) emergTitle.textContent = s.emergencyTitle;
   const callBtn = document.querySelector('.btn-112');
-  if (callBtn) callBtn.innerHTML = `<span class="material-symbols-outlined">phone_in_talk</span>${s.callBtn}`;
+  if (callBtn) callBtn.innerHTML = `<span class="material-symbols-outlined">phone_in_talk</span> ${s.callBtn}`;
   const emergNote = document.querySelector('.emergency-note');
   if (emergNote) emergNote.textContent = s.emergencyNote;
 
@@ -212,16 +214,26 @@ function bindEvents() {
   DOM.clearHistory.addEventListener('click', clearHistory);
   DOM.backToInput.addEventListener('click', () => showScreen('screenInput'));
   DOM.backFromResult.addEventListener('click', () => { showScreen('screenInput'); DOM.input.focus(); });
+
+  // Logo/marka: sayfanın herhangi bir ekranından (sonuç, soru, acil, vücut
+  // haritası) tek tıkla ana giriş ekranına dönüş sağlamalı — href="#" tek
+  // başına hiçbir şey yapmıyordu, sayfa en üste bile kaymıyordu.
+  const brandHome = document.getElementById('brandHome');
+  if (brandHome) {
+    brandHome.addEventListener('click', (e) => {
+      e.preventDefault();
+      showScreen('screenInput');
+    });
+  }
   DOM.backFromEmerg.addEventListener('click', () => showScreen('screenInput'));
 
   const bmToggle = document.getElementById('bmToggle');
-  const bmCollapse = document.getElementById('bmCollapse');
-  if (bmToggle && bmCollapse) {
-    bmToggle.addEventListener('click', () => {
-      const willOpen = !bmCollapse.classList.contains('open');
-      bmCollapse.classList.toggle('open', willOpen);
-      bmToggle.setAttribute('aria-expanded', String(willOpen));
-    });
+  if (bmToggle) {
+    bmToggle.addEventListener('click', () => showScreen('screenBodyMap'));
+  }
+  const backFromBodyMap = document.getElementById('backFromBodyMap');
+  if (backFromBodyMap) {
+    backFromBodyMap.addEventListener('click', () => showScreen('screenInput'));
   }
 
   document.querySelectorAll('.chip').forEach(c => {
@@ -274,7 +286,7 @@ function toggleLang() {
   applyLang();
   import('./engine/body-map.js')
     .then(({ setBodyMapLang }) => setBodyMapLang(state.lang))
-    .catch(() => {});
+    .catch(() => { });
 }
 
 // ── Analysis ──────────────────────────────
@@ -392,13 +404,13 @@ function renderFollowUp() {
 
   const q = questions[index];
   const type = q.type || 'yesno';
+  const isAgeBandQuestion = q.symptomId === '__age_band__';
 
   const card = document.createElement('div');
   card.className = 'fq-card';
   card.innerHTML = `
     <div class="fq-symptom-tag">
-      <span class="material-symbols-outlined" style="font-size:12px">clinical_notes</span>
-      ${q.symptomId || ''}
+      <span class="material-symbols-outlined" style="font-size:12px">${isAgeBandQuestion ? 'group' : 'clinical_notes'}</span> ${isAgeBandQuestion ? 'Genel' : (q.symptomId || '')}
     </div>
     <div class="fq-question">${q.question}</div>
     ${renderQuestionInputs(q, type)}
@@ -415,7 +427,7 @@ function renderQuestionInputs(q, type) {
   if (type === 'options' && q.options) {
     return `<div class="fq-options">${q.options.map(o => `
       <button class="fq-option" data-val="${o}">
-        <span class="fq-option-dot"></span>${o}
+        <span class="fq-option-dot"></span> ${o}
       </button>`).join('')}</div>`;
   }
 
@@ -423,13 +435,13 @@ function renderQuestionInputs(q, type) {
   return `
     <div class="fq-yesno">
       <button class="fq-btn" data-val="${s.yesBtn}">
-        <span class="material-symbols-outlined">check</span>${s.yesBtn}
+        <span class="material-symbols-outlined">check</span> ${s.yesBtn}
       </button>
       <button class="fq-btn" data-val="${s.noBtn}">
-        <span class="material-symbols-outlined">close</span>${s.noBtn}
+        <span class="material-symbols-outlined">close</span> ${s.noBtn}
       </button>
       <button class="fq-btn" data-val="${s.unsureBtn}">
-        <span class="material-symbols-outlined">help</span>${s.unsureBtn}
+        <span class="material-symbols-outlined">help</span> ${s.unsureBtn}
       </button>
     </div>`;
 }
@@ -453,6 +465,12 @@ function bindQuestionEvents(card, q, type) {
         answer: val,
         impact: q.impact || {},
         selectedOption: type === 'options' ? val : undefined,
+        options: q.options,
+        optionDays: q.optionDays,
+        thresholdDays: q.thresholdDays,
+        optionWeights: q.optionWeights,
+        symptomId: q.symptomId,
+        ageBandValues: q.ageBandValues,
       });
 
       state.followUp.index++;
@@ -476,8 +494,27 @@ async function finishFollowUp() {
 }
 
 // ── Result ────────────────────────────────
+const AGE_BAND_LABELS = {
+  bebek: 'Bebek (0-2 yaş)',
+  cocuk: 'Çocuk (2-12 yaş)',
+  yetiskin: 'Genç/Yetişkin (12-65 yaş)',
+  yasli: '65 yaş üstü',
+};
+
+// Sonuç ekranında hangi yaş grubunun kullanıldığını HER ZAMAN görünür
+// yapıyoruz — sessiz, düzeltilemez bir varsayım olmasın diye. "Varsayılan"
+// ibaresi, kullanıcı soruyu cevaplamadıysa (metinden de çıkarılamadıysa)
+// gösteriliyor; bu durumda kullanıcı yanlış olduğunu fark edip yeniden
+// başlatabilir.
+function renderAgeBandLabel(result) {
+  if (!result.ageBand) return '';
+  const label = AGE_BAND_LABELS[result.ageBand] || result.ageBand;
+  const suffix = result.ageBandWasAssumed ? ' (varsayılan)' : '';
+  return `<div class="age-band-label"><span class="material-symbols-outlined">group</span> Bu değerlendirme: <strong>${label}${suffix}</strong> için yapıldı</div>`;
+}
+
 function showResult(result, text, fromFollowUp = false) {
-  DOM.resultContent.innerHTML = result.isFamilyDoctor ? renderFamilyCard(result) : renderDeptCard(result);
+  DOM.resultContent.innerHTML = (result.isFamilyDoctor ? renderFamilyCard(result) : renderDeptCard(result)) + renderAgeBandLabel(result) + renderFeedbackWidget();
   showScreen('screenResult');
 
   requestAnimationFrame(() => {
@@ -486,7 +523,60 @@ function showResult(result, text, fromFollowUp = false) {
   });
 
   document.getElementById('copyBtn')?.addEventListener('click', () => copyNote(result, text));
+  bindFeedbackWidget(result, text);
+  bindConfInfo();
   saveToHistory(text, result);
+}
+
+function bindConfInfo() {
+  const btn = document.getElementById('confInfoBtn');
+  const text = document.getElementById('confInfoText');
+  if (!btn || !text) return;
+  btn.addEventListener('click', () => {
+    const willShow = text.classList.contains('hidden');
+    text.classList.toggle('hidden', !willShow);
+    btn.setAttribute('aria-expanded', String(willShow));
+  });
+}
+
+// Sonuca "itiraz" yerine basit, ikon tabanlı (emoji değil) bir geri
+// bildirim: kullanıcı sonucun faydalı olup olmadığını tek dokunuşla
+// belirtebiliyor. Sunucuya gönderilmiyor (veri cihazda kalır ilkesiyle
+// tutarlı) — sadece arayüzde teşekkür mesajına dönüşüyor.
+function renderFeedbackWidget() {
+  const s = t();
+  return `
+    <div class="result-feedback" id="resultFeedback">
+      <span class="result-feedback-label">${s.feedbackQuestion}</span>
+      <div class="result-feedback-btns">
+        <button class="fq-btn feedback-btn" data-feedback="yes" type="button">
+          <span class="material-symbols-outlined">check</span> ${s.feedbackYes}
+        </button>
+        <button class="fq-btn feedback-btn" data-feedback="no" type="button">
+          <span class="material-symbols-outlined">close</span> ${s.feedbackNo}
+        </button>
+      </div>
+    </div>`;
+}
+
+function bindFeedbackWidget(result, text) {
+  const s = t();
+  const widget = document.getElementById('resultFeedback');
+  if (!widget) return;
+  const btns = widget.querySelectorAll('.feedback-btn');
+  btns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      const val = btn.getAttribute('data-feedback');
+      btns.forEach(b => {
+        b.disabled = true;
+        b.classList.toggle('selected-yes', b === btn && val === 'yes');
+        b.classList.toggle('selected-no', b === btn && val === 'no');
+      });
+      const label = widget.querySelector('.result-feedback-label');
+      if (label) label.textContent = s.feedbackThanks;
+      saveFeedbackEntry(result, text, val);
+    });
+  });
 }
 
 function renderTriageBanner(result) {
@@ -545,16 +635,20 @@ function renderDeptCard(result) {
         <div class="conf-row">
           <div class="conf-track"><div class="conf-fill" id="confFill" style="width:0%"></div></div>
           <span class="conf-label">${confText} · %${score}</span>
+          <button class="conf-info-btn" id="confInfoBtn" type="button" aria-expanded="false" aria-controls="confInfoText" aria-label="Güven skoru ne anlama geliyor?">
+            <span class="material-symbols-outlined">info</span>
+          </button>
         </div>
+        <p class="conf-info-text hidden" id="confInfoText">${s.confInfoText}</p>
       </div>
       ${symptoms}
       ${alts}
       <div class="dept-card-footer">
         <a href="https://mhrs.gov.tr" target="_blank" rel="noopener" class="btn-mhrs">
-          <span class="material-symbols-outlined">calendar_month</span>${s.mhrsBtn}
+          <span class="material-symbols-outlined">calendar_month</span> ${s.mhrsBtn}
         </a>
         <button class="btn-copy" id="copyBtn">
-          <span class="material-symbols-outlined">content_copy</span>${s.copyBtn}
+          <span class="material-symbols-outlined">content_copy</span> ${s.copyBtn}
         </button>
       </div>
     </div>
@@ -587,10 +681,10 @@ function renderFamilyCard(result) {
       </div>
       <div class="family-footer">
         <a href="https://mhrs.gov.tr" target="_blank" rel="noopener" class="btn-mhrs">
-          <span class="material-symbols-outlined">calendar_month</span>${s.mhrsBtn}
+          <span class="material-symbols-outlined">calendar_month</span> ${s.mhrsBtn}
         </a>
         <button class="btn-copy" id="copyBtn">
-          <span class="material-symbols-outlined">content_copy</span>${s.copyBtn}
+          <span class="material-symbols-outlined">content_copy</span> ${s.copyBtn}
         </button>
       </div>
     </div>
@@ -622,15 +716,64 @@ function copyNote(result, text) {
   navigator.clipboard.writeText(note).then(() => {
     const btn = document.getElementById('copyBtn');
     if (btn) {
-      btn.innerHTML = `<span class="material-symbols-outlined">check</span>${s.copied}`;
+      btn.innerHTML = `<span class="material-symbols-outlined">check</span> ${s.copied}`;
       btn.style.color = 'var(--green)';
       setTimeout(() => {
-        btn.innerHTML = `<span class="material-symbols-outlined">content_copy</span>${s.copyBtn}`;
+        btn.innerHTML = `<span class="material-symbols-outlined">content_copy</span> ${s.copyBtn}`;
         btn.style.color = '';
       }, 2500);
     }
   }).catch(() => alert(s.copyBtn + ' failed.'));
 }
+
+// ── Geri bildirim kalıcılığı ──────────────────
+// AMAÇ: 👍/👎 geri bildirimi artık sadece arayüzde gösterilip kaybolmuyor,
+// bu cihazda (localStorage) kalıcı olarak saklanıyor. "Veri cihazda kalır"
+// ilkesiyle tutarlı olması için hiçbir sunucuya gönderilmiyor — geliştirici
+// bu veriye ihtiyaç duyarsa, tarayıcı konsolundan exportFeedbackData()
+// çağırarak kendi cihazından bir JSON dosyası olarak indirebilir.
+const FEEDBACK_STORAGE_KEY = 'sy_feedback_log';
+const MAX_FEEDBACK_ENTRIES = 300;
+
+function saveFeedbackEntry(result, text, value) {
+  try {
+    const log = readJson(FEEDBACK_STORAGE_KEY, []);
+    log.unshift({
+      timestamp: new Date().toISOString(),
+      textExcerpt: text.slice(0, 80),
+      matchedSymptoms: result.matchedSymptoms || [],
+      primaryDepartmentId: result.primaryDepartment || null,
+      confidenceScore: result.confidenceScore ?? null,
+      ageBand: result.ageBand || null,
+      feedback: value, // 'yes' | 'no'
+    });
+    if (log.length > MAX_FEEDBACK_ENTRIES) log.length = MAX_FEEDBACK_ENTRIES;
+    saveJson(FEEDBACK_STORAGE_KEY, log);
+  } catch (e) {
+    // localStorage dolu/erişilemez olabilir (gizlilik modu vb.) — geri
+    // bildirim özelliğinin kendisi bu yüzden çökmemeli, sessizce yutuyoruz.
+  }
+}
+
+// Geliştirici aracı: tarayıcı konsolunda `exportFeedbackData()` çağrılırsa,
+// bu cihazda birikmiş TÜM geri bildirim kayıtlarını bir .json dosyası
+// olarak indirir. Kullanıcı arayüzünde görünmez (bilinçli tercih —
+// sıradan kullanıcı için gereksiz bir buton kalabalığı yaratmamak için),
+// ama geliştirme/analiz sırasında kolayca erişilebilir.
+window.exportFeedbackData = function () {
+  const log = readJson(FEEDBACK_STORAGE_KEY, []);
+  const blob = new Blob([JSON.stringify(log, null, 2)], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `saglikyon_feedback_${new Date().toISOString().slice(0, 10)}.json`;
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  URL.revokeObjectURL(url);
+  console.log(`${log.length} geri bildirim kaydı indirildi.`);
+  return log;
+};
 
 // ── History ───────────────────────────────
 function saveToHistory(text, result) {

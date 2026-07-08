@@ -665,23 +665,23 @@ textarea {
   vertical-align: -3px;
 }
 
-.bm-chevron {
-  transition: transform var(--t);
-  color: var(--text-3);
+.bodymap-top-label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font-body);
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-1);
 }
 
-.bm-collapse {
-  max-height: 0;
-  overflow: hidden;
-  transition: max-height .28s ease;
+.bodymap-top-label .material-symbols-outlined {
+  font-size: 18px;
+  color: var(--blue-700);
 }
 
-.bm-collapse.open {
-  max-height: 600px;
-}
-
-#bmToggle[aria-expanded="true"] .bm-chevron {
-  transform: rotate(180deg);
+#screenBodyMap .followup-wrap {
+  max-width: 680px;
 }
 
 .body-map-card {
@@ -1419,6 +1419,42 @@ textarea {
   white-space: nowrap;
 }
 
+.conf-info-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  flex-shrink: 0;
+  border-radius: var(--r-full);
+  background: none;
+  border: none;
+  color: var(--text-3);
+  cursor: pointer;
+  transition: background var(--t), color var(--t);
+}
+
+.conf-info-btn:hover,
+.conf-info-btn[aria-expanded="true"] {
+  background: var(--surface-2);
+  color: var(--blue-700);
+}
+
+.conf-info-btn .material-symbols-outlined {
+  font-size: 17px;
+}
+
+.conf-info-text {
+  margin: 6px 0 0;
+  font-size: 12.5px;
+  line-height: 1.5;
+  color: var(--text-3);
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: var(--r-md);
+  padding: 10px 12px;
+}
+
 .dept-symptoms-section {
   padding: 16px 28px;
   border-top: 1px solid var(--border);
@@ -1552,10 +1588,74 @@ textarea {
   line-height: 1.5;
 }
 
+#resultContent {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
 .result-disclaimer .material-symbols-outlined {
   font-size: 15px;
   flex-shrink: 0;
   margin-top: 1px;
+}
+
+/* Sonuç geri bildirimi (itiraz DEĞİL — basit faydalı/faydasız) */
+.result-feedback {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  padding: 14px 16px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg);
+  flex-wrap: wrap;
+}
+
+.result-feedback-label {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-2);
+}
+
+.result-feedback-btns {
+  display: flex;
+  gap: 8px;
+}
+
+.result-feedback-btns .feedback-btn {
+  flex: none;
+  min-height: 40px;
+  padding: 8px 14px;
+  font-size: 13px;
+}
+
+.result-feedback-btns .feedback-btn .material-symbols-outlined {
+  font-size: 16px;
+}
+
+.age-band-label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 16px;
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg);
+  font-size: 12.5px;
+  color: var(--text-3);
+}
+
+.age-band-label .material-symbols-outlined {
+  font-size: 16px;
+  color: var(--blue-700);
+  flex-shrink: 0;
+}
+
+.age-band-label strong {
+  color: var(--text-2);
+  font-weight: 600;
 }
 
 /* Family doctor card */

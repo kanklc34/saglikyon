@@ -3,7 +3,7 @@
 // Dil desteği: lang parametresi dışarıdan gelir
 // ============================================
 
-import { SYMPTOM_DATABASE, DEPARTMENTS, FOLLOW_UP_TEMPLATES } from './symptom-db.js';
+import { SYMPTOM_DATABASE, DEPARTMENTS, FOLLOW_UP_TEMPLATES, AGE_SENSITIVE_SYMPTOM_IDS } from './symptom-db.js';
 import { matchKeywords, normalizeForSearch, isNegated, analyzeIntensifiers } from './nlp.js';
 import { getCandidateSymptomIds } from './keyword-index.js';
 
@@ -11,6 +11,75 @@ const IMMEDIATE_RED_FLAG_IDS = new Set([
   'felc', 'gorme_kaybi', 'hemoptizi', 'bayilma', 'nöbet',
   'inme_belirtisi', 'siddetli_bas_agrisi', 'anevrizma_belirti'
 ]);
+
+// ── Yaş grubu tespiti ve sorusu ──────────────────────────────
+// AMAÇ: Aynı semptom (örn. ateş) yaşa göre çok farklı aciliyet taşıyor
+// (bebekte ateş ile yetişkinde ateş aynı şey değil), ama bunun için HER
+// girdide kullanıcıya soru sormak sürtünme yaratır. Bu yüzden:
+//   1) Önce metinden AÇIK bir yaş ipucu aramaya çalışıyoruz (varsa soru
+//      hiç sorulmuyor, sessizce kullanılıyor).
+//   2) İpucu yoksa VE eşleşen semptom(lar) gerçekten yaşa duyarlıysa
+//      (bkz. AGE_SENSITIVE_SYMPTOM_IDS), tek bir soru soruyoruz.
+//   3) Sonuç ekranında hangi yaş grubunun varsayıldığı HER ZAMAN görünür
+//      kalıyor — sessiz, düzeltilemez bir varsayım asla yapılmıyor.
+const AGE_BAND_QUESTION_ID = '__age_band__';
+const AGE_BAND_OPTIONS = ['Bebek (0-2 yaş)', 'Çocuk (2-12 yaş)', 'Genç/Yetişkin (12-65 yaş)', '65 yaş üstü'];
+const AGE_BAND_VALUES = ['bebek', 'cocuk', 'yetiskin', 'yasli'];
+
+// Metinden AÇIK yaş ipucu çıkarma — sadece güçlü/net sinyaller kabul
+// edilir (yanlış varsayım riskini düşük tutmak için kasıtlı olarak
+// muhafazakâr: "anneme bakıyorum" gibi dolaylı ipuçları YOK sayılır).
+function detectAgeBand(text) {
+  const norm = text.toLowerCase();
+
+  if (/\bbebe(ğ|g)im\b|\byenido(ğ|g)an\b|\b0-?1 ya\b/.test(norm)) return 'bebek';
+
+  const ayMatch = norm.match(/(\d{1,2})\s*ayl[ıi]k/);
+  if (ayMatch) {
+    const months = parseInt(ayMatch[1], 10);
+    return months < 24 ? 'bebek' : 'cocuk';
+  }
+
+  const yasMatch = norm.match(/(\d{1,3})\s*ya[şs][ıi]?nda|(\d{1,3})\s*ya[şs][ıi]ndaki|(\d{1,3})\s*ya[şs][ıi]m/);
+  if (yasMatch) {
+    const age = parseInt(yasMatch[1] || yasMatch[2] || yasMatch[3], 10);
+    if (age < 2) return 'bebek';
+    if (age < 12) return 'cocuk';
+    if (age < 65) return 'yetiskin';
+    return 'yasli';
+  }
+
+  return null;
+}
+
+function buildAgeBandQuestion() {
+  return {
+    question: 'Bu değerlendirme kimin için?',
+    symptomId: AGE_BAND_QUESTION_ID,
+    impact: {},
+    urgent: false,
+    type: 'options',
+    options: AGE_BAND_OPTIONS,
+    ageBandValues: AGE_BAND_VALUES,
+  };
+}
+
+// previousAnswers içinde yaş grubu sorusu cevaplanmışsa, seçilen değeri
+// ('bebek'/'cocuk'/'yetiskin'/'yasli') döner; yoksa null.
+function resolveAnsweredAgeBand(previousAnswers) {
+  if (!Array.isArray(previousAnswers)) return null;
+  for (const answer of previousAnswers) {
+    if (answer.symptomId !== AGE_BAND_QUESTION_ID) continue;
+    const idx = (answer.options || AGE_BAND_OPTIONS).indexOf(answer.answer);
+    const values = answer.ageBandValues || AGE_BAND_VALUES;
+    if (idx >= 0 && values[idx]) return values[idx];
+  }
+  return null;
+}
+
+function needsAgeBandQuestion(extractedSymptoms) {
+  return extractedSymptoms.some(s => AGE_SENSITIVE_SYMPTOM_IDS.has(s.id));
+}
 
 // ── Belirsiz kırmızı bayrak kelimeleri ──────────────────────
 // Bu listedeki ID'ler ciddi durumları da kapsayan kırmızı bayraklar,
@@ -200,15 +269,27 @@ export function analyzeSymptoms(inputText, previousAnswers = null, lang = 'tr', 
     return { isEmergency: true, emergencyMessage: triage.message, emergencyName: triage.name, verification: null, matchedSymptoms: extractedSymptoms.map(s => s.id) };
   }
 
+  // Yaş grubu: önce metinden açık ipucu ara, yoksa (daha önce) cevaplanmış
+  // mı diye bak. İkisi de yoksa ve semptom(lar) yaşa duyarlıysa, tek bir
+  // soru sorulacak (aşağıda, takip soruları listesine eklenerek).
+  const detectedAgeBand = detectAgeBand(inputText);
+  const resolvedAgeBand = detectedAgeBand || resolveAnsweredAgeBand(previousAnswers);
+
   if (!previousAnswers) {
     const followUpQuestions = generateFollowUpQuestions(extractedSymptoms, lang, universalQuestions);
+    if (!detectedAgeBand && needsAgeBandQuestion(extractedSymptoms)) {
+      followUpQuestions.unshift(buildAgeBandQuestion());
+    }
     if (followUpQuestions.length > 0) {
       return { needsMoreInfo: true, followUpQuestions, matchedSymptoms: extractedSymptoms.map(s => s.id), primarySymptom: extractedSymptoms[0].id, lang };
     }
   }
 
-  const scores = calculateDepartmentScores(extractedSymptoms, previousAnswers);
-  return buildResult(scores, extractedSymptoms, triage, lang);
+  const scores = calculateDepartmentScores(extractedSymptoms, previousAnswers, resolvedAgeBand);
+  const result = buildResult(scores, extractedSymptoms, triage, lang);
+  result.ageBand = resolvedAgeBand || 'yetiskin'; // görünürlük için: varsayılan da açıkça belirtiliyor
+  result.ageBandWasAssumed = !resolvedAgeBand;
+  return result;
 }
 
 // Performans: TR+EN birleşik anahtar kelime listesini her çağrıda
@@ -326,7 +407,16 @@ function generateFollowUpQuestions(extractedSymptoms, lang, universalQuestions) 
     for (const template of langTemplates) {
       if (addedQuestions.has(template.question)) continue;
       if (questions.length >= 2) break;
-      questions.push({ question: template.question, symptomId: symptom.id, impact: template.impact, urgent: Boolean(template.urgent), type: 'yesno' });
+      questions.push({
+        question: template.question,
+        symptomId: symptom.id,
+        impact: template.impact,
+        urgent: Boolean(template.urgent),
+        type: template.type || 'yesno',
+        options: template.options,
+        optionDays: template.optionDays,
+        thresholdDays: template.thresholdDays,
+      });
       addedQuestions.add(template.question);
     }
   }
@@ -395,7 +485,7 @@ function createAnswerLookup(previousAnswers, lang = 'tr') {
   };
 }
 
-function calculateDepartmentScores(extractedSymptoms, previousAnswers) {
+function calculateDepartmentScores(extractedSymptoms, previousAnswers, ageBand = null) {
   // Her bölüm önsel olasılığından (prior) başlar. Kanıt geldikçe
   // log-odds uzayında TOPLANIR — bu, olasılık uzayında ÇARPMAK
   // anlamına gelir (naive Bayes'in temel mantığı).
@@ -420,17 +510,78 @@ function calculateDepartmentScores(extractedSymptoms, previousAnswers) {
     });
   }
 
+  // Yaş grubu etkisi: mevcut veritabanında neredeyse hiçbir semptom
+  // "cocuk" (Çocuk Sağlığı) bölümüne ağırlık vermiyor — yani bir çocuk
+  // için yazılan "ateş" gibi bir şikayet bile, tespit edilmeden önce
+  // hep yetişkin bölümlerine (Dahiliye vb.) yönlendiriliyordu. Yaş
+  // grubu bebek/çocuk olarak belirlendiğinde ve semptom yaşa duyarlıysa,
+  // Çocuk Sağlığı bölümüne güçlü, doğrudan bir destek ekliyoruz.
+  if ((ageBand === 'bebek' || ageBand === 'cocuk') && extractedSymptoms.some(s => AGE_SENSITIVE_SYMPTOM_IDS.has(s.id))) {
+    if (!('cocuk' in logOdds)) logOdds.cocuk = priorLogOdds('cocuk');
+    if (ageBand === 'bebek') {
+      // BEBEK (0-2 yaş): klinik triyaj protokollerinde (NICE "trafik ışığı",
+      // AAP rehberleri) ateş gibi yaşa-duyarlı belirtiler, "hafif görünse
+      // bile" düşük eşikle değerlendirilir — çünkü bebekler hızlı
+      // kötüleşebilir ve "hafif/şiddetli" değerlendirmesi bir yetişkinin
+      // kendi kendini değerlendirmesi kadar güvenilir değil. Bu yüzden
+      // bebek için diğer sinyaller (süre kısa, şiddet hafif vb.) ne olursa
+      // olsun Çocuk Sağlığı yönlendirmesi BASKIN kalmalı — bu yüzden
+      // sadece boost eklemek yerine, rakip yetişkin bölümlerini de
+      // doğrudan bastırıyoruz.
+      logOdds.cocuk += 6.5;
+      for (const adultDept of ['aile_hekimi', 'dahiliye', 'kbb', 'gogus', 'gastroenteroloji', 'genel_cerrahi', 'endokrinoloji', 'psikiyatri']) {
+        if (adultDept in logOdds) logOdds[adultDept] -= 2.0;
+      }
+    } else {
+      // ÇOCUK (2-12 yaş): daha büyük çocuklarda "hafif ve kısa süreli"
+      // sinyali bebeklere göre daha güvenilir kabul edilebilir, o yüzden
+      // güçlü ama BASKIN olmayan bir destek yeterli — diğer sinyallerle
+      // birlikte tartılmasına izin veriyoruz (rakip bölümleri bastırmıyoruz).
+      logOdds.cocuk += 3.2;
+    }
+  }
+
   if (Array.isArray(previousAnswers)) {
     for (const answer of previousAnswers) {
       if (!answer.impact) continue;
       const isYes = ['Evet', 'Yes'].includes(answer.answer);
       const isNo = ['Hayır', 'No'].includes(answer.answer);
+
+      // Süreye dayalı seçenek soruları (örn. "Kaç gündür ateşiniz var?"):
+      // thresholdDays/optionDays tanımlıysa, seçilen aralığın günü eşiği
+      // karşılıyor mu diye bakıp buna göre destekleyici/zayıflatıcı kanıt
+      // uyguluyoruz — böylece thresholdDays artık gerçekten skora yansıyor
+      // (önceden hiç okunmayan, ölü bir alandı).
+      let thresholdMet = null;
+      if (answer.thresholdDays != null && Array.isArray(answer.optionDays) && Array.isArray(answer.options)) {
+        const idx = answer.options.indexOf(answer.answer);
+        const days = idx >= 0 ? answer.optionDays[idx] : null;
+        if (days != null) thresholdMet = days >= answer.thresholdDays;
+      }
+
+      // Genel "seçenek" tipi sorular (örn. şiddet: hafif/orta/şiddetli,
+      // genel süre: bugün/birkaç gün/1 ay+): daha önce bu sorulara verilen
+      // cevap SKORA HİÇ YANSIMIYORDU (ne Evet/Hayır'a ne thresholdDays'e
+      // uyuyordu, sessizce atlanıyordu). optionWeights (0-1 aralığında,
+      // seçilen şıkkın ne kadar "destekleyici kanıt" sayılacağını belirten
+      // bir ağırlık) tanımlıysa, artık bu da orantılı şekilde skora
+      // yansıtılıyor — örn. "şiddetli" cevabı, "hafif" cevabından çok
+      // daha güçlü bir destek sağlıyor.
+      let optionWeight = null;
+      if (thresholdMet === null && Array.isArray(answer.optionWeights) && Array.isArray(answer.options)) {
+        const idx = answer.options.indexOf(answer.answer);
+        if (idx >= 0 && answer.optionWeights[idx] != null) optionWeight = answer.optionWeights[idx];
+      }
+
       for (const [id, boost] of Object.entries(answer.impact)) {
         if (!(id in logOdds)) logOdds[id] = priorLogOdds(id);
         // "Evet" kanıtı destekler, "Hayır" kanıtı zayıflatır — ikisi de
         // aynı log-odds mantığıyla, simetrik biçimde işlenir.
-        if (isYes) logOdds[id] += boost * 1.6;
-        if (isNo) logOdds[id] -= boost * 1.1;
+        if (thresholdMet === true) logOdds[id] += boost * 1.6;
+        else if (thresholdMet === false) logOdds[id] -= boost * 0.5;
+        else if (optionWeight !== null) logOdds[id] += boost * 1.6 * optionWeight;
+        else if (isYes) logOdds[id] += boost * 1.6;
+        else if (isNo) logOdds[id] -= boost * 1.1;
       }
     }
   }

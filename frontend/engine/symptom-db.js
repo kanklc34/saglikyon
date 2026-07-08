@@ -15917,6 +15917,42 @@ export const SYMPTOM_DATABASE = [
     followUp: true
   },
 ]
+
+// ============================================
+// YAŞA DUYARLI SEMPTOMLAR
+// ============================================
+// Bu semptomlarda aciliyet/yönlendirme yaşa göre GERÇEKTEN değişiyor
+// (örn. bebekte ateş ile yetişkinde ateş çok farklı aciliyet taşır).
+// 142 semptomun HER BİRİNE ayrı bir alan eklemek yerine, tek bir yerden
+// yönetilebilir bu liste tercih edildi — yeni bir yaşa-duyarlı semptom
+// eklemek istendiğinde sadece buraya id eklemek yeterli.
+// Not: Bu, tam bir tıbbi sınıflandırma değil, başlangıç seti — zamanla
+// genişletilebilir (bkz. Adım: "kanıta dayalı büyüme").
+export const AGE_SENSITIVE_SYMPTOM_IDS = new Set([
+  // İlk grup (bkz. konuşma geçmişi):
+  'ates',
+  'bogaz_agrisi',
+  'nefes_darligi',
+  'oksuruk',
+  'karin_agrisi',
+  'ishal',
+  'cilt_dokuntu',
+  'nöbet',
+  'mide_bulantisi',
+  // İkinci grup — gerekçeler:
+  'kulak_agrisi',      // çocuklarda orta kulak iltihabı çok yaygın, yönetimi farklı
+  'sarilik',           // yenidoğan sarılığı, yetişkindekinden tamamen farklı aciliyette (kernikterus riski)
+  'kanli_diski',       // bebekte invajinasyon gibi acil durumların işareti olabilir
+  'kabizlik',          // bebekte "hiç kaka yapmama" farklı bir kırmızı bayrak
+  'burun_tikanklik',   // bebekler burunla nefes almaya mecbur, tıkanıklık daha ciddi
+  'burun_akintisi',    // aynı gerekçe
+  'soguk_alginligi',   // solunum yolu enfeksiyonları bebek/çocukta daha hızlı ilerleyebilir
+  'balgam',            // aynı gerekçe
+  'enfeksiyon_genel',  // aynı gerekçe
+  'yorgunluk',         // bebekte "aşırı uykulu/halsiz" ciddi bir kırmızı bayrak
+  'kilo_kaybi',        // çocukta büyüme geriliği endişesi, farklı değerlendirme gerektirir
+]);
+
 // ============================================
 // ACİL DURUM KURALLARI
 // Belirli semptom kombinasyonları = ACİL
@@ -15980,10 +16016,10 @@ export const FOLLOW_UP_TEMPLATES = {
   'bogaz_agrisi': [
     { question: 'Ateşiniz var mı?', impact: { dahiliye: 0.2, kbb: 0.1 } },
     { question: 'Yutkunurken çok şiddetli ağrı oluyor mu?', impact: { kbb: 0.3 } },
-    { question: 'Kaç gündür devam ediyor?', impact: { aile_hekimi: 0.2 }, thresholdDays: 3 }
+    { question: 'Kaç gündür devam ediyor?', impact: { aile_hekimi: 0.2 }, thresholdDays: 3, type: 'options', options: ['1-2 gün', '3-6 gün', '1 haftadan uzun'], optionDays: [1, 3, 7] }
   ],
   'karin_agrisi': [
-    { question: 'Ağrı ani mi başladı yoksa yavaş yavaş mı?', impact: { genel_cerrahi: 0.3 } },
+    { question: 'Ağrı ani mi başladı yoksa yavaş yavaş mı?', impact: { genel_cerrahi: 0.3 }, type: 'options', options: ['Ani başladı', 'Yavaş yavaş başladı'] },
     { question: 'Ateşiniz var mı?', impact: { dahiliye: 0.2, genel_cerrahi: 0.15 } },
     { question: 'Kusma var mı?', impact: { gastroenteroloji: 0.2, genel_cerrahi: 0.15 } },
     { question: 'Ağrı sağ alt karında mı?', impact: { genel_cerrahi: 0.4 } }
@@ -16020,7 +16056,7 @@ export const FOLLOW_UP_TEMPLATES = {
     { question: 'Uyuşma veya karıncalanma var mı?', impact: { noroloji: 0.3 } }
   ],
   'ates': [
-    { question: 'Kaç gündür ateşiniz var?', impact: { dahiliye: 0.2 }, thresholdDays: 3 },
+    { question: 'Kaç gündür ateşiniz var?', impact: { dahiliye: 0.2 }, thresholdDays: 3, type: 'options', options: ['1-2 gün', '3-6 gün', '1 haftadan uzun'], optionDays: [1, 3, 7] },
     { question: 'Öksürük var mı?', impact: { gogus: 0.2, kbb: 0.15 } },
     { question: 'Boğaz ağrınız var mı?', impact: { kbb: 0.2, aile_hekimi: 0.1 } }
   ],

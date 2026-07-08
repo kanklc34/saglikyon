@@ -22,7 +22,7 @@
 
   <header class="header">
     <div class="header-inner">
-      <a class="brand" href="#">
+      <a class="brand" href="#" id="brandHome">
         <div class="brand-icon"><span class="material-symbols-outlined">clinical_notes</span></div>
         <span class="brand-name">SağlıkYön</span>
       </a>
@@ -57,42 +57,72 @@
       <h1 class="hero-h1">Nasıl hissediyorsunuz?</h1>
       <p class="hero-sub">Şikayetinizi doğal dilde yazın. Sistem analiz ederek doğru bölümü ve aciliyet düzeyini
         belirler.</p>
+
+      <div class="input-card">
+        <div class="input-wrap" id="inputWrap">
+          <span class="material-symbols-outlined input-search-icon">edit_note</span>
+          <textarea id="symptomInput" class="symptom-textarea"
+            placeholder="Örn: Üç gündür başım ağrıyor, bulantım var ve ışığa bakınca artıyor…" rows="1" maxlength="500"
+            aria-label="Şikayet girişi"></textarea>
+          <button id="voiceBtn" class="voice-btn" type="button" aria-label="Sesli giriş">
+            <span class="material-symbols-outlined">mic</span>
+          </button>
+        </div>
+        <div class="input-footer">
+          <span id="voiceStatus" class="voice-status hidden"></span>
+          <span id="rateLimitStatus" class="rate-status" aria-live="polite"></span>
+          <span class="char-count"><span id="charCount">0</span>/500</span>
+        </div>
+        <div class="chips-row">
+          <span class="chip">Baş ağrısı + bulantı</span>
+          <span class="chip">Göğüs ağrısı + nefes darlığı</span>
+          <span class="chip">Bel ağrısı</span>
+          <span class="chip">Ateş + boğaz ağrısı</span>
+        </div>
+        <button id="analyzeBtn" class="btn-analyze" type="button">
+          <span class="material-symbols-outlined">search</span>
+          <span>Hangi Bölüme Gitmeliyim?</span>
+        </button>
+        <div id="errorMsg" class="error-msg hidden"></div>
+
+        <button class="section-label" id="bmToggle" type="button">
+          <span><span class="material-symbols-outlined">touch_app</span> Anlatmakta zorlanıyorsanız vücut haritasından
+            işaretleyin</span>
+          <span class="material-symbols-outlined">chevron_right</span>
+        </button>
+
+        <div class="severity-row">
+          <div class="sev sev-red">Acil</div>
+          <div class="sev sev-amber">Yakın zamanda görün</div>
+          <div class="sev sev-green">Rutin takip</div>
+        </div>
+
+        <div class="trust-row">
+          <div class="trust-item"><span class="material-symbols-outlined">lock</span><span>Veri cihazda kalır</span>
+          </div>
+          <div class="trust-item"><span class="material-symbols-outlined">fact_check</span><span>4 seviyeli
+              triage</span>
+          </div>
+          <div class="trust-item"><span class="material-symbols-outlined">forum</span><span>Takip soruları</span></div>
+          <div class="trust-item"><span class="material-symbols-outlined">emergency</span><span>Acil tespiti</span>
+          </div>
+        </div>
+      </div>
     </div>
 
-    <div class="input-card">
-      <div class="input-wrap" id="inputWrap">
-        <span class="material-symbols-outlined input-search-icon">edit_note</span>
-        <textarea id="symptomInput" class="symptom-textarea"
-          placeholder="Örn: Üç gündür başım ağrıyor, bulantım var ve ışığa bakınca artıyor…" rows="1" maxlength="500"
-          aria-label="Şikayet girişi"></textarea>
-        <button id="voiceBtn" class="voice-btn" type="button" aria-label="Sesli giriş">
-          <span class="material-symbols-outlined">mic</span>
-        </button>
-      </div>
-      <div class="input-footer">
-        <span id="voiceStatus" class="voice-status hidden"></span>
-        <span id="rateLimitStatus" class="rate-status" aria-live="polite"></span>
-        <span class="char-count"><span id="charCount">0</span>/500</span>
-      </div>
-      <div class="chips-row">
-        <span class="chip">Baş ağrısı + bulantı</span>
-        <span class="chip">Göğüs ağrısı + nefes darlığı</span>
-        <span class="chip">Bel ağrısı</span>
-        <span class="chip">Ateş + boğaz ağrısı</span>
-      </div>
-      <button id="analyzeBtn" class="btn-analyze" type="button">
-        <span class="material-symbols-outlined">search</span>
-        <span>Hangi Bölüme Gitmeliyim?</span>
-      </button>
-      <div id="errorMsg" class="error-msg hidden"></div>
-
-      <button class="section-label" id="bmToggle" type="button" aria-expanded="false" aria-controls="bmCollapse">
-        <span><span class="material-symbols-outlined">touch_app</span> Anlatmakta zorlanıyorsanız vücut haritasından
-          işaretleyin</span>
-        <span class="material-symbols-outlined bm-chevron">expand_more</span>
-      </button>
-      <div class="bm-collapse" id="bmCollapse">
-        <div class="body-map-card">
+    <!-- EKRAN VÜCUT HARİTASI -->
+    <div id="screenBodyMap" class="screen hidden">
+      <div class="followup-wrap">
+        <div class="followup-top">
+          <button class="back-btn" id="backFromBodyMap">
+            <span class="material-symbols-outlined">arrow_back</span>
+          </button>
+          <div class="bodymap-top-label">
+            <span class="material-symbols-outlined">touch_app</span>
+            <span id="bodyMapScreenTitle">Ağrının veya rahatsızlığın olduğu bölgeye dokunun</span>
+          </div>
+        </div>
+        <div class="body-map-card" id="bodyMapCard">
           <div class="body-map-inner">
             <div class="bm-svg-col">
               <div class="bm-tabs">
@@ -189,20 +219,7 @@
           </div>
         </div>
       </div>
-
-      <div class="severity-row">
-        <div class="sev sev-red">Acil</div>
-        <div class="sev sev-amber">Yakın zamanda görün</div>
-        <div class="sev sev-green">Rutin takip</div>
-      </div>
-
-      <div class="trust-row">
-        <div class="trust-item"><span class="material-symbols-outlined">lock</span><span>Veri cihazda kalır</span></div>
-        <div class="trust-item"><span class="material-symbols-outlined">fact_check</span><span>4 seviyeli triage</span>
-        </div>
-        <div class="trust-item"><span class="material-symbols-outlined">forum</span><span>Takip soruları</span></div>
-        <div class="trust-item"><span class="material-symbols-outlined">emergency</span><span>Acil tespiti</span></div>
-      </div>
+    </div>
     </div>
 
     <!-- EKRAN 2: TAKİP SORULARI -->
