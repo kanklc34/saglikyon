@@ -1,11 +1,21 @@
 {
   "total": 64,
   "positive": 48,
-  "positive_passed": 2,
+  "positive_passed": 10,
   "negation": 16,
   "negation_passed": 15,
-  "department_correct": 3,
-  "department_total": 48,
+  "department_correct": 2,
+  "department_total": 8,
+  "category_counts": {
+    "resolved": 11,
+    "emergency": 10,
+    "needsMoreInfo": 23,
+    "noMatch": 20
+  },
+  "emergency_symptom_correct": 5,
+  "emergency_total": 9,
+  "needs_more_info_symptom_correct": 5,
+  "needs_more_info_total": 20,
   "symptom_mismatch_cases": [
     {
       "index": 0,
@@ -21,161 +31,35 @@
         "primaryDepartmentName": "Nöroloji",
         "primaryDepartmentIcon": "🧠",
         "primaryDepartmentColor": "#9b59b6",
-        "confidence": "medium",
-        "confidenceScore": 59,
+        "confidence": "low",
+        "confidenceScore": 39,
         "alternatives": [],
         "isFamilyDoctor": false,
         "familyDoctorMessage": null,
-        "reasoning": "gaz, konuşamıyorum belirtileri birlikte değerlendirildiğinde en uygun bölüm Nöroloji görünüyor. Belirtileriniz acil görünmüyor ancak geciktirilmemeli.",
+        "reasoning": "\"konuşamıyorum\" şikayeti en çok Nöroloji ile uyumlu görünüyor. Belirtileriniz aynı gün doktor tarafından değerlendirilmelidir.",
         "matchedSymptoms": [
-          {
-            "id": "siskinlik",
-            "keyword": "gaz",
-            "score": 100
-          },
           {
             "id": "konusma_bozuklugu",
             "keyword": "konuşamıyorum",
             "score": 96
           }
         ],
-        "careLevel": "soon",
-        "careLabel": "Kısa sürede randevu alın",
-        "careSummary": "Belirtileriniz acil görünmüyor ancak geciktirilmemeli.",
-        "careAdvice": "İlgili bölümden yakın tarihe randevu almanız uygun olur.",
-        "note": "İlgili bölümden yakın tarihe randevu almanız uygun olur. Bu öneri teşhis değildir; kesin tanı için doktor muayenesi gerekir.",
-        "timestamp": "2026-06-08T14:41:57.756Z",
-        "lang": "tr"
+        "careLevel": "urgent",
+        "careLabel": "Aynı gün değerlendirme iyi olur",
+        "careSummary": "Belirtileriniz aynı gün doktor tarafından değerlendirilmelidir.",
+        "careAdvice": "Mümkünse bugün içinde acil servis veya ilgili branşa başvurun.",
+        "note": "Mümkünse bugün içinde acil servis veya ilgili branşa başvurun. Bu öneri teşhis değildir; kesin tanı için doktor muayenesi gerekir.",
+        "timestamp": "2026-07-11T13:13:39.363Z",
+        "lang": "tr",
+        "ageBand": "yetiskin",
+        "ageBandWasAssumed": true
       },
       "matchedIds": [
-        "siskinlik",
         "konusma_bozuklugu"
       ],
+      "resultCategory": "resolved",
       "symptomMatched": false,
       "departmentMatched": true,
-      "passed": false
-    },
-    {
-      "index": 1,
-      "symptomId": "inme_belirtisi",
-      "expectedDepartment": "noroloji",
-      "mode": "positive",
-      "text": "Sol kolumu ve bacağımı şu an hiç hareket ettiremiyorum, sanki vücudumun yarısı tamamen boşaldı.",
-      "lang": "tr",
-      "result": {
-        "isEmergency": true,
-        "emergencyMessage": "\"vücudumun yarısı boşaldı\" ciddi bir duruma işaret edebilir. Hemen 112 ile iletişime geçin.",
-        "emergencyName": "inme_belirtisi",
-        "matchedSymptoms": [
-          "inme_belirtisi"
-        ]
-      },
-      "matchedIds": [
-        null
-      ],
-      "symptomMatched": false,
-      "departmentMatched": null,
-      "passed": false
-    },
-    {
-      "index": 2,
-      "symptomId": "inme_belirtisi",
-      "expectedDepartment": "noroloji",
-      "mode": "positive",
-      "text": "Az önce aniden kelimeleri birbirine karıştırmaya başladım ve sağ tarafımda ciddi bir his kaybı oluştu.",
-      "lang": "tr",
-      "result": {
-        "isEmergency": true,
-        "emergencyMessage": "Ani felç veya konuşma kaybı benzeri \"konuşamıyorum ani\" belirtisi acil müdahale gerektirebilir. Hemen 112 ile iletişime geçin.",
-        "emergencyName": "felc",
-        "matchedSymptoms": [
-          "siskinlik",
-          "felc",
-          "inme_belirtisi",
-          "konusma_bozuklugu"
-        ]
-      },
-      "matchedIds": [
-        null,
-        null,
-        null,
-        null
-      ],
-      "symptomMatched": false,
-      "departmentMatched": null,
-      "passed": false
-    },
-    {
-      "index": 4,
-      "symptomId": "anevrizma_belirti",
-      "expectedDepartment": "kardiyoloji",
-      "mode": "positive",
-      "text": "Karnımın tam ortasında sanki bir kalp atıyormuş gibi sürekli bir hareketlilik ve zonklama hissediyorum.",
-      "lang": "tr",
-      "result": {
-        "needsMoreInfo": true,
-        "followUpQuestions": [
-          {
-            "question": "Ağrı ani mi başladı yoksa yavaş yavaş mı?",
-            "symptomId": "karin_agrisi",
-            "impact": {
-              "genel_cerrahi": 0.3
-            },
-            "urgent": false,
-            "type": "yesno"
-          },
-          {
-            "question": "Ateşiniz var mı?",
-            "symptomId": "karin_agrisi",
-            "impact": {
-              "dahiliye": 0.2,
-              "genel_cerrahi": 0.15
-            },
-            "urgent": false,
-            "type": "yesno"
-          }
-        ],
-        "matchedSymptoms": [
-          "karin_agrisi"
-        ],
-        "primarySymptom": "karin_agrisi",
-        "lang": "tr"
-      },
-      "matchedIds": [
-        null
-      ],
-      "symptomMatched": false,
-      "departmentMatched": null,
-      "passed": false
-    },
-    {
-      "index": 5,
-      "symptomId": "anevrizma_belirti",
-      "expectedDepartment": "kardiyoloji",
-      "mode": "positive",
-      "text": "Göğsümün içinden sırtıma doğru yayılan, sanki bir şeylerin parçalandığını hissettiren çok şiddetli bir sancı başladı.",
-      "lang": "tr",
-      "result": {
-        "isEmergency": true,
-        "emergencyMessage": "\"göğsümden sırtıma yayılan acı\" ciddi bir duruma işaret edebilir. Hemen 112 ile iletişime geçin.",
-        "emergencyName": "anevrizma_belirti",
-        "matchedSymptoms": [
-          "gogus_agrisi",
-          "meme_sorunu",
-          "anevrizma_belirti",
-          "mide_ulser",
-          "bel_agrisi"
-        ]
-      },
-      "matchedIds": [
-        null,
-        null,
-        null,
-        null,
-        null
-      ],
-      "symptomMatched": false,
-      "departmentMatched": null,
       "passed": false
     },
     {
@@ -189,13 +73,36 @@
         "needsMoreInfo": true,
         "followUpQuestions": [
           {
+            "question": "Bu değerlendirme kimin için?",
+            "symptomId": "__age_band__",
+            "impact": {},
+            "urgent": false,
+            "type": "options",
+            "options": [
+              "Bebek (0-2 yaş)",
+              "Çocuk (2-12 yaş)",
+              "Genç/Yetişkin (12-65 yaş)",
+              "65 yaş üstü"
+            ],
+            "ageBandValues": [
+              "bebek",
+              "cocuk",
+              "yetiskin",
+              "yasli"
+            ]
+          },
+          {
             "question": "Ağrı ani mi başladı yoksa yavaş yavaş mı?",
             "symptomId": "karin_agrisi",
             "impact": {
               "genel_cerrahi": 0.3
             },
             "urgent": false,
-            "type": "yesno"
+            "type": "options",
+            "options": [
+              "Ani başladı",
+              "Yavaş yavaş başladı"
+            ]
           },
           {
             "question": "Ateşiniz var mı?",
@@ -209,18 +116,17 @@
           }
         ],
         "matchedSymptoms": [
-          "migren",
-          "karin_agrisi",
-          "madde_kullanimi"
+          "madde_kullanimi",
+          "karin_agrisi"
         ],
-        "primarySymptom": "migren",
+        "primarySymptom": "madde_kullanimi",
         "lang": "tr"
       },
       "matchedIds": [
-        null,
-        null,
-        null
+        "madde_kullanimi",
+        "karin_agrisi"
       ],
+      "resultCategory": "needsMoreInfo",
       "symptomMatched": false,
       "departmentMatched": null,
       "passed": false
@@ -233,24 +139,65 @@
       "text": "Kafamın içinde sanki bir bomba patladı, acıdan gözlerimi bile açamıyorum.",
       "lang": "tr",
       "result": {
-        "isEmergency": true,
-        "emergencyMessage": "\"kafa sancısı\" ciddi bir duruma işaret edebilir. Hemen 112 ile iletişime geçin.",
-        "emergencyName": "siddetli_bas_agrisi",
+        "needsMoreInfo": true,
+        "followUpQuestions": [
+          {
+            "question": "Bu değerlendirme kimin için?",
+            "symptomId": "__age_band__",
+            "impact": {},
+            "urgent": false,
+            "type": "options",
+            "options": [
+              "Bebek (0-2 yaş)",
+              "Çocuk (2-12 yaş)",
+              "Genç/Yetişkin (12-65 yaş)",
+              "65 yaş üstü"
+            ],
+            "ageBandValues": [
+              "bebek",
+              "cocuk",
+              "yetiskin",
+              "yasli"
+            ]
+          },
+          {
+            "question": "Kilo değişikliği var mı?",
+            "symptomId": "yorgunluk",
+            "impact": {
+              "endokrinoloji": 0.3
+            },
+            "urgent": false,
+            "type": "yesno"
+          },
+          {
+            "question": "İştahınızda değişiklik var mı?",
+            "symptomId": "yorgunluk",
+            "impact": {
+              "dahiliye": 0.2,
+              "endokrinoloji": 0.2
+            },
+            "urgent": false,
+            "type": "yesno"
+          }
+        ],
         "matchedSymptoms": [
-          "bas_agrisi",
           "yorgunluk",
-          "tansiyon",
-          "siddetli_bas_agrisi",
-          "ben_degisimi"
-        ]
+          "bipolar_bozukluk",
+          "ben_degisimi",
+          "bas_agrisi",
+          "panik_atak"
+        ],
+        "primarySymptom": "yorgunluk",
+        "lang": "tr"
       },
       "matchedIds": [
-        null,
-        null,
-        null,
-        null,
-        null
+        "yorgunluk",
+        "bipolar_bozukluk",
+        "ben_degisimi",
+        "bas_agrisi",
+        "panik_atak"
       ],
+      "resultCategory": "needsMoreInfo",
       "symptomMatched": false,
       "departmentMatched": null,
       "passed": false
@@ -263,38 +210,15 @@
       "text": "Bir anda başlayan ve dayanılmaz bir seviyeye ulaşan, zonklayıcı bir ağrı hissediyorum.",
       "lang": "tr",
       "result": {
-        "isEmergency": false,
-        "needsMoreInfo": false,
-        "primaryDepartment": "gastroenteroloji",
-        "primaryDepartmentName": "Gastroenteroloji",
-        "primaryDepartmentIcon": "🫃",
-        "primaryDepartmentColor": "#d35400",
-        "confidence": "high",
-        "confidenceScore": 84,
-        "alternatives": [],
-        "isFamilyDoctor": false,
-        "familyDoctorMessage": null,
-        "reasoning": "\"yemekten sonra ağrı\" şikayeti en çok Gastroenteroloji ile uyumlu görünüyor. Belirtileriniz aynı gün doktor tarafından değerlendirilmelidir.",
-        "matchedSymptoms": [
-          {
-            "id": "mide_ulser",
-            "keyword": "yemekten sonra ağrı",
-            "score": 99
-          }
-        ],
-        "careLevel": "urgent",
-        "careLabel": "Aynı gün değerlendirme iyi olur",
-        "careSummary": "Belirtileriniz aynı gün doktor tarafından değerlendirilmelidir.",
-        "careAdvice": "Mümkünse bugün içinde acil servis veya ilgili branşa başvurun.",
-        "note": "Mümkünse bugün içinde acil servis veya ilgili branşa başvurun. Bu öneri teşhis değildir; kesin tanı için doktor muayenesi gerekir.",
-        "timestamp": "2026-06-08T14:42:11.931Z",
-        "lang": "tr"
+        "error": null,
+        "noMatch": true,
+        "message": "Şikayetinizi yeterince net anlayamadım. Lütfen daha detaylı yazın veya vücut haritasından destek alın.",
+        "suggestion": "Örnek: \"Başım ağrıyor ve mide bulantım var\" veya \"Göğsümde baskı hissediyorum\"."
       },
-      "matchedIds": [
-        "mide_ulser"
-      ],
+      "matchedIds": [],
+      "resultCategory": "noMatch",
       "symptomMatched": false,
-      "departmentMatched": false,
+      "departmentMatched": null,
       "passed": false
     },
     {
@@ -311,8 +235,8 @@
         "primaryDepartmentName": "Kadın Hastalıkları ve Doğum",
         "primaryDepartmentIcon": "🤰",
         "primaryDepartmentColor": "#e91e63",
-        "confidence": "high",
-        "confidenceScore": 96,
+        "confidence": "low",
+        "confidenceScore": 47,
         "alternatives": [],
         "isFamilyDoctor": false,
         "familyDoctorMessage": null,
@@ -329,12 +253,15 @@
         "careSummary": "Belirtileriniz aynı gün doktor tarafından değerlendirilmelidir.",
         "careAdvice": "Mümkünse bugün içinde acil servis veya ilgili branşa başvurun.",
         "note": "Mümkünse bugün içinde acil servis veya ilgili branşa başvurun. Bu öneri teşhis değildir; kesin tanı için doktor muayenesi gerekir.",
-        "timestamp": "2026-06-08T14:42:13.130Z",
-        "lang": "tr"
+        "timestamp": "2026-07-11T13:14:02.369Z",
+        "lang": "tr",
+        "ageBand": "yetiskin",
+        "ageBandWasAssumed": true
       },
       "matchedIds": [
         "vajinal_kanama"
       ],
+      "resultCategory": "resolved",
       "symptomMatched": false,
       "departmentMatched": false,
       "passed": false
@@ -353,6 +280,7 @@
         "suggestion": "Örnek: \"Başım ağrıyor ve mide bulantım var\" veya \"Göğsümde baskı hissediyorum\"."
       },
       "matchedIds": [],
+      "resultCategory": "noMatch",
       "symptomMatched": false,
       "departmentMatched": null,
       "passed": false
@@ -368,6 +296,7 @@
         "isEmergency": true,
         "emergencyMessage": "\"ağzım kaydı\" ciddi bir duruma işaret edebilir. Hemen 112 ile iletişime geçin.",
         "emergencyName": "inme_belirtisi",
+        "verification": null,
         "matchedSymptoms": [
           "inme_belirtisi",
           "konusma_bozuklugu",
@@ -378,13 +307,14 @@
         ]
       },
       "matchedIds": [
-        null,
-        null,
-        null,
-        null,
-        null,
-        null
+        "inme_belirtisi",
+        "konusma_bozuklugu",
+        "mide_bulantisi",
+        "depresyon",
+        "anksiyete",
+        "idrar_yanmasi"
       ],
+      "resultCategory": "emergency",
       "symptomMatched": false,
       "departmentMatched": null,
       "passed": false
@@ -422,19 +352,18 @@
           "dikkat_eksikligi",
           "omuz_agrisi",
           "kol_agrisi",
-          "bacak_uyusma",
-          "cilt_dokuntu"
+          "bacak_uyusma"
         ],
         "primarySymptom": "dikkat_eksikligi",
         "lang": "tr"
       },
       "matchedIds": [
-        null,
-        null,
-        null,
-        null,
-        null
+        "dikkat_eksikligi",
+        "omuz_agrisi",
+        "kol_agrisi",
+        "bacak_uyusma"
       ],
+      "resultCategory": "needsMoreInfo",
       "symptomMatched": false,
       "departmentMatched": null,
       "passed": false
@@ -453,6 +382,7 @@
         "suggestion": "Örnek: \"Başım ağrıyor ve mide bulantım var\" veya \"Göğsümde baskı hissediyorum\"."
       },
       "matchedIds": [],
+      "resultCategory": "noMatch",
       "symptomMatched": false,
       "departmentMatched": null,
       "passed": false
@@ -465,24 +395,47 @@
       "text": "Sağ gözümün önünde sanki siyah bir tül varmış gibi hiçbir detayı ayırt edemiyorum.",
       "lang": "tr",
       "result": {
-        "isEmergency": true,
-        "emergencyMessage": "Ani gelişen \"kararma\" durumu acil değerlendirme gerektirir. Hemen 112 ile iletişime geçin.",
-        "emergencyName": "gorme_kaybi",
+        "isEmergency": false,
+        "needsMoreInfo": false,
+        "primaryDepartment": "goz",
+        "primaryDepartmentName": "Göz Hastalıkları",
+        "primaryDepartmentIcon": "👁️",
+        "primaryDepartmentColor": "#3498db",
+        "confidence": "low",
+        "confidenceScore": 39,
+        "alternatives": [],
+        "isFamilyDoctor": false,
+        "familyDoctorMessage": null,
+        "reasoning": "gözümde tül var, edema belirtileri birlikte değerlendirildiğinde en uygun bölüm Göz Hastalıkları görünüyor. Belirtileriniz aynı gün doktor tarafından değerlendirilmelidir.",
         "matchedSymptoms": [
-          "gorme_bulaniklik",
-          "gorme_kaybi",
-          "bayilma",
-          "kalp_yetmezligi"
-        ]
+          {
+            "id": "gorme_bulaniklik",
+            "keyword": "gözümde tül var",
+            "score": 100
+          },
+          {
+            "id": "kalp_yetmezligi",
+            "keyword": "edema",
+            "score": 93
+          }
+        ],
+        "careLevel": "urgent",
+        "careLabel": "Aynı gün değerlendirme iyi olur",
+        "careSummary": "Belirtileriniz aynı gün doktor tarafından değerlendirilmelidir.",
+        "careAdvice": "Mümkünse bugün içinde acil servis veya ilgili branşa başvurun.",
+        "note": "Mümkünse bugün içinde acil servis veya ilgili branşa başvurun. Bu öneri teşhis değildir; kesin tanı için doktor muayenesi gerekir.",
+        "timestamp": "2026-07-11T13:14:14.465Z",
+        "lang": "tr",
+        "ageBand": "yetiskin",
+        "ageBandWasAssumed": true
       },
       "matchedIds": [
-        null,
-        null,
-        null,
-        null
+        "gorme_bulaniklik",
+        "kalp_yetmezligi"
       ],
+      "resultCategory": "resolved",
       "symptomMatched": false,
-      "departmentMatched": null,
+      "departmentMatched": true,
       "passed": false
     },
     {
@@ -496,15 +449,22 @@
         "isEmergency": true,
         "emergencyMessage": "\"karanlığa gömüldüm\" acil müdahale gerektirebilir. Hemen 112 ile iletişime geçin.",
         "emergencyName": "bayilma",
+        "verification": {
+          "symptomId": "bayilma",
+          "question": "Gerçekten bilincinizi kaybedip yere yığıldınız mı?",
+          "confirmLabel": "Evet, bayıldım",
+          "reassureLabel": "Hayır, sadece baş dönmesi/halsizlik hissettim"
+        },
         "matchedSymptoms": [
           "bayilma",
           "kalp_yetmezligi"
         ]
       },
       "matchedIds": [
-        null,
-        null
+        "bayilma",
+        "kalp_yetmezligi"
       ],
+      "resultCategory": "emergency",
       "symptomMatched": false,
       "departmentMatched": null,
       "passed": false
@@ -519,12 +479,12 @@
       "result": {
         "isEmergency": false,
         "needsMoreInfo": false,
-        "primaryDepartment": "dermatoloji",
-        "primaryDepartmentName": "Dermatoloji",
-        "primaryDepartmentIcon": "🩹",
-        "primaryDepartmentColor": "#e67e22",
+        "primaryDepartment": "aile_hekimi",
+        "primaryDepartmentName": "Aile Hekimi",
+        "primaryDepartmentIcon": "👨‍⚕️",
+        "primaryDepartmentColor": "#28a745",
         "confidence": "low",
-        "confidenceScore": 40,
+        "confidenceScore": 38,
         "alternatives": [
           {
             "id": "dahiliye",
@@ -532,34 +492,24 @@
             "icon": "🏥"
           },
           {
-            "id": "gastroenteroloji",
-            "name": "Gastroenteroloji",
-            "icon": "🫃"
+            "id": "dermatoloji",
+            "name": "Dermatoloji",
+            "icon": "🩹"
           }
         ],
         "isFamilyDoctor": false,
         "familyDoctorMessage": null,
-        "reasoning": "hazımsızlık var, hazımsızlık, şişkinlik belirtileri birlikte değerlendirildiğinde en uygun bölüm Dermatoloji görünüyor. Belirtileriniz acil görünmüyor ancak geciktirilmemeli.",
+        "reasoning": "şişkinlik, şişkinlik belirtileri birlikte değerlendirildiğinde en uygun bölüm Aile Hekimi görünüyor. Belirtileriniz acil görünmüyor ancak geciktirilmemeli.",
         "matchedSymptoms": [
           {
             "id": "siskinlik",
-            "keyword": "hazımsızlık var",
-            "score": 100
-          },
-          {
-            "id": "reflü",
-            "keyword": "hazımsızlık",
-            "score": 100
+            "keyword": "şişkinlik",
+            "score": 98
           },
           {
             "id": "cilt_sisligi",
             "keyword": "şişkinlik",
             "score": 98
-          },
-          {
-            "id": "cilt_dokuntu",
-            "keyword": "su toplaması",
-            "score": 93
           }
         ],
         "careLevel": "soon",
@@ -567,15 +517,16 @@
         "careSummary": "Belirtileriniz acil görünmüyor ancak geciktirilmemeli.",
         "careAdvice": "İlgili bölümden yakın tarihe randevu almanız uygun olur.",
         "note": "İlgili bölümden yakın tarihe randevu almanız uygun olur. Bu öneri teşhis değildir; kesin tanı için doktor muayenesi gerekir.",
-        "timestamp": "2026-06-08T14:42:26.813Z",
-        "lang": "tr"
+        "timestamp": "2026-07-11T13:14:20.125Z",
+        "lang": "tr",
+        "ageBand": "yetiskin",
+        "ageBandWasAssumed": true
       },
       "matchedIds": [
         "siskinlik",
-        "reflü",
-        "cilt_sisligi",
-        "cilt_dokuntu"
+        "cilt_sisligi"
       ],
+      "resultCategory": "resolved",
       "symptomMatched": false,
       "departmentMatched": false,
       "passed": false
@@ -588,73 +539,42 @@
       "text": "Uzun süreli otobüs yolculuğumdan sonra sağ alt ekstremitemde zonklayıcı bir sızı ve gerginlik hissetmeye başladım.",
       "lang": "tr",
       "result": {
-        "isEmergency": false,
-        "needsMoreInfo": false,
-        "primaryDepartment": "dahiliye",
-        "primaryDepartmentName": "Dahiliye (İç Hastalıkları)",
-        "primaryDepartmentIcon": "🏥",
-        "primaryDepartmentColor": "#667eea",
-        "confidence": "low",
-        "confidenceScore": 40,
-        "alternatives": [
+        "needsMoreInfo": true,
+        "followUpQuestions": [
           {
-            "id": "genel_cerrahi",
-            "name": "Genel Cerrahi",
-            "icon": "🔪"
+            "question": "İntihar düşünceniz var mı?",
+            "symptomId": "depresyon",
+            "impact": {
+              "psikiyatri": 0.5
+            },
+            "urgent": true,
+            "type": "yesno"
           },
           {
-            "id": "gastroenteroloji",
-            "name": "Gastroenteroloji",
-            "icon": "🫃"
+            "question": "İştahınızda değişiklik var mı?",
+            "symptomId": "depresyon",
+            "impact": {
+              "psikiyatri": 0.1,
+              "dahiliye": 0.1
+            },
+            "urgent": false,
+            "type": "yesno"
           }
         ],
-        "isFamilyDoctor": false,
-        "familyDoctorMessage": null,
-        "reasoning": "şişkinlik, hazımsızlık, sağ alt ağrı belirtileri birlikte değerlendirildiğinde en uygun bölüm Dahiliye (İç Hastalıkları) görünüyor. Belirtileriniz aynı gün doktor tarafından değerlendirilmelidir.",
         "matchedSymptoms": [
-          {
-            "id": "siskinlik",
-            "keyword": "şişkinlik",
-            "score": 100
-          },
-          {
-            "id": "reflü",
-            "keyword": "hazımsızlık",
-            "score": 100
-          },
-          {
-            "id": "sag_alt_karin",
-            "keyword": "sağ alt ağrı",
-            "score": 100
-          },
-          {
-            "id": "cilt_sisligi",
-            "keyword": "şişkinlik",
-            "score": 100
-          },
-          {
-            "id": "depresyon",
-            "keyword": "üzgünüm",
-            "score": 93
-          }
+          "depresyon",
+          "sag_alt_karin"
         ],
-        "careLevel": "urgent",
-        "careLabel": "Aynı gün değerlendirme iyi olur",
-        "careSummary": "Belirtileriniz aynı gün doktor tarafından değerlendirilmelidir.",
-        "careAdvice": "Mümkünse bugün içinde acil servis veya ilgili branşa başvurun.",
-        "note": "Mümkünse bugün içinde acil servis veya ilgili branşa başvurun. Bu öneri teşhis değildir; kesin tanı için doktor muayenesi gerekir.",
-        "timestamp": "2026-06-08T14:42:28.478Z",
+        "primarySymptom": "depresyon",
         "lang": "tr"
       },
       "matchedIds": [
-        "siskinlik",
-        "reflü",
-        "sag_alt_karin",
-        "cilt_sisligi",
-        "depresyon"
+        "depresyon",
+        "sag_alt_karin"
       ],
+      "resultCategory": "needsMoreInfo",
       "symptomMatched": false,
-      "departmentMatched": false,
+      "departmentMatched": null,
       "passed": false
     },
     {
@@ -668,44 +588,37 @@
         "needsMoreInfo": true,
         "followUpQuestions": [
           {
-            "question": "Şişlik var mı?",
-            "symptomId": "bacak_agrisi",
-            "impact": {
-              "kardiyoloji": 0.3
-            },
+            "question": "Bu değerlendirme kimin için?",
+            "symptomId": "__age_band__",
+            "impact": {},
             "urgent": false,
-            "type": "yesno"
-          },
-          {
-            "question": "Yürürken mi ağrıyor?",
-            "symptomId": "bacak_agrisi",
-            "impact": {
-              "ortopedi": 0.2,
-              "kardiyoloji": 0.2
-            },
-            "urgent": false,
-            "type": "yesno"
+            "type": "options",
+            "options": [
+              "Bebek (0-2 yaş)",
+              "Çocuk (2-12 yaş)",
+              "Genç/Yetişkin (12-65 yaş)",
+              "65 yaş üstü"
+            ],
+            "ageBandValues": [
+              "bebek",
+              "cocuk",
+              "yetiskin",
+              "yasli"
+            ]
           }
         ],
         "matchedSymptoms": [
-          "bacak_agrisi",
-          "periferik_noropati",
-          "derin_ven_trombozu",
-          "cilt_dokuntu",
           "sarilik",
           "anemi"
         ],
-        "primarySymptom": "bacak_agrisi",
+        "primarySymptom": "sarilik",
         "lang": "tr"
       },
       "matchedIds": [
-        null,
-        null,
-        null,
-        null,
-        null,
-        null
+        "sarilik",
+        "anemi"
       ],
+      "resultCategory": "needsMoreInfo",
       "symptomMatched": false,
       "departmentMatched": null,
       "passed": false
@@ -744,17 +657,20 @@
           "tansiyon",
           "tiroid_sisme",
           "tiroid_hipo_hiper",
-          "depresyon"
+          "depresyon",
+          "anksiyete"
         ],
         "primarySymptom": "tansiyon",
         "lang": "tr"
       },
       "matchedIds": [
-        null,
-        null,
-        null,
-        null
+        "tansiyon",
+        "tiroid_sisme",
+        "tiroid_hipo_hiper",
+        "depresyon",
+        "anksiyete"
       ],
+      "resultCategory": "needsMoreInfo",
       "symptomMatched": false,
       "departmentMatched": null,
       "passed": false
@@ -773,6 +689,7 @@
         "suggestion": "Örnek: \"Başım ağrıyor ve mide bulantım var\" veya \"Göğsümde baskı hissediyorum\"."
       },
       "matchedIds": [],
+      "resultCategory": "noMatch",
       "symptomMatched": false,
       "departmentMatched": null,
       "passed": false
@@ -787,22 +704,16 @@
       "result": {
         "isEmergency": false,
         "needsMoreInfo": false,
-        "primaryDepartment": "kardiyoloji",
-        "primaryDepartmentName": "Kardiyoloji",
-        "primaryDepartmentIcon": "❤️",
-        "primaryDepartmentColor": "#e74c3c",
-        "confidence": "medium",
-        "confidenceScore": 59,
-        "alternatives": [
-          {
-            "id": "dahiliye",
-            "name": "Dahiliye (İç Hastalıkları)",
-            "icon": "🏥"
-          }
-        ],
+        "primaryDepartment": "aile_hekimi",
+        "primaryDepartmentName": "Aile Hekimi",
+        "primaryDepartmentIcon": "👨‍⚕️",
+        "primaryDepartmentColor": "#28a745",
+        "confidence": "low",
+        "confidenceScore": 32,
+        "alternatives": [],
         "isFamilyDoctor": false,
         "familyDoctorMessage": null,
-        "reasoning": "\"tansiyon\" şikayeti en çok Kardiyoloji ile uyumlu görünüyor. Belirtileriniz aynı gün doktor tarafından değerlendirilmelidir.",
+        "reasoning": "\"tansiyon\" şikayeti en çok Aile Hekimi ile uyumlu görünüyor. Belirtileriniz aynı gün doktor tarafından değerlendirilmelidir.",
         "matchedSymptoms": [
           {
             "id": "tansiyon",
@@ -815,14 +726,17 @@
         "careSummary": "Belirtileriniz aynı gün doktor tarafından değerlendirilmelidir.",
         "careAdvice": "Mümkünse bugün içinde acil servis veya ilgili branşa başvurun.",
         "note": "Mümkünse bugün içinde acil servis veya ilgili branşa başvurun. Bu öneri teşhis değildir; kesin tanı için doktor muayenesi gerekir.",
-        "timestamp": "2026-06-08T14:42:35.643Z",
-        "lang": "tr"
+        "timestamp": "2026-07-11T13:14:32.319Z",
+        "lang": "tr",
+        "ageBand": "yetiskin",
+        "ageBandWasAssumed": true
       },
       "matchedIds": [
         "tansiyon"
       ],
+      "resultCategory": "resolved",
       "symptomMatched": false,
-      "departmentMatched": true,
+      "departmentMatched": false,
       "passed": false
     },
     {
@@ -835,16 +749,16 @@
       "result": {
         "isEmergency": false,
         "needsMoreInfo": false,
-        "primaryDepartment": "kardiyoloji",
-        "primaryDepartmentName": "Kardiyoloji",
-        "primaryDepartmentIcon": "❤️",
-        "primaryDepartmentColor": "#e74c3c",
-        "confidence": "high",
-        "confidenceScore": 72,
+        "primaryDepartment": "dahiliye",
+        "primaryDepartmentName": "Dahiliye (İç Hastalıkları)",
+        "primaryDepartmentIcon": "🏥",
+        "primaryDepartmentColor": "#667eea",
+        "confidence": "low",
+        "confidenceScore": 30,
         "alternatives": [],
         "isFamilyDoctor": false,
         "familyDoctorMessage": null,
-        "reasoning": "\"tansiyon krizi\" şikayeti en çok Kardiyoloji ile uyumlu görünüyor. Belirtileriniz aynı gün doktor tarafından değerlendirilmelidir.",
+        "reasoning": "\"tansiyon krizi\" şikayeti en çok Dahiliye (İç Hastalıkları) ile uyumlu görünüyor. Belirtileriniz aynı gün doktor tarafından değerlendirilmelidir.",
         "matchedSymptoms": [
           {
             "id": "tansiyon_krizi",
@@ -857,14 +771,17 @@
         "careSummary": "Belirtileriniz aynı gün doktor tarafından değerlendirilmelidir.",
         "careAdvice": "Mümkünse bugün içinde acil servis veya ilgili branşa başvurun.",
         "note": "Mümkünse bugün içinde acil servis veya ilgili branşa başvurun. Bu öneri teşhis değildir; kesin tanı için doktor muayenesi gerekir.",
-        "timestamp": "2026-06-08T14:42:36.973Z",
-        "lang": "tr"
+        "timestamp": "2026-07-11T13:14:33.229Z",
+        "lang": "tr",
+        "ageBand": "yetiskin",
+        "ageBandWasAssumed": true
       },
       "matchedIds": [
         "tansiyon_krizi"
       ],
+      "resultCategory": "resolved",
       "symptomMatched": true,
-      "departmentMatched": true,
+      "departmentMatched": false,
       "passed": false
     },
     {
@@ -877,6 +794,25 @@
       "result": {
         "needsMoreInfo": true,
         "followUpQuestions": [
+          {
+            "question": "Bu değerlendirme kimin için?",
+            "symptomId": "__age_band__",
+            "impact": {},
+            "urgent": false,
+            "type": "options",
+            "options": [
+              "Bebek (0-2 yaş)",
+              "Çocuk (2-12 yaş)",
+              "Genç/Yetişkin (12-65 yaş)",
+              "65 yaş üstü"
+            ],
+            "ageBandValues": [
+              "bebek",
+              "cocuk",
+              "yetiskin",
+              "yasli"
+            ]
+          },
           {
             "question": "İstirahat halinde de nefes darlığınız var mı?",
             "symptomId": "nefes_darligi",
@@ -906,10 +842,11 @@
         "lang": "tr"
       },
       "matchedIds": [
-        null,
-        null,
-        null
+        "nefes_darligi",
+        "yutkunma_guclugu",
+        "yutma_agrisi"
       ],
+      "resultCategory": "needsMoreInfo",
       "symptomMatched": false,
       "departmentMatched": null,
       "passed": false
@@ -925,6 +862,25 @@
         "needsMoreInfo": true,
         "followUpQuestions": [
           {
+            "question": "Bu değerlendirme kimin için?",
+            "symptomId": "__age_band__",
+            "impact": {},
+            "urgent": false,
+            "type": "options",
+            "options": [
+              "Bebek (0-2 yaş)",
+              "Çocuk (2-12 yaş)",
+              "Genç/Yetişkin (12-65 yaş)",
+              "65 yaş üstü"
+            ],
+            "ageBandValues": [
+              "bebek",
+              "cocuk",
+              "yetiskin",
+              "yasli"
+            ]
+          },
+          {
             "question": "İstirahat halinde de nefes darlığınız var mı?",
             "symptomId": "nefes_darligi",
             "impact": {
@@ -946,7 +902,6 @@
         ],
         "matchedSymptoms": [
           "nefes_darligi",
-          "bacak_sislik",
           "lenf_sisme",
           "cilt_sisligi",
           "anemi"
@@ -955,12 +910,12 @@
         "lang": "tr"
       },
       "matchedIds": [
-        null,
-        null,
-        null,
-        null,
-        null
+        "nefes_darligi",
+        "lenf_sisme",
+        "cilt_sisligi",
+        "anemi"
       ],
+      "resultCategory": "needsMoreInfo",
       "symptomMatched": false,
       "departmentMatched": null,
       "passed": false
@@ -976,6 +931,25 @@
         "needsMoreInfo": true,
         "followUpQuestions": [
           {
+            "question": "Bu değerlendirme kimin için?",
+            "symptomId": "__age_band__",
+            "impact": {},
+            "urgent": false,
+            "type": "options",
+            "options": [
+              "Bebek (0-2 yaş)",
+              "Çocuk (2-12 yaş)",
+              "Genç/Yetişkin (12-65 yaş)",
+              "65 yaş üstü"
+            ],
+            "ageBandValues": [
+              "bebek",
+              "cocuk",
+              "yetiskin",
+              "yasli"
+            ]
+          },
+          {
             "question": "İstirahat halinde de nefes darlığınız var mı?",
             "symptomId": "nefes_darligi",
             "impact": {
@@ -996,20 +970,19 @@
           }
         ],
         "matchedSymptoms": [
-          "migren",
           "nefes_darligi",
           "kabizlik",
-          "terleme"
+          "isitme_kaybi"
         ],
-        "primarySymptom": "migren",
+        "primarySymptom": "nefes_darligi",
         "lang": "tr"
       },
       "matchedIds": [
-        null,
-        null,
-        null,
-        null
+        "nefes_darligi",
+        "kabizlik",
+        "isitme_kaybi"
       ],
+      "resultCategory": "needsMoreInfo",
       "symptomMatched": false,
       "departmentMatched": null,
       "passed": false
@@ -1022,49 +995,67 @@
       "text": "Düşüncelerimi ifade etmekte zorlanıyorum, ağzımdan çıkanlar sanki birbirine karışıyor.",
       "lang": "tr",
       "result": {
-        "isEmergency": false,
-        "needsMoreInfo": false,
-        "primaryDepartment": "gastroenteroloji",
-        "primaryDepartmentName": "Gastroenteroloji",
-        "primaryDepartmentIcon": "🫃",
-        "primaryDepartmentColor": "#d35400",
-        "confidence": "low",
-        "confidenceScore": 42,
-        "alternatives": [
+        "needsMoreInfo": true,
+        "followUpQuestions": [
           {
-            "id": "dahiliye",
-            "name": "Dahiliye (İç Hastalıkları)",
-            "icon": "🏥"
+            "question": "Bu değerlendirme kimin için?",
+            "symptomId": "__age_band__",
+            "impact": {},
+            "urgent": false,
+            "type": "options",
+            "options": [
+              "Bebek (0-2 yaş)",
+              "Çocuk (2-12 yaş)",
+              "Genç/Yetişkin (12-65 yaş)",
+              "65 yaş üstü"
+            ],
+            "ageBandValues": [
+              "bebek",
+              "cocuk",
+              "yetiskin",
+              "yasli"
+            ]
           },
           {
-            "id": "aile_hekimi",
-            "name": "Aile Hekimi",
-            "icon": "👨‍⚕️"
-          }
-        ],
-        "isFamilyDoctor": true,
-        "familyDoctorMessage": "Belirtileriniz ilk adımda aile hekimi tarafından değerlendirilebilir. Gerekirse doğru branşa yönlendirme yapılabilir.",
-        "reasoning": "\"zorlanıyorum\" şikayeti en çok Gastroenteroloji ile uyumlu görünüyor. Belirtileriniz poliklinik veya aile hekimi düzeyinde görünüyor.",
-        "matchedSymptoms": [
+            "question": "Ağrı ani mi başladı yoksa yavaş yavaş mı?",
+            "symptomId": "karin_agrisi",
+            "impact": {
+              "genel_cerrahi": 0.3
+            },
+            "urgent": false,
+            "type": "options",
+            "options": [
+              "Ani başladı",
+              "Yavaş yavaş başladı"
+            ]
+          },
           {
-            "id": "kabizlik",
-            "keyword": "zorlanıyorum",
-            "score": 98
+            "question": "Ateşiniz var mı?",
+            "symptomId": "karin_agrisi",
+            "impact": {
+              "dahiliye": 0.2,
+              "genel_cerrahi": 0.15
+            },
+            "urgent": false,
+            "type": "yesno"
           }
         ],
-        "careLevel": "routine",
-        "careLabel": "Rutin poliklinik uygun",
-        "careSummary": "Belirtileriniz poliklinik veya aile hekimi düzeyinde görünüyor.",
-        "careAdvice": "Uygun ilk randevuda ilgili bölüme veya aile hekiminize başvurabilirsiniz.",
-        "note": "Uygun ilk randevuda ilgili bölüme veya aile hekiminize başvurabilirsiniz. Bu öneri teşhis değildir; kesin tanı için doktor muayenesi gerekir.",
-        "timestamp": "2026-06-08T14:42:44.555Z",
+        "matchedSymptoms": [
+          "kabizlik",
+          "karin_agrisi",
+          "cilt_sisligi"
+        ],
+        "primarySymptom": "kabizlik",
         "lang": "tr"
       },
       "matchedIds": [
-        "kabizlik"
+        "kabizlik",
+        "karin_agrisi",
+        "cilt_sisligi"
       ],
+      "resultCategory": "needsMoreInfo",
       "symptomMatched": false,
-      "departmentMatched": false,
+      "departmentMatched": null,
       "passed": false
     },
     {
@@ -1081,6 +1072,7 @@
         "suggestion": "Örnek: \"Başım ağrıyor ve mide bulantım var\" veya \"Göğsümde baskı hissediyorum\"."
       },
       "matchedIds": [],
+      "resultCategory": "noMatch",
       "symptomMatched": false,
       "departmentMatched": null,
       "passed": false
@@ -1099,53 +1091,7 @@
         "suggestion": "Örnek: \"Başım ağrıyor ve mide bulantım var\" veya \"Göğsümde baskı hissediyorum\"."
       },
       "matchedIds": [],
-      "symptomMatched": false,
-      "departmentMatched": null,
-      "passed": false
-    },
-    {
-      "index": 36,
-      "symptomId": "idrar_yapamama",
-      "expectedDepartment": "uroloji",
-      "mode": "positive",
-      "text": "Mesanem tamamen dolu olmasına rağmen bir türlü boşaltamıyorum.",
-      "lang": "tr",
-      "result": {
-        "needsMoreInfo": true,
-        "followUpQuestions": [
-          {
-            "question": "Kilo değişikliği var mı?",
-            "symptomId": "yorgunluk",
-            "impact": {
-              "endokrinoloji": 0.3
-            },
-            "urgent": false,
-            "type": "yesno"
-          },
-          {
-            "question": "İştahınızda değişiklik var mı?",
-            "symptomId": "yorgunluk",
-            "impact": {
-              "dahiliye": 0.2,
-              "endokrinoloji": 0.2
-            },
-            "urgent": false,
-            "type": "yesno"
-          }
-        ],
-        "matchedSymptoms": [
-          "idrar_tutamama",
-          "idrar_yapamama",
-          "yorgunluk"
-        ],
-        "primarySymptom": "idrar_tutamama",
-        "lang": "tr"
-      },
-      "matchedIds": [
-        null,
-        null,
-        null
-      ],
+      "resultCategory": "noMatch",
       "symptomMatched": false,
       "departmentMatched": null,
       "passed": false
@@ -1158,38 +1104,16 @@
       "text": "Saatlerdir tuvalete gitme ihtiyacı hissediyorum ama ne kadar zorlasam da idrar çıkışı olmuyor.",
       "lang": "tr",
       "result": {
-        "isEmergency": false,
-        "needsMoreInfo": false,
-        "primaryDepartment": "endokrinoloji",
-        "primaryDepartmentName": "Endokrinoloji",
-        "primaryDepartmentIcon": "⚗️",
-        "primaryDepartmentColor": "#8e44ad",
-        "confidence": "medium",
-        "confidenceScore": 68,
-        "alternatives": [],
-        "isFamilyDoctor": false,
-        "familyDoctorMessage": null,
-        "reasoning": "\"poliüri\" şikayeti en çok Endokrinoloji ile uyumlu görünüyor. Belirtileriniz acil görünmüyor ancak geciktirilmemeli.",
-        "matchedSymptoms": [
-          {
-            "id": "susuzluk_cok_idrar",
-            "keyword": "poliüri",
-            "score": 98
-          }
-        ],
-        "careLevel": "soon",
-        "careLabel": "Kısa sürede randevu alın",
-        "careSummary": "Belirtileriniz acil görünmüyor ancak geciktirilmemeli.",
-        "careAdvice": "İlgili bölümden yakın tarihe randevu almanız uygun olur.",
-        "note": "İlgili bölümden yakın tarihe randevu almanız uygun olur. Bu öneri teşhis değildir; kesin tanı için doktor muayenesi gerekir.",
-        "timestamp": "2026-06-08T14:42:51.184Z",
-        "lang": "tr"
+        "error": null,
+        "noMatch": true,
+        "message": "Bu şikayet için net bir bölüm çıkarılamadı. İlk adım olarak aile hekiminizden destek alabilirsiniz.",
+        "ageBand": "yetiskin",
+        "ageBandWasAssumed": true
       },
-      "matchedIds": [
-        "susuzluk_cok_idrar"
-      ],
+      "matchedIds": [],
+      "resultCategory": "noMatch",
       "symptomMatched": false,
-      "departmentMatched": false,
+      "departmentMatched": null,
       "passed": false
     },
     {
@@ -1206,6 +1130,7 @@
         "suggestion": "Örnek: \"Başım ağrıyor ve mide bulantım var\" veya \"Göğsümde baskı hissediyorum\"."
       },
       "matchedIds": [],
+      "resultCategory": "noMatch",
       "symptomMatched": false,
       "departmentMatched": null,
       "passed": false
@@ -1224,32 +1149,7 @@
         "suggestion": "Örnek: \"Başım ağrıyor ve mide bulantım var\" veya \"Göğsümde baskı hissediyorum\"."
       },
       "matchedIds": [],
-      "symptomMatched": false,
-      "departmentMatched": null,
-      "passed": false
-    },
-    {
-      "index": 41,
-      "symptomId": "nöbet",
-      "expectedDepartment": "noroloji",
-      "mode": "positive",
-      "text": "Aniden yere yığıldım ve tüm vücudumda şiddetli bir titreme hissettim.",
-      "lang": "tr",
-      "result": {
-        "isEmergency": true,
-        "emergencyMessage": "\"yere yığılma\" acil müdahale gerektirebilir. Hemen 112 ile iletişime geçin.",
-        "emergencyName": "nöbet",
-        "matchedSymptoms": [
-          "el_titremes",
-          "parkinson_belirtisi",
-          "nöbet"
-        ]
-      },
-      "matchedIds": [
-        null,
-        null,
-        null
-      ],
+      "resultCategory": "noMatch",
       "symptomMatched": false,
       "departmentMatched": null,
       "passed": false
@@ -1268,8 +1168,8 @@
         "primaryDepartmentName": "Psikiyatri",
         "primaryDepartmentIcon": "🧘",
         "primaryDepartmentColor": "#1abc9c",
-        "confidence": "high",
-        "confidenceScore": 89,
+        "confidence": "low",
+        "confidenceScore": 37,
         "alternatives": [],
         "isFamilyDoctor": false,
         "familyDoctorMessage": null,
@@ -1286,12 +1186,15 @@
         "careSummary": "Belirtileriniz acil görünmüyor ancak geciktirilmemeli.",
         "careAdvice": "İlgili bölümden yakın tarihe randevu almanız uygun olur.",
         "note": "İlgili bölümden yakın tarihe randevu almanız uygun olur. Bu öneri teşhis değildir; kesin tanı için doktor muayenesi gerekir.",
-        "timestamp": "2026-06-08T14:42:58.104Z",
-        "lang": "tr"
+        "timestamp": "2026-07-11T13:14:57.527Z",
+        "lang": "tr",
+        "ageBand": "yetiskin",
+        "ageBandWasAssumed": true
       },
       "matchedIds": [
         "anksiyete"
       ],
+      "resultCategory": "resolved",
       "symptomMatched": false,
       "departmentMatched": false,
       "passed": false
@@ -1304,82 +1207,14 @@
       "text": "Bir anda etrafımdaki her şey döndü ve yere düştüğümü hatırlıyorum.",
       "lang": "tr",
       "result": {
-        "isEmergency": false,
-        "needsMoreInfo": false,
-        "primaryDepartment": "noroloji",
-        "primaryDepartmentName": "Nöroloji",
-        "primaryDepartmentIcon": "🧠",
-        "primaryDepartmentColor": "#9b59b6",
-        "confidence": "medium",
-        "confidenceScore": 65,
-        "alternatives": [],
-        "isFamilyDoctor": false,
-        "familyDoctorMessage": null,
-        "reasoning": "\"hatırlayamıyorum\" şikayeti en çok Nöroloji ile uyumlu görünüyor. Belirtileriniz poliklinik veya aile hekimi düzeyinde görünüyor.",
-        "matchedSymptoms": [
-          {
-            "id": "unutkanlik",
-            "keyword": "hatırlayamıyorum",
-            "score": 94
-          }
-        ],
-        "careLevel": "routine",
-        "careLabel": "Rutin poliklinik uygun",
-        "careSummary": "Belirtileriniz poliklinik veya aile hekimi düzeyinde görünüyor.",
-        "careAdvice": "Uygun ilk randevuda ilgili bölüme veya aile hekiminize başvurabilirsiniz.",
-        "note": "Uygun ilk randevuda ilgili bölüme veya aile hekiminize başvurabilirsiniz. Bu öneri teşhis değildir; kesin tanı için doktor muayenesi gerekir.",
-        "timestamp": "2026-06-08T14:43:00.501Z",
-        "lang": "tr"
+        "error": null,
+        "noMatch": true,
+        "message": "Bu şikayet için net bir bölüm çıkarılamadı. İlk adım olarak aile hekiminizden destek alabilirsiniz.",
+        "ageBand": "yetiskin",
+        "ageBandWasAssumed": true
       },
-      "matchedIds": [
-        "unutkanlik"
-      ],
-      "symptomMatched": false,
-      "departmentMatched": true,
-      "passed": false
-    },
-    {
-      "index": 45,
-      "symptomId": "bayilma",
-      "expectedDepartment": "noroloji",
-      "mode": "positive",
-      "text": "Aniden bilincim kapandı ve kendimi yerde buldum.",
-      "lang": "tr",
-      "result": {
-        "isEmergency": true,
-        "emergencyMessage": "\"bilincim kapandı\" acil müdahale gerektirebilir. Hemen 112 ile iletişime geçin.",
-        "emergencyName": "bayilma",
-        "matchedSymptoms": [
-          "bayilma"
-        ]
-      },
-      "matchedIds": [
-        null
-      ],
-      "symptomMatched": false,
-      "departmentMatched": null,
-      "passed": false
-    },
-    {
-      "index": 46,
-      "symptomId": "bayilma",
-      "expectedDepartment": "noroloji",
-      "mode": "positive",
-      "text": "Ayaktayken bir anlık boşluk yaşadım ve ne olduğunu anlamadan yere serildim.",
-      "lang": "tr",
-      "result": {
-        "isEmergency": true,
-        "emergencyMessage": "\"yere serildim\" acil müdahale gerektirebilir. Hemen 112 ile iletişime geçin.",
-        "emergencyName": "bayilma",
-        "matchedSymptoms": [
-          "siskinlik",
-          "bayilma"
-        ]
-      },
-      "matchedIds": [
-        null,
-        null
-      ],
+      "matchedIds": [],
+      "resultCategory": "noMatch",
       "symptomMatched": false,
       "departmentMatched": null,
       "passed": false
@@ -1395,23 +1230,26 @@
         "isEmergency": true,
         "emergencyMessage": "Ani gelişen \"karartı\" durumu acil değerlendirme gerektirir. Hemen 112 ile iletişime geçin.",
         "emergencyName": "gorme_kaybi",
+        "verification": {
+          "symptomId": "gorme_kaybi",
+          "question": "Görme kaybı ani mi başladı ve hâlâ sürüyor mu?",
+          "confirmLabel": "Evet, ani ve sürüyor",
+          "reassureLabel": "Hayır, geçici bulanıklık gibiydi"
+        },
         "matchedSymptoms": [
           "gorme_kaybi",
-          "alerji",
           "vajinal_kanama",
-          "cilt_dokuntu",
-          "cilt_yanik",
-          "sedef_hastaligi"
+          "sedef_hastaligi",
+          "cilt_lekeleri"
         ]
       },
       "matchedIds": [
-        null,
-        null,
-        null,
-        null,
-        null,
-        null
+        "gorme_kaybi",
+        "vajinal_kanama",
+        "sedef_hastaligi",
+        "cilt_lekeleri"
       ],
+      "resultCategory": "emergency",
       "symptomMatched": false,
       "departmentMatched": null,
       "passed": false
@@ -1426,6 +1264,25 @@
       "result": {
         "needsMoreInfo": true,
         "followUpQuestions": [
+          {
+            "question": "Bu değerlendirme kimin için?",
+            "symptomId": "__age_band__",
+            "impact": {},
+            "urgent": false,
+            "type": "options",
+            "options": [
+              "Bebek (0-2 yaş)",
+              "Çocuk (2-12 yaş)",
+              "Genç/Yetişkin (12-65 yaş)",
+              "65 yaş üstü"
+            ],
+            "ageBandValues": [
+              "bebek",
+              "cocuk",
+              "yetiskin",
+              "yasli"
+            ]
+          },
           {
             "question": "Kilo değişikliği var mı?",
             "symptomId": "yorgunluk",
@@ -1447,20 +1304,17 @@
           }
         ],
         "matchedSymptoms": [
-          "vajinal_kanama",
-          "vajinal_akinti",
           "yorgunluk",
           "kilo_kaybi"
         ],
-        "primarySymptom": "vajinal_kanama",
+        "primarySymptom": "yorgunluk",
         "lang": "tr"
       },
       "matchedIds": [
-        null,
-        null,
-        null,
-        null
+        "yorgunluk",
+        "kilo_kaybi"
       ],
+      "resultCategory": "needsMoreInfo",
       "symptomMatched": false,
       "departmentMatched": null,
       "passed": false
@@ -1475,6 +1329,25 @@
       "result": {
         "needsMoreInfo": true,
         "followUpQuestions": [
+          {
+            "question": "Bu değerlendirme kimin için?",
+            "symptomId": "__age_band__",
+            "impact": {},
+            "urgent": false,
+            "type": "options",
+            "options": [
+              "Bebek (0-2 yaş)",
+              "Çocuk (2-12 yaş)",
+              "Genç/Yetişkin (12-65 yaş)",
+              "65 yaş üstü"
+            ],
+            "ageBandValues": [
+              "bebek",
+              "cocuk",
+              "yetiskin",
+              "yasli"
+            ]
+          },
           {
             "question": "İstirahat halinde de nefes darlığınız var mı?",
             "symptomId": "nefes_darligi",
@@ -1497,15 +1370,18 @@
         ],
         "matchedSymptoms": [
           "nefes_darligi",
-          "ates"
+          "ates",
+          "kanli_diski"
         ],
         "primarySymptom": "nefes_darligi",
         "lang": "tr"
       },
       "matchedIds": [
-        null,
-        null
+        "nefes_darligi",
+        "ates",
+        "kanli_diski"
       ],
+      "resultCategory": "needsMoreInfo",
       "symptomMatched": false,
       "departmentMatched": null,
       "passed": false
@@ -1521,13 +1397,20 @@
         "isEmergency": true,
         "emergencyMessage": "Ani gelişen \"karartı\" durumu acil değerlendirme gerektirir. Hemen 112 ile iletişime geçin.",
         "emergencyName": "gorme_kaybi",
+        "verification": {
+          "symptomId": "gorme_kaybi",
+          "question": "Görme kaybı ani mi başladı ve hâlâ sürüyor mu?",
+          "confirmLabel": "Evet, ani ve sürüyor",
+          "reassureLabel": "Hayır, geçici bulanıklık gibiydi"
+        },
         "matchedSymptoms": [
           "gorme_kaybi"
         ]
       },
       "matchedIds": [
-        null
+        "gorme_kaybi"
       ],
+      "resultCategory": "emergency",
       "symptomMatched": false,
       "departmentMatched": null,
       "passed": false
@@ -1540,50 +1423,42 @@
       "text": "Sırtımdaki kahverengi noktanın tonunun koyulaştığını ve eskiye göre daha kabarık durduğunu görüyorum.",
       "lang": "tr",
       "result": {
-        "isEmergency": false,
-        "needsMoreInfo": false,
-        "primaryDepartment": "noroloji",
-        "primaryDepartmentName": "Nöroloji",
-        "primaryDepartmentIcon": "🧠",
-        "primaryDepartmentColor": "#9b59b6",
-        "confidence": "low",
-        "confidenceScore": 51,
-        "alternatives": [
+        "needsMoreInfo": true,
+        "followUpQuestions": [
           {
-            "id": "dermatoloji",
-            "name": "Dermatoloji",
-            "icon": "🩹"
+            "question": "Bu değerlendirme kimin için?",
+            "symptomId": "__age_band__",
+            "impact": {},
+            "urgent": false,
+            "type": "options",
+            "options": [
+              "Bebek (0-2 yaş)",
+              "Çocuk (2-12 yaş)",
+              "Genç/Yetişkin (12-65 yaş)",
+              "65 yaş üstü"
+            ],
+            "ageBandValues": [
+              "bebek",
+              "cocuk",
+              "yetiskin",
+              "yasli"
+            ]
           }
         ],
-        "isFamilyDoctor": false,
-        "familyDoctorMessage": null,
-        "reasoning": "skotom, kabarcıklar belirtileri birlikte değerlendirildiğinde en uygun bölüm Nöroloji görünüyor. Belirtileriniz acil görünmüyor ancak geciktirilmemeli.",
         "matchedSymptoms": [
-          {
-            "id": "migren_aura",
-            "keyword": "skotom",
-            "score": 98
-          },
-          {
-            "id": "cilt_dokuntu",
-            "keyword": "kabarcıklar",
-            "score": 96
-          }
+          "migren_aura",
+          "cilt_dokuntu"
         ],
-        "careLevel": "soon",
-        "careLabel": "Kısa sürede randevu alın",
-        "careSummary": "Belirtileriniz acil görünmüyor ancak geciktirilmemeli.",
-        "careAdvice": "İlgili bölümden yakın tarihe randevu almanız uygun olur.",
-        "note": "İlgili bölümden yakın tarihe randevu almanız uygun olur. Bu öneri teşhis değildir; kesin tanı için doktor muayenesi gerekir.",
-        "timestamp": "2026-06-08T14:43:13.168Z",
+        "primarySymptom": "migren_aura",
         "lang": "tr"
       },
       "matchedIds": [
         "migren_aura",
         "cilt_dokuntu"
       ],
+      "resultCategory": "needsMoreInfo",
       "symptomMatched": false,
-      "departmentMatched": false,
+      "departmentMatched": null,
       "passed": false
     },
     {
@@ -1600,6 +1475,7 @@
         "suggestion": "Örnek: \"Başım ağrıyor ve mide bulantım var\" veya \"Göğsümde baskı hissediyorum\"."
       },
       "matchedIds": [],
+      "resultCategory": "noMatch",
       "symptomMatched": false,
       "departmentMatched": null,
       "passed": false
@@ -1618,29 +1494,29 @@
         "primaryDepartmentName": "Genel Cerrahi",
         "primaryDepartmentIcon": "🔪",
         "primaryDepartmentColor": "#795548",
-        "confidence": "low",
-        "confidenceScore": 48,
+        "confidence": "medium",
+        "confidenceScore": 64,
         "alternatives": [
+          {
+            "id": "kadin_dogum",
+            "name": "Kadın Hastalıkları ve Doğum",
+            "icon": "🤰"
+          },
           {
             "id": "uroloji",
             "name": "Üroloji",
             "icon": "🔬"
           },
           {
-            "id": "kadin_dogum",
-            "name": "Kadın Hastalıkları ve Doğum",
-            "icon": "🤰"
+            "id": "dahiliye",
+            "name": "Dahiliye (İç Hastalıkları)",
+            "icon": "🏥"
           }
         ],
         "isFamilyDoctor": false,
         "familyDoctorMessage": null,
-        "reasoning": "belim ağrıyor, belimde sızı var, sağ kasık ağrısı belirtileri birlikte değerlendirildiğinde en uygun bölüm Genel Cerrahi görünüyor. Belirtileriniz aynı gün doktor tarafından değerlendirilmelidir.",
+        "reasoning": "belimde sızı var, sağ kasık ağrısı, kasık ağrısından duramıyorum belirtileri birlikte değerlendirildiğinde en uygun bölüm Genel Cerrahi görünüyor. Belirtileriniz aynı gün doktor tarafından değerlendirilmelidir.",
         "matchedSymptoms": [
-          {
-            "id": "bel_agrisi",
-            "keyword": "belim ağrıyor",
-            "score": 100
-          },
           {
             "id": "bobrek_agrisi",
             "keyword": "belimde sızı var",
@@ -1652,19 +1528,24 @@
             "score": 99
           },
           {
+            "id": "kasik_agrisi",
+            "keyword": "kasık ağrısından duramıyorum",
+            "score": 99
+          },
+          {
             "id": "fitik",
             "keyword": "kasık fıtığı",
             "score": 99
           },
           {
-            "id": "kasik_agrisi",
-            "keyword": "kasık ağrısı",
+            "id": "endometriozis",
+            "keyword": "pelvis ağrısı",
             "score": 99
           },
           {
-            "id": "adet_agrisi",
-            "keyword": "kasık sancısı",
-            "score": 99
+            "id": "anksiyete",
+            "keyword": "yerimde duramıyorum",
+            "score": 98
           }
         ],
         "careLevel": "urgent",
@@ -1672,19 +1553,70 @@
         "careSummary": "Belirtileriniz aynı gün doktor tarafından değerlendirilmelidir.",
         "careAdvice": "Mümkünse bugün içinde acil servis veya ilgili branşa başvurun.",
         "note": "Mümkünse bugün içinde acil servis veya ilgili branşa başvurun. Bu öneri teşhis değildir; kesin tanı için doktor muayenesi gerekir.",
-        "timestamp": "2026-06-08T14:43:17.872Z",
+        "timestamp": "2026-07-11T13:15:22.041Z",
+        "lang": "tr",
+        "ageBand": "yetiskin",
+        "ageBandWasAssumed": true
+      },
+      "matchedIds": [
+        "bobrek_agrisi",
+        "sag_alt_karin",
+        "kasik_agrisi",
+        "fitik",
+        "endometriozis",
+        "anksiyete"
+      ],
+      "resultCategory": "resolved",
+      "symptomMatched": false,
+      "departmentMatched": false,
+      "passed": false
+    },
+    {
+      "index": 58,
+      "symptomId": "bobrek_tasi",
+      "expectedDepartment": "uroloji",
+      "mode": "positive",
+      "text": "Sırtımın alt kısmında kıvrandıran bir acı var, sanki içeride bir şey hareket ediyor ve aşağıya doğru baskı yapıyor.",
+      "lang": "tr",
+      "result": {
+        "needsMoreInfo": true,
+        "followUpQuestions": [
+          {
+            "question": "Bu değerlendirme kimin için?",
+            "symptomId": "__age_band__",
+            "impact": {},
+            "urgent": false,
+            "type": "options",
+            "options": [
+              "Bebek (0-2 yaş)",
+              "Çocuk (2-12 yaş)",
+              "Genç/Yetişkin (12-65 yaş)",
+              "65 yaş üstü"
+            ],
+            "ageBandValues": [
+              "bebek",
+              "cocuk",
+              "yetiskin",
+              "yasli"
+            ]
+          }
+        ],
+        "matchedSymptoms": [
+          "tansiyon",
+          "bel_agrisi",
+          "kilo_kaybi"
+        ],
+        "primarySymptom": "tansiyon",
         "lang": "tr"
       },
       "matchedIds": [
+        "tansiyon",
         "bel_agrisi",
-        "bobrek_agrisi",
-        "sag_alt_karin",
-        "fitik",
-        "kasik_agrisi",
-        "adet_agrisi"
+        "kilo_kaybi"
       ],
+      "resultCategory": "needsMoreInfo",
       "symptomMatched": false,
-      "departmentMatched": false,
+      "departmentMatched": null,
       "passed": false
     },
     {
@@ -1695,45 +1627,41 @@
       "text": "Sol tarafımda sanki bir ağırlık var ve sanki bir şey kalbimi sıkıştırıyor.",
       "lang": "tr",
       "result": {
-        "needsMoreInfo": true,
-        "followUpQuestions": [
+        "isEmergency": false,
+        "needsMoreInfo": false,
+        "primaryDepartment": "kbb",
+        "primaryDepartmentName": "Kulak Burun Boğaz",
+        "primaryDepartmentIcon": "👂",
+        "primaryDepartmentColor": "#f39c12",
+        "confidence": "medium",
+        "confidenceScore": 63,
+        "alternatives": [],
+        "isFamilyDoctor": false,
+        "familyDoctorMessage": null,
+        "reasoning": "\"sağırlık\" şikayeti en çok Kulak Burun Boğaz ile uyumlu görünüyor. Belirtileriniz aynı gün doktor tarafından değerlendirilmelidir.",
+        "matchedSymptoms": [
           {
-            "question": "Ağrı ani mi başladı yoksa yavaş yavaş mı?",
-            "symptomId": "karin_agrisi",
-            "impact": {
-              "genel_cerrahi": 0.3
-            },
-            "urgent": false,
-            "type": "yesno"
-          },
-          {
-            "question": "Ateşiniz var mı?",
-            "symptomId": "karin_agrisi",
-            "impact": {
-              "dahiliye": 0.2,
-              "genel_cerrahi": 0.15
-            },
-            "urgent": false,
-            "type": "yesno"
+            "id": "isitme_kaybi",
+            "keyword": "sağırlık",
+            "score": 93
           }
         ],
-        "matchedSymptoms": [
-          "migren",
-          "siskinlik",
-          "karin_agrisi",
-          "fitik"
-        ],
-        "primarySymptom": "migren",
-        "lang": "tr"
+        "careLevel": "urgent",
+        "careLabel": "Aynı gün değerlendirme iyi olur",
+        "careSummary": "Belirtileriniz aynı gün doktor tarafından değerlendirilmelidir.",
+        "careAdvice": "Mümkünse bugün içinde acil servis veya ilgili branşa başvurun.",
+        "note": "Mümkünse bugün içinde acil servis veya ilgili branşa başvurun. Bu öneri teşhis değildir; kesin tanı için doktor muayenesi gerekir.",
+        "timestamp": "2026-07-11T13:15:31.802Z",
+        "lang": "tr",
+        "ageBand": "yetiskin",
+        "ageBandWasAssumed": true
       },
       "matchedIds": [
-        null,
-        null,
-        null,
-        null
+        "isitme_kaybi"
       ],
+      "resultCategory": "resolved",
       "symptomMatched": false,
-      "departmentMatched": null,
+      "departmentMatched": false,
       "passed": false
     },
     {
@@ -1768,293 +1696,24 @@
         ],
         "matchedSymptoms": [
           "bacak_agrisi",
-          "periferik_noropati",
-          "derin_ven_trombozu",
-          "cilt_dokuntu"
+          "kalp_yetmezligi",
+          "bacak_sislik"
         ],
         "primarySymptom": "bacak_agrisi",
         "lang": "tr"
       },
       "matchedIds": [
-        null,
-        null,
-        null,
-        null
+        "bacak_agrisi",
+        "kalp_yetmezligi",
+        "bacak_sislik"
       ],
-      "symptomMatched": false,
-      "departmentMatched": null,
-      "passed": false
-    },
-    {
-      "index": 62,
-      "symptomId": "gogus_agrisi",
-      "expectedDepartment": "kardiyoloji",
-      "mode": "positive",
-      "text": "Göğüs kafesimin ortasında sanki bir el kalbimi kavrıyormuş gibi bir acı var.",
-      "lang": "tr",
-      "result": {
-        "isEmergency": true,
-        "emergencyMessage": "\"göğsümde zonklama\" ciddi bir duruma işaret edebilir. Hemen 112 ile iletişime geçin.",
-        "emergencyName": "anevrizma_belirti",
-        "matchedSymptoms": [
-          "gogus_agrisi",
-          "meme_sorunu",
-          "anevrizma_belirti"
-        ]
-      },
-      "matchedIds": [
-        null,
-        null,
-        null
-      ],
+      "resultCategory": "needsMoreInfo",
       "symptomMatched": false,
       "departmentMatched": null,
       "passed": false
     }
   ],
   "department_mismatch_cases": [
-    {
-      "index": 1,
-      "symptomId": "inme_belirtisi",
-      "expectedDepartment": "noroloji",
-      "mode": "positive",
-      "text": "Sol kolumu ve bacağımı şu an hiç hareket ettiremiyorum, sanki vücudumun yarısı tamamen boşaldı.",
-      "lang": "tr",
-      "result": {
-        "isEmergency": true,
-        "emergencyMessage": "\"vücudumun yarısı boşaldı\" ciddi bir duruma işaret edebilir. Hemen 112 ile iletişime geçin.",
-        "emergencyName": "inme_belirtisi",
-        "matchedSymptoms": [
-          "inme_belirtisi"
-        ]
-      },
-      "matchedIds": [
-        null
-      ],
-      "symptomMatched": false,
-      "departmentMatched": null,
-      "passed": false
-    },
-    {
-      "index": 2,
-      "symptomId": "inme_belirtisi",
-      "expectedDepartment": "noroloji",
-      "mode": "positive",
-      "text": "Az önce aniden kelimeleri birbirine karıştırmaya başladım ve sağ tarafımda ciddi bir his kaybı oluştu.",
-      "lang": "tr",
-      "result": {
-        "isEmergency": true,
-        "emergencyMessage": "Ani felç veya konuşma kaybı benzeri \"konuşamıyorum ani\" belirtisi acil müdahale gerektirebilir. Hemen 112 ile iletişime geçin.",
-        "emergencyName": "felc",
-        "matchedSymptoms": [
-          "siskinlik",
-          "felc",
-          "inme_belirtisi",
-          "konusma_bozuklugu"
-        ]
-      },
-      "matchedIds": [
-        null,
-        null,
-        null,
-        null
-      ],
-      "symptomMatched": false,
-      "departmentMatched": null,
-      "passed": false
-    },
-    {
-      "index": 4,
-      "symptomId": "anevrizma_belirti",
-      "expectedDepartment": "kardiyoloji",
-      "mode": "positive",
-      "text": "Karnımın tam ortasında sanki bir kalp atıyormuş gibi sürekli bir hareketlilik ve zonklama hissediyorum.",
-      "lang": "tr",
-      "result": {
-        "needsMoreInfo": true,
-        "followUpQuestions": [
-          {
-            "question": "Ağrı ani mi başladı yoksa yavaş yavaş mı?",
-            "symptomId": "karin_agrisi",
-            "impact": {
-              "genel_cerrahi": 0.3
-            },
-            "urgent": false,
-            "type": "yesno"
-          },
-          {
-            "question": "Ateşiniz var mı?",
-            "symptomId": "karin_agrisi",
-            "impact": {
-              "dahiliye": 0.2,
-              "genel_cerrahi": 0.15
-            },
-            "urgent": false,
-            "type": "yesno"
-          }
-        ],
-        "matchedSymptoms": [
-          "karin_agrisi"
-        ],
-        "primarySymptom": "karin_agrisi",
-        "lang": "tr"
-      },
-      "matchedIds": [
-        null
-      ],
-      "symptomMatched": false,
-      "departmentMatched": null,
-      "passed": false
-    },
-    {
-      "index": 5,
-      "symptomId": "anevrizma_belirti",
-      "expectedDepartment": "kardiyoloji",
-      "mode": "positive",
-      "text": "Göğsümün içinden sırtıma doğru yayılan, sanki bir şeylerin parçalandığını hissettiren çok şiddetli bir sancı başladı.",
-      "lang": "tr",
-      "result": {
-        "isEmergency": true,
-        "emergencyMessage": "\"göğsümden sırtıma yayılan acı\" ciddi bir duruma işaret edebilir. Hemen 112 ile iletişime geçin.",
-        "emergencyName": "anevrizma_belirti",
-        "matchedSymptoms": [
-          "gogus_agrisi",
-          "meme_sorunu",
-          "anevrizma_belirti",
-          "mide_ulser",
-          "bel_agrisi"
-        ]
-      },
-      "matchedIds": [
-        null,
-        null,
-        null,
-        null,
-        null
-      ],
-      "symptomMatched": false,
-      "departmentMatched": null,
-      "passed": false
-    },
-    {
-      "index": 6,
-      "symptomId": "anevrizma_belirti",
-      "expectedDepartment": "kardiyoloji",
-      "mode": "positive",
-      "text": "Karnımda derinlerde bir yerlerde sanki bir damar atıyor ve bu durum beni çok endişelendiriyor.",
-      "lang": "tr",
-      "result": {
-        "needsMoreInfo": true,
-        "followUpQuestions": [
-          {
-            "question": "Ağrı ani mi başladı yoksa yavaş yavaş mı?",
-            "symptomId": "karin_agrisi",
-            "impact": {
-              "genel_cerrahi": 0.3
-            },
-            "urgent": false,
-            "type": "yesno"
-          },
-          {
-            "question": "Ateşiniz var mı?",
-            "symptomId": "karin_agrisi",
-            "impact": {
-              "dahiliye": 0.2,
-              "genel_cerrahi": 0.15
-            },
-            "urgent": false,
-            "type": "yesno"
-          }
-        ],
-        "matchedSymptoms": [
-          "migren",
-          "karin_agrisi",
-          "madde_kullanimi"
-        ],
-        "primarySymptom": "migren",
-        "lang": "tr"
-      },
-      "matchedIds": [
-        null,
-        null,
-        null
-      ],
-      "symptomMatched": false,
-      "departmentMatched": null,
-      "passed": false
-    },
-    {
-      "index": 8,
-      "symptomId": "siddetli_bas_agrisi",
-      "expectedDepartment": "noroloji",
-      "mode": "positive",
-      "text": "Kafamın içinde sanki bir bomba patladı, acıdan gözlerimi bile açamıyorum.",
-      "lang": "tr",
-      "result": {
-        "isEmergency": true,
-        "emergencyMessage": "\"kafa sancısı\" ciddi bir duruma işaret edebilir. Hemen 112 ile iletişime geçin.",
-        "emergencyName": "siddetli_bas_agrisi",
-        "matchedSymptoms": [
-          "bas_agrisi",
-          "yorgunluk",
-          "tansiyon",
-          "siddetli_bas_agrisi",
-          "ben_degisimi"
-        ]
-      },
-      "matchedIds": [
-        null,
-        null,
-        null,
-        null,
-        null
-      ],
-      "symptomMatched": false,
-      "departmentMatched": null,
-      "passed": false
-    },
-    {
-      "index": 9,
-      "symptomId": "siddetli_bas_agrisi",
-      "expectedDepartment": "noroloji",
-      "mode": "positive",
-      "text": "Bir anda başlayan ve dayanılmaz bir seviyeye ulaşan, zonklayıcı bir ağrı hissediyorum.",
-      "lang": "tr",
-      "result": {
-        "isEmergency": false,
-        "needsMoreInfo": false,
-        "primaryDepartment": "gastroenteroloji",
-        "primaryDepartmentName": "Gastroenteroloji",
-        "primaryDepartmentIcon": "🫃",
-        "primaryDepartmentColor": "#d35400",
-        "confidence": "high",
-        "confidenceScore": 84,
-        "alternatives": [],
-        "isFamilyDoctor": false,
-        "familyDoctorMessage": null,
-        "reasoning": "\"yemekten sonra ağrı\" şikayeti en çok Gastroenteroloji ile uyumlu görünüyor. Belirtileriniz aynı gün doktor tarafından değerlendirilmelidir.",
-        "matchedSymptoms": [
-          {
-            "id": "mide_ulser",
-            "keyword": "yemekten sonra ağrı",
-            "score": 99
-          }
-        ],
-        "careLevel": "urgent",
-        "careLabel": "Aynı gün değerlendirme iyi olur",
-        "careSummary": "Belirtileriniz aynı gün doktor tarafından değerlendirilmelidir.",
-        "careAdvice": "Mümkünse bugün içinde acil servis veya ilgili branşa başvurun.",
-        "note": "Mümkünse bugün içinde acil servis veya ilgili branşa başvurun. Bu öneri teşhis değildir; kesin tanı için doktor muayenesi gerekir.",
-        "timestamp": "2026-06-08T14:42:11.931Z",
-        "lang": "tr"
-      },
-      "matchedIds": [
-        "mide_ulser"
-      ],
-      "symptomMatched": false,
-      "departmentMatched": false,
-      "passed": false
-    },
     {
       "index": 10,
       "symptomId": "siddetli_bas_agrisi",
@@ -2069,8 +1728,8 @@
         "primaryDepartmentName": "Kadın Hastalıkları ve Doğum",
         "primaryDepartmentIcon": "🤰",
         "primaryDepartmentColor": "#e91e63",
-        "confidence": "high",
-        "confidenceScore": 96,
+        "confidence": "low",
+        "confidenceScore": 47,
         "alternatives": [],
         "isFamilyDoctor": false,
         "familyDoctorMessage": null,
@@ -2087,184 +1746,17 @@
         "careSummary": "Belirtileriniz aynı gün doktor tarafından değerlendirilmelidir.",
         "careAdvice": "Mümkünse bugün içinde acil servis veya ilgili branşa başvurun.",
         "note": "Mümkünse bugün içinde acil servis veya ilgili branşa başvurun. Bu öneri teşhis değildir; kesin tanı için doktor muayenesi gerekir.",
-        "timestamp": "2026-06-08T14:42:13.130Z",
-        "lang": "tr"
+        "timestamp": "2026-07-11T13:14:02.369Z",
+        "lang": "tr",
+        "ageBand": "yetiskin",
+        "ageBandWasAssumed": true
       },
       "matchedIds": [
         "vajinal_kanama"
       ],
+      "resultCategory": "resolved",
       "symptomMatched": false,
       "departmentMatched": false,
-      "passed": false
-    },
-    {
-      "index": 12,
-      "symptomId": "felc",
-      "expectedDepartment": "noroloji",
-      "mode": "positive",
-      "text": "Sabah uyandığımda sağ tarafımı hiç hissedemiyordum ve hareket ettiremiyorum.",
-      "lang": "tr",
-      "result": {
-        "error": null,
-        "noMatch": true,
-        "message": "Şikayetinizi yeterince net anlayamadım. Lütfen daha detaylı yazın veya vücut haritasından destek alın.",
-        "suggestion": "Örnek: \"Başım ağrıyor ve mide bulantım var\" veya \"Göğsümde baskı hissediyorum\"."
-      },
-      "matchedIds": [],
-      "symptomMatched": false,
-      "departmentMatched": null,
-      "passed": false
-    },
-    {
-      "index": 13,
-      "symptomId": "felc",
-      "expectedDepartment": "noroloji",
-      "mode": "positive",
-      "text": "Bir anda ağzım yana kaydı ve kelimeleri düzgün telaffuz edemez hale geldim.",
-      "lang": "tr",
-      "result": {
-        "isEmergency": true,
-        "emergencyMessage": "\"ağzım kaydı\" ciddi bir duruma işaret edebilir. Hemen 112 ile iletişime geçin.",
-        "emergencyName": "inme_belirtisi",
-        "matchedSymptoms": [
-          "inme_belirtisi",
-          "konusma_bozuklugu",
-          "mide_bulantisi",
-          "depresyon",
-          "anksiyete",
-          "idrar_yanmasi"
-        ]
-      },
-      "matchedIds": [
-        null,
-        null,
-        null,
-        null,
-        null,
-        null
-      ],
-      "symptomMatched": false,
-      "departmentMatched": null,
-      "passed": false
-    },
-    {
-      "index": 14,
-      "symptomId": "felc",
-      "expectedDepartment": "noroloji",
-      "mode": "positive",
-      "text": "Sol bacağım ve kolum aniden boşaldı, şu an hiçbir şekilde yerinden oynatamıyorum.",
-      "lang": "tr",
-      "result": {
-        "needsMoreInfo": true,
-        "followUpQuestions": [
-          {
-            "question": "Şişlik var mı?",
-            "symptomId": "kol_agrisi",
-            "impact": {
-              "ortopedi": 0.2
-            },
-            "urgent": false,
-            "type": "yesno"
-          },
-          {
-            "question": "Travma geçirdiniz mi?",
-            "symptomId": "kol_agrisi",
-            "impact": {
-              "ortopedi": 0.4
-            },
-            "urgent": false,
-            "type": "yesno"
-          }
-        ],
-        "matchedSymptoms": [
-          "dikkat_eksikligi",
-          "omuz_agrisi",
-          "kol_agrisi",
-          "bacak_uyusma",
-          "cilt_dokuntu"
-        ],
-        "primarySymptom": "dikkat_eksikligi",
-        "lang": "tr"
-      },
-      "matchedIds": [
-        null,
-        null,
-        null,
-        null,
-        null
-      ],
-      "symptomMatched": false,
-      "departmentMatched": null,
-      "passed": false
-    },
-    {
-      "index": 16,
-      "symptomId": "gorme_kaybi",
-      "expectedDepartment": "goz",
-      "mode": "positive",
-      "text": "Bir anda etrafımdaki her şey silikleşti ve hiçbir şeyi seçemez oldum.",
-      "lang": "tr",
-      "result": {
-        "error": null,
-        "noMatch": true,
-        "message": "Şikayetinizi yeterince net anlayamadım. Lütfen daha detaylı yazın veya vücut haritasından destek alın.",
-        "suggestion": "Örnek: \"Başım ağrıyor ve mide bulantım var\" veya \"Göğsümde baskı hissediyorum\"."
-      },
-      "matchedIds": [],
-      "symptomMatched": false,
-      "departmentMatched": null,
-      "passed": false
-    },
-    {
-      "index": 17,
-      "symptomId": "gorme_kaybi",
-      "expectedDepartment": "goz",
-      "mode": "positive",
-      "text": "Sağ gözümün önünde sanki siyah bir tül varmış gibi hiçbir detayı ayırt edemiyorum.",
-      "lang": "tr",
-      "result": {
-        "isEmergency": true,
-        "emergencyMessage": "Ani gelişen \"kararma\" durumu acil değerlendirme gerektirir. Hemen 112 ile iletişime geçin.",
-        "emergencyName": "gorme_kaybi",
-        "matchedSymptoms": [
-          "gorme_bulaniklik",
-          "gorme_kaybi",
-          "bayilma",
-          "kalp_yetmezligi"
-        ]
-      },
-      "matchedIds": [
-        null,
-        null,
-        null,
-        null
-      ],
-      "symptomMatched": false,
-      "departmentMatched": null,
-      "passed": false
-    },
-    {
-      "index": 18,
-      "symptomId": "gorme_kaybi",
-      "expectedDepartment": "goz",
-      "mode": "positive",
-      "text": "Bakış alanım tamamen karanlığa gömüldü, hiçbir nesneyi fark edemiyorum.",
-      "lang": "tr",
-      "result": {
-        "isEmergency": true,
-        "emergencyMessage": "\"karanlığa gömüldüm\" acil müdahale gerektirebilir. Hemen 112 ile iletişime geçin.",
-        "emergencyName": "bayilma",
-        "matchedSymptoms": [
-          "bayilma",
-          "kalp_yetmezligi"
-        ]
-      },
-      "matchedIds": [
-        null,
-        null
-      ],
-      "symptomMatched": false,
-      "departmentMatched": null,
       "passed": false
     },
     {
@@ -2277,12 +1769,12 @@
       "result": {
         "isEmergency": false,
         "needsMoreInfo": false,
-        "primaryDepartment": "dermatoloji",
-        "primaryDepartmentName": "Dermatoloji",
-        "primaryDepartmentIcon": "🩹",
-        "primaryDepartmentColor": "#e67e22",
+        "primaryDepartment": "aile_hekimi",
+        "primaryDepartmentName": "Aile Hekimi",
+        "primaryDepartmentIcon": "👨‍⚕️",
+        "primaryDepartmentColor": "#28a745",
         "confidence": "low",
-        "confidenceScore": 40,
+        "confidenceScore": 38,
         "alternatives": [
           {
             "id": "dahiliye",
@@ -2290,34 +1782,24 @@
             "icon": "🏥"
           },
           {
-            "id": "gastroenteroloji",
-            "name": "Gastroenteroloji",
-            "icon": "🫃"
+            "id": "dermatoloji",
+            "name": "Dermatoloji",
+            "icon": "🩹"
           }
         ],
         "isFamilyDoctor": false,
         "familyDoctorMessage": null,
-        "reasoning": "hazımsızlık var, hazımsızlık, şişkinlik belirtileri birlikte değerlendirildiğinde en uygun bölüm Dermatoloji görünüyor. Belirtileriniz acil görünmüyor ancak geciktirilmemeli.",
+        "reasoning": "şişkinlik, şişkinlik belirtileri birlikte değerlendirildiğinde en uygun bölüm Aile Hekimi görünüyor. Belirtileriniz acil görünmüyor ancak geciktirilmemeli.",
         "matchedSymptoms": [
           {
             "id": "siskinlik",
-            "keyword": "hazımsızlık var",
-            "score": 100
-          },
-          {
-            "id": "reflü",
-            "keyword": "hazımsızlık",
-            "score": 100
+            "keyword": "şişkinlik",
+            "score": 98
           },
           {
             "id": "cilt_sisligi",
             "keyword": "şişkinlik",
             "score": 98
-          },
-          {
-            "id": "cilt_dokuntu",
-            "keyword": "su toplaması",
-            "score": 93
           }
         ],
         "careLevel": "soon",
@@ -2325,75 +1807,45 @@
         "careSummary": "Belirtileriniz acil görünmüyor ancak geciktirilmemeli.",
         "careAdvice": "İlgili bölümden yakın tarihe randevu almanız uygun olur.",
         "note": "İlgili bölümden yakın tarihe randevu almanız uygun olur. Bu öneri teşhis değildir; kesin tanı için doktor muayenesi gerekir.",
-        "timestamp": "2026-06-08T14:42:26.813Z",
-        "lang": "tr"
+        "timestamp": "2026-07-11T13:14:20.125Z",
+        "lang": "tr",
+        "ageBand": "yetiskin",
+        "ageBandWasAssumed": true
       },
       "matchedIds": [
         "siskinlik",
-        "reflü",
-        "cilt_sisligi",
-        "cilt_dokuntu"
+        "cilt_sisligi"
       ],
+      "resultCategory": "resolved",
       "symptomMatched": false,
       "departmentMatched": false,
       "passed": false
     },
     {
-      "index": 21,
-      "symptomId": "derin_ven_trombozu",
+      "index": 26,
+      "symptomId": "tansiyon_krizi",
       "expectedDepartment": "kardiyoloji",
       "mode": "positive",
-      "text": "Uzun süreli otobüs yolculuğumdan sonra sağ alt ekstremitemde zonklayıcı bir sızı ve gerginlik hissetmeye başladım.",
+      "text": "Tansiyonum aniden aşırı yükseldi ve şu an kontrol altına alamıyorum.",
       "lang": "tr",
       "result": {
         "isEmergency": false,
         "needsMoreInfo": false,
-        "primaryDepartment": "dahiliye",
-        "primaryDepartmentName": "Dahiliye (İç Hastalıkları)",
-        "primaryDepartmentIcon": "🏥",
-        "primaryDepartmentColor": "#667eea",
+        "primaryDepartment": "aile_hekimi",
+        "primaryDepartmentName": "Aile Hekimi",
+        "primaryDepartmentIcon": "👨‍⚕️",
+        "primaryDepartmentColor": "#28a745",
         "confidence": "low",
-        "confidenceScore": 40,
-        "alternatives": [
-          {
-            "id": "genel_cerrahi",
-            "name": "Genel Cerrahi",
-            "icon": "🔪"
-          },
-          {
-            "id": "gastroenteroloji",
-            "name": "Gastroenteroloji",
-            "icon": "🫃"
-          }
-        ],
+        "confidenceScore": 32,
+        "alternatives": [],
         "isFamilyDoctor": false,
         "familyDoctorMessage": null,
-        "reasoning": "şişkinlik, hazımsızlık, sağ alt ağrı belirtileri birlikte değerlendirildiğinde en uygun bölüm Dahiliye (İç Hastalıkları) görünüyor. Belirtileriniz aynı gün doktor tarafından değerlendirilmelidir.",
+        "reasoning": "\"tansiyon\" şikayeti en çok Aile Hekimi ile uyumlu görünüyor. Belirtileriniz aynı gün doktor tarafından değerlendirilmelidir.",
         "matchedSymptoms": [
           {
-            "id": "siskinlik",
-            "keyword": "şişkinlik",
+            "id": "tansiyon",
+            "keyword": "tansiyon",
             "score": 100
-          },
-          {
-            "id": "reflü",
-            "keyword": "hazımsızlık",
-            "score": 100
-          },
-          {
-            "id": "sag_alt_karin",
-            "keyword": "sağ alt ağrı",
-            "score": 100
-          },
-          {
-            "id": "cilt_sisligi",
-            "keyword": "şişkinlik",
-            "score": 100
-          },
-          {
-            "id": "depresyon",
-            "keyword": "üzgünüm",
-            "score": 93
           }
         ],
         "careLevel": "urgent",
@@ -2401,525 +1853,17 @@
         "careSummary": "Belirtileriniz aynı gün doktor tarafından değerlendirilmelidir.",
         "careAdvice": "Mümkünse bugün içinde acil servis veya ilgili branşa başvurun.",
         "note": "Mümkünse bugün içinde acil servis veya ilgili branşa başvurun. Bu öneri teşhis değildir; kesin tanı için doktor muayenesi gerekir.",
-        "timestamp": "2026-06-08T14:42:28.478Z",
-        "lang": "tr"
+        "timestamp": "2026-07-11T13:14:32.319Z",
+        "lang": "tr",
+        "ageBand": "yetiskin",
+        "ageBandWasAssumed": true
       },
       "matchedIds": [
-        "siskinlik",
-        "reflü",
-        "sag_alt_karin",
-        "cilt_sisligi",
-        "depresyon"
+        "tansiyon"
       ],
+      "resultCategory": "resolved",
       "symptomMatched": false,
       "departmentMatched": false,
-      "passed": false
-    },
-    {
-      "index": 22,
-      "symptomId": "derin_ven_trombozu",
-      "expectedDepartment": "kardiyoloji",
-      "mode": "positive",
-      "text": "Baldırımda sanki bir kütle varmış gibi bir dolgunluk ve üzerine bastığımda ciddi bir acı hissediyorum.",
-      "lang": "tr",
-      "result": {
-        "needsMoreInfo": true,
-        "followUpQuestions": [
-          {
-            "question": "Şişlik var mı?",
-            "symptomId": "bacak_agrisi",
-            "impact": {
-              "kardiyoloji": 0.3
-            },
-            "urgent": false,
-            "type": "yesno"
-          },
-          {
-            "question": "Yürürken mi ağrıyor?",
-            "symptomId": "bacak_agrisi",
-            "impact": {
-              "ortopedi": 0.2,
-              "kardiyoloji": 0.2
-            },
-            "urgent": false,
-            "type": "yesno"
-          }
-        ],
-        "matchedSymptoms": [
-          "bacak_agrisi",
-          "periferik_noropati",
-          "derin_ven_trombozu",
-          "cilt_dokuntu",
-          "sarilik",
-          "anemi"
-        ],
-        "primarySymptom": "bacak_agrisi",
-        "lang": "tr"
-      },
-      "matchedIds": [
-        null,
-        null,
-        null,
-        null,
-        null,
-        null
-      ],
-      "symptomMatched": false,
-      "departmentMatched": null,
-      "passed": false
-    },
-    {
-      "index": 24,
-      "symptomId": "tansiyon_krizi",
-      "expectedDepartment": "kardiyoloji",
-      "mode": "positive",
-      "text": "Tansiyon aletim büyük değerin 20'nin üzerinde olduğunu gösteriyor, kendimi çok kötü hissediyorum.",
-      "lang": "tr",
-      "result": {
-        "needsMoreInfo": true,
-        "followUpQuestions": [
-          {
-            "question": "İntihar düşünceniz var mı?",
-            "symptomId": "depresyon",
-            "impact": {
-              "psikiyatri": 0.5
-            },
-            "urgent": true,
-            "type": "yesno"
-          },
-          {
-            "question": "İştahınızda değişiklik var mı?",
-            "symptomId": "depresyon",
-            "impact": {
-              "psikiyatri": 0.1,
-              "dahiliye": 0.1
-            },
-            "urgent": false,
-            "type": "yesno"
-          }
-        ],
-        "matchedSymptoms": [
-          "tansiyon",
-          "tiroid_sisme",
-          "tiroid_hipo_hiper",
-          "depresyon"
-        ],
-        "primarySymptom": "tansiyon",
-        "lang": "tr"
-      },
-      "matchedIds": [
-        null,
-        null,
-        null,
-        null
-      ],
-      "symptomMatched": false,
-      "departmentMatched": null,
-      "passed": false
-    },
-    {
-      "index": 25,
-      "symptomId": "tansiyon_krizi",
-      "expectedDepartment": "kardiyoloji",
-      "mode": "positive",
-      "text": "Şiddetli bir ense ağrısıyla beraber kan basıncım tehlikeli seviyelere ulaştı.",
-      "lang": "tr",
-      "result": {
-        "error": null,
-        "noMatch": true,
-        "message": "Şikayetinizi yeterince net anlayamadım. Lütfen daha detaylı yazın veya vücut haritasından destek alın.",
-        "suggestion": "Örnek: \"Başım ağrıyor ve mide bulantım var\" veya \"Göğsümde baskı hissediyorum\"."
-      },
-      "matchedIds": [],
-      "symptomMatched": false,
-      "departmentMatched": null,
-      "passed": false
-    },
-    {
-      "index": 28,
-      "symptomId": "kalp_yetmezligi",
-      "expectedDepartment": "kardiyoloji",
-      "mode": "positive",
-      "text": "Geceleri düz bir şekilde yatamıyorum, nefesim kesildiği için hemen doğrulup oturma ihtiyacı hissediyorum.",
-      "lang": "tr",
-      "result": {
-        "needsMoreInfo": true,
-        "followUpQuestions": [
-          {
-            "question": "İstirahat halinde de nefes darlığınız var mı?",
-            "symptomId": "nefes_darligi",
-            "impact": {
-              "kardiyoloji": 0.3,
-              "gogus": 0.2
-            },
-            "urgent": false,
-            "type": "yesno"
-          },
-          {
-            "question": "Öksürük eşlik ediyor mu?",
-            "symptomId": "nefes_darligi",
-            "impact": {
-              "gogus": 0.3
-            },
-            "urgent": false,
-            "type": "yesno"
-          }
-        ],
-        "matchedSymptoms": [
-          "nefes_darligi",
-          "yutkunma_guclugu",
-          "yutma_agrisi"
-        ],
-        "primarySymptom": "nefes_darligi",
-        "lang": "tr"
-      },
-      "matchedIds": [
-        null,
-        null,
-        null
-      ],
-      "symptomMatched": false,
-      "departmentMatched": null,
-      "passed": false
-    },
-    {
-      "index": 29,
-      "symptomId": "kalp_yetmezligi",
-      "expectedDepartment": "kardiyoloji",
-      "mode": "positive",
-      "text": "Son zamanlarda ayak bileklerimde ciddi bir şişlik oluştu ve merdiven çıkarken nefes nefese kalıyorum.",
-      "lang": "tr",
-      "result": {
-        "needsMoreInfo": true,
-        "followUpQuestions": [
-          {
-            "question": "İstirahat halinde de nefes darlığınız var mı?",
-            "symptomId": "nefes_darligi",
-            "impact": {
-              "kardiyoloji": 0.3,
-              "gogus": 0.2
-            },
-            "urgent": false,
-            "type": "yesno"
-          },
-          {
-            "question": "Öksürük eşlik ediyor mu?",
-            "symptomId": "nefes_darligi",
-            "impact": {
-              "gogus": 0.3
-            },
-            "urgent": false,
-            "type": "yesno"
-          }
-        ],
-        "matchedSymptoms": [
-          "nefes_darligi",
-          "bacak_sislik",
-          "lenf_sisme",
-          "cilt_sisligi",
-          "anemi"
-        ],
-        "primarySymptom": "nefes_darligi",
-        "lang": "tr"
-      },
-      "matchedIds": [
-        null,
-        null,
-        null,
-        null,
-        null
-      ],
-      "symptomMatched": false,
-      "departmentMatched": null,
-      "passed": false
-    },
-    {
-      "index": 30,
-      "symptomId": "kalp_yetmezligi",
-      "expectedDepartment": "kardiyoloji",
-      "mode": "positive",
-      "text": "Yastıksız yattığımda sanki göğsüme bir ağırlık çöküyor ve nefes almakta çok zorlanıyorum.",
-      "lang": "tr",
-      "result": {
-        "needsMoreInfo": true,
-        "followUpQuestions": [
-          {
-            "question": "İstirahat halinde de nefes darlığınız var mı?",
-            "symptomId": "nefes_darligi",
-            "impact": {
-              "kardiyoloji": 0.3,
-              "gogus": 0.2
-            },
-            "urgent": false,
-            "type": "yesno"
-          },
-          {
-            "question": "Öksürük eşlik ediyor mu?",
-            "symptomId": "nefes_darligi",
-            "impact": {
-              "gogus": 0.3
-            },
-            "urgent": false,
-            "type": "yesno"
-          }
-        ],
-        "matchedSymptoms": [
-          "migren",
-          "nefes_darligi",
-          "kabizlik",
-          "terleme"
-        ],
-        "primarySymptom": "migren",
-        "lang": "tr"
-      },
-      "matchedIds": [
-        null,
-        null,
-        null,
-        null
-      ],
-      "symptomMatched": false,
-      "departmentMatched": null,
-      "passed": false
-    },
-    {
-      "index": 32,
-      "symptomId": "konusma_bozuklugu",
-      "expectedDepartment": "noroloji",
-      "mode": "positive",
-      "text": "Düşüncelerimi ifade etmekte zorlanıyorum, ağzımdan çıkanlar sanki birbirine karışıyor.",
-      "lang": "tr",
-      "result": {
-        "isEmergency": false,
-        "needsMoreInfo": false,
-        "primaryDepartment": "gastroenteroloji",
-        "primaryDepartmentName": "Gastroenteroloji",
-        "primaryDepartmentIcon": "🫃",
-        "primaryDepartmentColor": "#d35400",
-        "confidence": "low",
-        "confidenceScore": 42,
-        "alternatives": [
-          {
-            "id": "dahiliye",
-            "name": "Dahiliye (İç Hastalıkları)",
-            "icon": "🏥"
-          },
-          {
-            "id": "aile_hekimi",
-            "name": "Aile Hekimi",
-            "icon": "👨‍⚕️"
-          }
-        ],
-        "isFamilyDoctor": true,
-        "familyDoctorMessage": "Belirtileriniz ilk adımda aile hekimi tarafından değerlendirilebilir. Gerekirse doğru branşa yönlendirme yapılabilir.",
-        "reasoning": "\"zorlanıyorum\" şikayeti en çok Gastroenteroloji ile uyumlu görünüyor. Belirtileriniz poliklinik veya aile hekimi düzeyinde görünüyor.",
-        "matchedSymptoms": [
-          {
-            "id": "kabizlik",
-            "keyword": "zorlanıyorum",
-            "score": 98
-          }
-        ],
-        "careLevel": "routine",
-        "careLabel": "Rutin poliklinik uygun",
-        "careSummary": "Belirtileriniz poliklinik veya aile hekimi düzeyinde görünüyor.",
-        "careAdvice": "Uygun ilk randevuda ilgili bölüme veya aile hekiminize başvurabilirsiniz.",
-        "note": "Uygun ilk randevuda ilgili bölüme veya aile hekiminize başvurabilirsiniz. Bu öneri teşhis değildir; kesin tanı için doktor muayenesi gerekir.",
-        "timestamp": "2026-06-08T14:42:44.555Z",
-        "lang": "tr"
-      },
-      "matchedIds": [
-        "kabizlik"
-      ],
-      "symptomMatched": false,
-      "departmentMatched": false,
-      "passed": false
-    },
-    {
-      "index": 33,
-      "symptomId": "konusma_bozuklugu",
-      "expectedDepartment": "noroloji",
-      "mode": "positive",
-      "text": "Bir şeyler anlatmaya çalışırken doğru ifadeleri seçemiyorum, cümlelerim yarım kalıyor.",
-      "lang": "tr",
-      "result": {
-        "error": null,
-        "noMatch": true,
-        "message": "Şikayetinizi yeterince net anlayamadım. Lütfen daha detaylı yazın veya vücut haritasından destek alın.",
-        "suggestion": "Örnek: \"Başım ağrıyor ve mide bulantım var\" veya \"Göğsümde baskı hissediyorum\"."
-      },
-      "matchedIds": [],
-      "symptomMatched": false,
-      "departmentMatched": null,
-      "passed": false
-    },
-    {
-      "index": 34,
-      "symptomId": "konusma_bozuklugu",
-      "expectedDepartment": "noroloji",
-      "mode": "positive",
-      "text": "Sesim çıkıyor ama kurduğum cümleler karşımdaki kişi tarafından hiç anlaşılmıyor.",
-      "lang": "tr",
-      "result": {
-        "error": null,
-        "noMatch": true,
-        "message": "Şikayetinizi yeterince net anlayamadım. Lütfen daha detaylı yazın veya vücut haritasından destek alın.",
-        "suggestion": "Örnek: \"Başım ağrıyor ve mide bulantım var\" veya \"Göğsümde baskı hissediyorum\"."
-      },
-      "matchedIds": [],
-      "symptomMatched": false,
-      "departmentMatched": null,
-      "passed": false
-    },
-    {
-      "index": 36,
-      "symptomId": "idrar_yapamama",
-      "expectedDepartment": "uroloji",
-      "mode": "positive",
-      "text": "Mesanem tamamen dolu olmasına rağmen bir türlü boşaltamıyorum.",
-      "lang": "tr",
-      "result": {
-        "needsMoreInfo": true,
-        "followUpQuestions": [
-          {
-            "question": "Kilo değişikliği var mı?",
-            "symptomId": "yorgunluk",
-            "impact": {
-              "endokrinoloji": 0.3
-            },
-            "urgent": false,
-            "type": "yesno"
-          },
-          {
-            "question": "İştahınızda değişiklik var mı?",
-            "symptomId": "yorgunluk",
-            "impact": {
-              "dahiliye": 0.2,
-              "endokrinoloji": 0.2
-            },
-            "urgent": false,
-            "type": "yesno"
-          }
-        ],
-        "matchedSymptoms": [
-          "idrar_tutamama",
-          "idrar_yapamama",
-          "yorgunluk"
-        ],
-        "primarySymptom": "idrar_tutamama",
-        "lang": "tr"
-      },
-      "matchedIds": [
-        null,
-        null,
-        null
-      ],
-      "symptomMatched": false,
-      "departmentMatched": null,
-      "passed": false
-    },
-    {
-      "index": 37,
-      "symptomId": "idrar_yapamama",
-      "expectedDepartment": "uroloji",
-      "mode": "positive",
-      "text": "Saatlerdir tuvalete gitme ihtiyacı hissediyorum ama ne kadar zorlasam da idrar çıkışı olmuyor.",
-      "lang": "tr",
-      "result": {
-        "isEmergency": false,
-        "needsMoreInfo": false,
-        "primaryDepartment": "endokrinoloji",
-        "primaryDepartmentName": "Endokrinoloji",
-        "primaryDepartmentIcon": "⚗️",
-        "primaryDepartmentColor": "#8e44ad",
-        "confidence": "medium",
-        "confidenceScore": 68,
-        "alternatives": [],
-        "isFamilyDoctor": false,
-        "familyDoctorMessage": null,
-        "reasoning": "\"poliüri\" şikayeti en çok Endokrinoloji ile uyumlu görünüyor. Belirtileriniz acil görünmüyor ancak geciktirilmemeli.",
-        "matchedSymptoms": [
-          {
-            "id": "susuzluk_cok_idrar",
-            "keyword": "poliüri",
-            "score": 98
-          }
-        ],
-        "careLevel": "soon",
-        "careLabel": "Kısa sürede randevu alın",
-        "careSummary": "Belirtileriniz acil görünmüyor ancak geciktirilmemeli.",
-        "careAdvice": "İlgili bölümden yakın tarihe randevu almanız uygun olur.",
-        "note": "İlgili bölümden yakın tarihe randevu almanız uygun olur. Bu öneri teşhis değildir; kesin tanı için doktor muayenesi gerekir.",
-        "timestamp": "2026-06-08T14:42:51.184Z",
-        "lang": "tr"
-      },
-      "matchedIds": [
-        "susuzluk_cok_idrar"
-      ],
-      "symptomMatched": false,
-      "departmentMatched": false,
-      "passed": false
-    },
-    {
-      "index": 38,
-      "symptomId": "idrar_yapamama",
-      "expectedDepartment": "uroloji",
-      "mode": "positive",
-      "text": "Alt tarafımda ciddi bir baskı var, tuvalete oturduğumda ise hiçbir şekilde idrar akışı gerçekleşmiyor.",
-      "lang": "tr",
-      "result": {
-        "error": null,
-        "noMatch": true,
-        "message": "Şikayetinizi yeterince net anlayamadım. Lütfen daha detaylı yazın veya vücut haritasından destek alın.",
-        "suggestion": "Örnek: \"Başım ağrıyor ve mide bulantım var\" veya \"Göğsümde baskı hissediyorum\"."
-      },
-      "matchedIds": [],
-      "symptomMatched": false,
-      "departmentMatched": null,
-      "passed": false
-    },
-    {
-      "index": 40,
-      "symptomId": "nöbet",
-      "expectedDepartment": "noroloji",
-      "mode": "positive",
-      "text": "Vücudumda istemsiz hareketler başladı ve bir an için bilincimi kaybettim.",
-      "lang": "tr",
-      "result": {
-        "error": null,
-        "noMatch": true,
-        "message": "Şikayetinizi yeterince net anlayamadım. Lütfen daha detaylı yazın veya vücut haritasından destek alın.",
-        "suggestion": "Örnek: \"Başım ağrıyor ve mide bulantım var\" veya \"Göğsümde baskı hissediyorum\"."
-      },
-      "matchedIds": [],
-      "symptomMatched": false,
-      "departmentMatched": null,
-      "passed": false
-    },
-    {
-      "index": 41,
-      "symptomId": "nöbet",
-      "expectedDepartment": "noroloji",
-      "mode": "positive",
-      "text": "Aniden yere yığıldım ve tüm vücudumda şiddetli bir titreme hissettim.",
-      "lang": "tr",
-      "result": {
-        "isEmergency": true,
-        "emergencyMessage": "\"yere yığılma\" acil müdahale gerektirebilir. Hemen 112 ile iletişime geçin.",
-        "emergencyName": "nöbet",
-        "matchedSymptoms": [
-          "el_titremes",
-          "parkinson_belirtisi",
-          "nöbet"
-        ]
-      },
-      "matchedIds": [
-        null,
-        null,
-        null
-      ],
-      "symptomMatched": false,
-      "departmentMatched": null,
       "passed": false
     },
     {
@@ -2936,8 +1880,8 @@
         "primaryDepartmentName": "Psikiyatri",
         "primaryDepartmentIcon": "🧘",
         "primaryDepartmentColor": "#1abc9c",
-        "confidence": "high",
-        "confidenceScore": 89,
+        "confidence": "low",
+        "confidenceScore": 37,
         "alternatives": [],
         "isFamilyDoctor": false,
         "familyDoctorMessage": null,
@@ -2954,280 +1898,17 @@
         "careSummary": "Belirtileriniz acil görünmüyor ancak geciktirilmemeli.",
         "careAdvice": "İlgili bölümden yakın tarihe randevu almanız uygun olur.",
         "note": "İlgili bölümden yakın tarihe randevu almanız uygun olur. Bu öneri teşhis değildir; kesin tanı için doktor muayenesi gerekir.",
-        "timestamp": "2026-06-08T14:42:58.104Z",
-        "lang": "tr"
+        "timestamp": "2026-07-11T13:14:57.527Z",
+        "lang": "tr",
+        "ageBand": "yetiskin",
+        "ageBandWasAssumed": true
       },
       "matchedIds": [
         "anksiyete"
       ],
+      "resultCategory": "resolved",
       "symptomMatched": false,
       "departmentMatched": false,
-      "passed": false
-    },
-    {
-      "index": 45,
-      "symptomId": "bayilma",
-      "expectedDepartment": "noroloji",
-      "mode": "positive",
-      "text": "Aniden bilincim kapandı ve kendimi yerde buldum.",
-      "lang": "tr",
-      "result": {
-        "isEmergency": true,
-        "emergencyMessage": "\"bilincim kapandı\" acil müdahale gerektirebilir. Hemen 112 ile iletişime geçin.",
-        "emergencyName": "bayilma",
-        "matchedSymptoms": [
-          "bayilma"
-        ]
-      },
-      "matchedIds": [
-        null
-      ],
-      "symptomMatched": false,
-      "departmentMatched": null,
-      "passed": false
-    },
-    {
-      "index": 46,
-      "symptomId": "bayilma",
-      "expectedDepartment": "noroloji",
-      "mode": "positive",
-      "text": "Ayaktayken bir anlık boşluk yaşadım ve ne olduğunu anlamadan yere serildim.",
-      "lang": "tr",
-      "result": {
-        "isEmergency": true,
-        "emergencyMessage": "\"yere serildim\" acil müdahale gerektirebilir. Hemen 112 ile iletişime geçin.",
-        "emergencyName": "bayilma",
-        "matchedSymptoms": [
-          "siskinlik",
-          "bayilma"
-        ]
-      },
-      "matchedIds": [
-        null,
-        null
-      ],
-      "symptomMatched": false,
-      "departmentMatched": null,
-      "passed": false
-    },
-    {
-      "index": 48,
-      "symptomId": "hemoptizi",
-      "expectedDepartment": "gogus",
-      "mode": "positive",
-      "text": "Öksürdüğüm zaman mendilime parlak kırmızı lekeler bulaşıyor.",
-      "lang": "tr",
-      "result": {
-        "isEmergency": true,
-        "emergencyMessage": "Ani gelişen \"karartı\" durumu acil değerlendirme gerektirir. Hemen 112 ile iletişime geçin.",
-        "emergencyName": "gorme_kaybi",
-        "matchedSymptoms": [
-          "gorme_kaybi",
-          "alerji",
-          "vajinal_kanama",
-          "cilt_dokuntu",
-          "cilt_yanik",
-          "sedef_hastaligi"
-        ]
-      },
-      "matchedIds": [
-        null,
-        null,
-        null,
-        null,
-        null,
-        null
-      ],
-      "symptomMatched": false,
-      "departmentMatched": null,
-      "passed": false
-    },
-    {
-      "index": 49,
-      "symptomId": "hemoptizi",
-      "expectedDepartment": "gogus",
-      "mode": "positive",
-      "text": "Birkaç gündür boğazımı temizlediğimde gelen sıvının içinde yoğun bir kızıllık fark ediyorum.",
-      "lang": "tr",
-      "result": {
-        "needsMoreInfo": true,
-        "followUpQuestions": [
-          {
-            "question": "Kilo değişikliği var mı?",
-            "symptomId": "yorgunluk",
-            "impact": {
-              "endokrinoloji": 0.3
-            },
-            "urgent": false,
-            "type": "yesno"
-          },
-          {
-            "question": "İştahınızda değişiklik var mı?",
-            "symptomId": "yorgunluk",
-            "impact": {
-              "dahiliye": 0.2,
-              "endokrinoloji": 0.2
-            },
-            "urgent": false,
-            "type": "yesno"
-          }
-        ],
-        "matchedSymptoms": [
-          "vajinal_kanama",
-          "vajinal_akinti",
-          "yorgunluk",
-          "kilo_kaybi"
-        ],
-        "primarySymptom": "vajinal_kanama",
-        "lang": "tr"
-      },
-      "matchedIds": [
-        null,
-        null,
-        null,
-        null
-      ],
-      "symptomMatched": false,
-      "departmentMatched": null,
-      "passed": false
-    },
-    {
-      "index": 50,
-      "symptomId": "hemoptizi",
-      "expectedDepartment": "gogus",
-      "mode": "positive",
-      "text": "Nefes darlığıyla birlikte soluk borumdan sanki kan geliyormuş gibi bir his yaşıyorum.",
-      "lang": "tr",
-      "result": {
-        "needsMoreInfo": true,
-        "followUpQuestions": [
-          {
-            "question": "İstirahat halinde de nefes darlığınız var mı?",
-            "symptomId": "nefes_darligi",
-            "impact": {
-              "kardiyoloji": 0.3,
-              "gogus": 0.2
-            },
-            "urgent": false,
-            "type": "yesno"
-          },
-          {
-            "question": "Öksürük eşlik ediyor mu?",
-            "symptomId": "nefes_darligi",
-            "impact": {
-              "gogus": 0.3
-            },
-            "urgent": false,
-            "type": "yesno"
-          }
-        ],
-        "matchedSymptoms": [
-          "nefes_darligi",
-          "ates"
-        ],
-        "primarySymptom": "nefes_darligi",
-        "lang": "tr"
-      },
-      "matchedIds": [
-        null,
-        null
-      ],
-      "symptomMatched": false,
-      "departmentMatched": null,
-      "passed": false
-    },
-    {
-      "index": 52,
-      "symptomId": "ben_degisimi",
-      "expectedDepartment": "dermatoloji",
-      "mode": "positive",
-      "text": "Vücudumdaki bir lekenin son zamanlarda giderek genişlediğini ve sınırlarının bozulduğunu fark ettim.",
-      "lang": "tr",
-      "result": {
-        "isEmergency": true,
-        "emergencyMessage": "Ani gelişen \"karartı\" durumu acil değerlendirme gerektirir. Hemen 112 ile iletişime geçin.",
-        "emergencyName": "gorme_kaybi",
-        "matchedSymptoms": [
-          "gorme_kaybi"
-        ]
-      },
-      "matchedIds": [
-        null
-      ],
-      "symptomMatched": false,
-      "departmentMatched": null,
-      "passed": false
-    },
-    {
-      "index": 53,
-      "symptomId": "ben_degisimi",
-      "expectedDepartment": "dermatoloji",
-      "mode": "positive",
-      "text": "Sırtımdaki kahverengi noktanın tonunun koyulaştığını ve eskiye göre daha kabarık durduğunu görüyorum.",
-      "lang": "tr",
-      "result": {
-        "isEmergency": false,
-        "needsMoreInfo": false,
-        "primaryDepartment": "noroloji",
-        "primaryDepartmentName": "Nöroloji",
-        "primaryDepartmentIcon": "🧠",
-        "primaryDepartmentColor": "#9b59b6",
-        "confidence": "low",
-        "confidenceScore": 51,
-        "alternatives": [
-          {
-            "id": "dermatoloji",
-            "name": "Dermatoloji",
-            "icon": "🩹"
-          }
-        ],
-        "isFamilyDoctor": false,
-        "familyDoctorMessage": null,
-        "reasoning": "skotom, kabarcıklar belirtileri birlikte değerlendirildiğinde en uygun bölüm Nöroloji görünüyor. Belirtileriniz acil görünmüyor ancak geciktirilmemeli.",
-        "matchedSymptoms": [
-          {
-            "id": "migren_aura",
-            "keyword": "skotom",
-            "score": 98
-          },
-          {
-            "id": "cilt_dokuntu",
-            "keyword": "kabarcıklar",
-            "score": 96
-          }
-        ],
-        "careLevel": "soon",
-        "careLabel": "Kısa sürede randevu alın",
-        "careSummary": "Belirtileriniz acil görünmüyor ancak geciktirilmemeli.",
-        "careAdvice": "İlgili bölümden yakın tarihe randevu almanız uygun olur.",
-        "note": "İlgili bölümden yakın tarihe randevu almanız uygun olur. Bu öneri teşhis değildir; kesin tanı için doktor muayenesi gerekir.",
-        "timestamp": "2026-06-08T14:43:13.168Z",
-        "lang": "tr"
-      },
-      "matchedIds": [
-        "migren_aura",
-        "cilt_dokuntu"
-      ],
-      "symptomMatched": false,
-      "departmentMatched": false,
-      "passed": false
-    },
-    {
-      "index": 54,
-      "symptomId": "ben_degisimi",
-      "expectedDepartment": "dermatoloji",
-      "mode": "positive",
-      "text": "Cildimdeki bir oluşumun yapısının bozulduğunu ve kenarlarının düzensizleştiğini gözlemliyorum.",
-      "lang": "tr",
-      "result": {
-        "error": null,
-        "noMatch": true,
-        "message": "Şikayetinizi yeterince net anlayamadım. Lütfen daha detaylı yazın veya vücut haritasından destek alın.",
-        "suggestion": "Örnek: \"Başım ağrıyor ve mide bulantım var\" veya \"Göğsümde baskı hissediyorum\"."
-      },
-      "matchedIds": [],
-      "symptomMatched": false,
-      "departmentMatched": null,
       "passed": false
     },
     {
@@ -3244,29 +1925,29 @@
         "primaryDepartmentName": "Genel Cerrahi",
         "primaryDepartmentIcon": "🔪",
         "primaryDepartmentColor": "#795548",
-        "confidence": "low",
-        "confidenceScore": 48,
+        "confidence": "medium",
+        "confidenceScore": 64,
         "alternatives": [
+          {
+            "id": "kadin_dogum",
+            "name": "Kadın Hastalıkları ve Doğum",
+            "icon": "🤰"
+          },
           {
             "id": "uroloji",
             "name": "Üroloji",
             "icon": "🔬"
           },
           {
-            "id": "kadin_dogum",
-            "name": "Kadın Hastalıkları ve Doğum",
-            "icon": "🤰"
+            "id": "dahiliye",
+            "name": "Dahiliye (İç Hastalıkları)",
+            "icon": "🏥"
           }
         ],
         "isFamilyDoctor": false,
         "familyDoctorMessage": null,
-        "reasoning": "belim ağrıyor, belimde sızı var, sağ kasık ağrısı belirtileri birlikte değerlendirildiğinde en uygun bölüm Genel Cerrahi görünüyor. Belirtileriniz aynı gün doktor tarafından değerlendirilmelidir.",
+        "reasoning": "belimde sızı var, sağ kasık ağrısı, kasık ağrısından duramıyorum belirtileri birlikte değerlendirildiğinde en uygun bölüm Genel Cerrahi görünüyor. Belirtileriniz aynı gün doktor tarafından değerlendirilmelidir.",
         "matchedSymptoms": [
-          {
-            "id": "bel_agrisi",
-            "keyword": "belim ağrıyor",
-            "score": 100
-          },
           {
             "id": "bobrek_agrisi",
             "keyword": "belimde sızı var",
@@ -3278,19 +1959,24 @@
             "score": 99
           },
           {
+            "id": "kasik_agrisi",
+            "keyword": "kasık ağrısından duramıyorum",
+            "score": 99
+          },
+          {
             "id": "fitik",
             "keyword": "kasık fıtığı",
             "score": 99
           },
           {
-            "id": "kasik_agrisi",
-            "keyword": "kasık ağrısı",
+            "id": "endometriozis",
+            "keyword": "pelvis ağrısı",
             "score": 99
           },
           {
-            "id": "adet_agrisi",
-            "keyword": "kasık sancısı",
-            "score": 99
+            "id": "anksiyete",
+            "keyword": "yerimde duramıyorum",
+            "score": 98
           }
         ],
         "careLevel": "urgent",
@@ -3298,181 +1984,23 @@
         "careSummary": "Belirtileriniz aynı gün doktor tarafından değerlendirilmelidir.",
         "careAdvice": "Mümkünse bugün içinde acil servis veya ilgili branşa başvurun.",
         "note": "Mümkünse bugün içinde acil servis veya ilgili branşa başvurun. Bu öneri teşhis değildir; kesin tanı için doktor muayenesi gerekir.",
-        "timestamp": "2026-06-08T14:43:17.872Z",
-        "lang": "tr"
+        "timestamp": "2026-07-11T13:15:22.041Z",
+        "lang": "tr",
+        "ageBand": "yetiskin",
+        "ageBandWasAssumed": true
       },
       "matchedIds": [
-        "bel_agrisi",
         "bobrek_agrisi",
         "sag_alt_karin",
-        "fitik",
         "kasik_agrisi",
-        "adet_agrisi"
+        "fitik",
+        "endometriozis",
+        "anksiyete"
       ],
+      "resultCategory": "resolved",
       "symptomMatched": false,
       "departmentMatched": false,
       "passed": false
-    },
-    {
-      "index": 57,
-      "symptomId": "bobrek_tasi",
-      "expectedDepartment": "uroloji",
-      "mode": "positive",
-      "text": "İdrar yaparken zorlanıyorum ve yan tarafımda bıçak saplanır gibi keskin bir ağrı hissediyorum.",
-      "lang": "tr",
-      "result": {
-        "isEmergency": false,
-        "needsMoreInfo": false,
-        "primaryDepartment": "gastroenteroloji",
-        "primaryDepartmentName": "Gastroenteroloji",
-        "primaryDepartmentIcon": "🫃",
-        "primaryDepartmentColor": "#d35400",
-        "confidence": "low",
-        "confidenceScore": 43,
-        "alternatives": [
-          {
-            "id": "dahiliye",
-            "name": "Dahiliye (İç Hastalıkları)",
-            "icon": "🏥"
-          },
-          {
-            "id": "uroloji",
-            "name": "Üroloji",
-            "icon": "🔬"
-          }
-        ],
-        "isFamilyDoctor": false,
-        "familyDoctorMessage": null,
-        "reasoning": "gaz, yan tarafım ağrıyor, gaz sancısı belirtileri birlikte değerlendirildiğinde en uygun bölüm Gastroenteroloji görünüyor. Belirtileriniz acil görünmüyor ancak geciktirilmemeli.",
-        "matchedSymptoms": [
-          {
-            "id": "siskinlik",
-            "keyword": "gaz",
-            "score": 100
-          },
-          {
-            "id": "bobrek_tasi",
-            "keyword": "yan tarafım ağrıyor",
-            "score": 100
-          },
-          {
-            "id": "irritabl_barsak",
-            "keyword": "gaz sancısı",
-            "score": 100
-          },
-          {
-            "id": "karin_agrisi",
-            "keyword": "karın sancısı",
-            "score": 99
-          },
-          {
-            "id": "kabizlik",
-            "keyword": "zorlanıyorum",
-            "score": 98
-          },
-          {
-            "id": "idrar_yanmasi",
-            "keyword": "idrarda batma",
-            "score": 97
-          }
-        ],
-        "careLevel": "soon",
-        "careLabel": "Kısa sürede randevu alın",
-        "careSummary": "Belirtileriniz acil görünmüyor ancak geciktirilmemeli.",
-        "careAdvice": "İlgili bölümden yakın tarihe randevu almanız uygun olur.",
-        "note": "İlgili bölümden yakın tarihe randevu almanız uygun olur. Bu öneri teşhis değildir; kesin tanı için doktor muayenesi gerekir.",
-        "timestamp": "2026-06-08T14:43:19.377Z",
-        "lang": "tr"
-      },
-      "matchedIds": [
-        "siskinlik",
-        "bobrek_tasi",
-        "irritabl_barsak",
-        "karin_agrisi",
-        "kabizlik",
-        "idrar_yanmasi"
-      ],
-      "symptomMatched": true,
-      "departmentMatched": false,
-      "passed": true
-    },
-    {
-      "index": 58,
-      "symptomId": "bobrek_tasi",
-      "expectedDepartment": "uroloji",
-      "mode": "positive",
-      "text": "Sırtımın alt kısmında kıvrandıran bir acı var, sanki içeride bir şey hareket ediyor ve aşağıya doğru baskı yapıyor.",
-      "lang": "tr",
-      "result": {
-        "isEmergency": false,
-        "needsMoreInfo": false,
-        "primaryDepartment": "dahiliye",
-        "primaryDepartmentName": "Dahiliye (İç Hastalıkları)",
-        "primaryDepartmentIcon": "🏥",
-        "primaryDepartmentColor": "#667eea",
-        "confidence": "low",
-        "confidenceScore": 42,
-        "alternatives": [
-          {
-            "id": "uroloji",
-            "name": "Üroloji",
-            "icon": "🔬"
-          }
-        ],
-        "isFamilyDoctor": false,
-        "familyDoctorMessage": null,
-        "reasoning": "belim ağrıyor, belimde sızı var, tansiyon belirtileri birlikte değerlendirildiğinde en uygun bölüm Dahiliye (İç Hastalıkları) görünüyor. Belirtileriniz aynı gün doktor tarafından değerlendirilmelidir.",
-        "matchedSymptoms": [
-          {
-            "id": "bel_agrisi",
-            "keyword": "belim ağrıyor",
-            "score": 100
-          },
-          {
-            "id": "bobrek_agrisi",
-            "keyword": "belimde sızı var",
-            "score": 100
-          },
-          {
-            "id": "tansiyon",
-            "keyword": "tansiyon",
-            "score": 100
-          },
-          {
-            "id": "bobrek_tasi",
-            "keyword": "kıvrandıran ağrı",
-            "score": 100
-          },
-          {
-            "id": "yutma_agrisi",
-            "keyword": "su içerken bile acıyor",
-            "score": 97
-          },
-          {
-            "id": "kilo_kaybi",
-            "keyword": "eriyorum",
-            "score": 94
-          }
-        ],
-        "careLevel": "urgent",
-        "careLabel": "Aynı gün değerlendirme iyi olur",
-        "careSummary": "Belirtileriniz aynı gün doktor tarafından değerlendirilmelidir.",
-        "careAdvice": "Mümkünse bugün içinde acil servis veya ilgili branşa başvurun.",
-        "note": "Mümkünse bugün içinde acil servis veya ilgili branşa başvurun. Bu öneri teşhis değildir; kesin tanı için doktor muayenesi gerekir.",
-        "timestamp": "2026-06-08T14:43:21.208Z",
-        "lang": "tr"
-      },
-      "matchedIds": [
-        "bel_agrisi",
-        "bobrek_agrisi",
-        "tansiyon",
-        "bobrek_tasi",
-        "yutma_agrisi",
-        "kilo_kaybi"
-      ],
-      "symptomMatched": true,
-      "departmentMatched": false,
-      "passed": true
     },
     {
       "index": 60,
@@ -3482,404 +2010,49 @@
       "text": "Sol tarafımda sanki bir ağırlık var ve sanki bir şey kalbimi sıkıştırıyor.",
       "lang": "tr",
       "result": {
-        "needsMoreInfo": true,
-        "followUpQuestions": [
+        "isEmergency": false,
+        "needsMoreInfo": false,
+        "primaryDepartment": "kbb",
+        "primaryDepartmentName": "Kulak Burun Boğaz",
+        "primaryDepartmentIcon": "👂",
+        "primaryDepartmentColor": "#f39c12",
+        "confidence": "medium",
+        "confidenceScore": 63,
+        "alternatives": [],
+        "isFamilyDoctor": false,
+        "familyDoctorMessage": null,
+        "reasoning": "\"sağırlık\" şikayeti en çok Kulak Burun Boğaz ile uyumlu görünüyor. Belirtileriniz aynı gün doktor tarafından değerlendirilmelidir.",
+        "matchedSymptoms": [
           {
-            "question": "Ağrı ani mi başladı yoksa yavaş yavaş mı?",
-            "symptomId": "karin_agrisi",
-            "impact": {
-              "genel_cerrahi": 0.3
-            },
-            "urgent": false,
-            "type": "yesno"
-          },
-          {
-            "question": "Ateşiniz var mı?",
-            "symptomId": "karin_agrisi",
-            "impact": {
-              "dahiliye": 0.2,
-              "genel_cerrahi": 0.15
-            },
-            "urgent": false,
-            "type": "yesno"
+            "id": "isitme_kaybi",
+            "keyword": "sağırlık",
+            "score": 93
           }
         ],
-        "matchedSymptoms": [
-          "migren",
-          "siskinlik",
-          "karin_agrisi",
-          "fitik"
-        ],
-        "primarySymptom": "migren",
-        "lang": "tr"
+        "careLevel": "urgent",
+        "careLabel": "Aynı gün değerlendirme iyi olur",
+        "careSummary": "Belirtileriniz aynı gün doktor tarafından değerlendirilmelidir.",
+        "careAdvice": "Mümkünse bugün içinde acil servis veya ilgili branşa başvurun.",
+        "note": "Mümkünse bugün içinde acil servis veya ilgili branşa başvurun. Bu öneri teşhis değildir; kesin tanı için doktor muayenesi gerekir.",
+        "timestamp": "2026-07-11T13:15:31.802Z",
+        "lang": "tr",
+        "ageBand": "yetiskin",
+        "ageBandWasAssumed": true
       },
       "matchedIds": [
-        null,
-        null,
-        null,
-        null
+        "isitme_kaybi"
       ],
+      "resultCategory": "resolved",
       "symptomMatched": false,
-      "departmentMatched": null,
-      "passed": false
-    },
-    {
-      "index": 61,
-      "symptomId": "gogus_agrisi",
-      "expectedDepartment": "kardiyoloji",
-      "mode": "positive",
-      "text": "Kaburgalarımın hemen altında zonklayan bir sızı hissediyorum.",
-      "lang": "tr",
-      "result": {
-        "needsMoreInfo": true,
-        "followUpQuestions": [
-          {
-            "question": "Şişlik var mı?",
-            "symptomId": "bacak_agrisi",
-            "impact": {
-              "kardiyoloji": 0.3
-            },
-            "urgent": false,
-            "type": "yesno"
-          },
-          {
-            "question": "Yürürken mi ağrıyor?",
-            "symptomId": "bacak_agrisi",
-            "impact": {
-              "ortopedi": 0.2,
-              "kardiyoloji": 0.2
-            },
-            "urgent": false,
-            "type": "yesno"
-          }
-        ],
-        "matchedSymptoms": [
-          "bacak_agrisi",
-          "periferik_noropati",
-          "derin_ven_trombozu",
-          "cilt_dokuntu"
-        ],
-        "primarySymptom": "bacak_agrisi",
-        "lang": "tr"
-      },
-      "matchedIds": [
-        null,
-        null,
-        null,
-        null
-      ],
-      "symptomMatched": false,
-      "departmentMatched": null,
-      "passed": false
-    },
-    {
-      "index": 62,
-      "symptomId": "gogus_agrisi",
-      "expectedDepartment": "kardiyoloji",
-      "mode": "positive",
-      "text": "Göğüs kafesimin ortasında sanki bir el kalbimi kavrıyormuş gibi bir acı var.",
-      "lang": "tr",
-      "result": {
-        "isEmergency": true,
-        "emergencyMessage": "\"göğsümde zonklama\" ciddi bir duruma işaret edebilir. Hemen 112 ile iletişime geçin.",
-        "emergencyName": "anevrizma_belirti",
-        "matchedSymptoms": [
-          "gogus_agrisi",
-          "meme_sorunu",
-          "anevrizma_belirti"
-        ]
-      },
-      "matchedIds": [
-        null,
-        null,
-        null
-      ],
-      "symptomMatched": false,
-      "departmentMatched": null,
+      "departmentMatched": false,
       "passed": false
     }
   ],
-  "positive_accuracy": 4.2,
+  "positive_accuracy": 20.8,
   "negation_accuracy": 93.8,
-  "department_accuracy": 6.2,
-  "generatedAt": "2026-06-08T14:43:27Z",
-  "resultsCount": 64,
-  "failureSamples": [
-    {
-      "index": 0,
-      "text": "Bir anda ağzımın bir tarafının kaydığını ve konuşmamın bozulduğunu fark ettim.",
-      "mode": "positive",
-      "symptomId": "inme_belirtisi",
-      "matchedIds": [
-        "siskinlik",
-        "konusma_bozuklugu"
-      ],
-      "primaryDepartment": "noroloji",
-      "departmentMatched": true,
-      "symptomMatched": false
-    },
-    {
-      "index": 1,
-      "text": "Sol kolumu ve bacağımı şu an hiç hareket ettiremiyorum, sanki vücudumun yarısı tamamen boşaldı.",
-      "mode": "positive",
-      "symptomId": "inme_belirtisi",
-      "matchedIds": [
-        null
-      ],
-      "primaryDepartment": null,
-      "departmentMatched": null,
-      "symptomMatched": false
-    },
-    {
-      "index": 2,
-      "text": "Az önce aniden kelimeleri birbirine karıştırmaya başladım ve sağ tarafımda ciddi bir his kaybı oluştu.",
-      "mode": "positive",
-      "symptomId": "inme_belirtisi",
-      "matchedIds": [
-        null,
-        null,
-        null,
-        null
-      ],
-      "primaryDepartment": null,
-      "departmentMatched": null,
-      "symptomMatched": false
-    },
-    {
-      "index": 4,
-      "text": "Karnımın tam ortasında sanki bir kalp atıyormuş gibi sürekli bir hareketlilik ve zonklama hissediyorum.",
-      "mode": "positive",
-      "symptomId": "anevrizma_belirti",
-      "matchedIds": [
-        null
-      ],
-      "primaryDepartment": null,
-      "departmentMatched": null,
-      "symptomMatched": false
-    },
-    {
-      "index": 5,
-      "text": "Göğsümün içinden sırtıma doğru yayılan, sanki bir şeylerin parçalandığını hissettiren çok şiddetli bir sancı başladı.",
-      "mode": "positive",
-      "symptomId": "anevrizma_belirti",
-      "matchedIds": [
-        null,
-        null,
-        null,
-        null,
-        null
-      ],
-      "primaryDepartment": null,
-      "departmentMatched": null,
-      "symptomMatched": false
-    },
-    {
-      "index": 6,
-      "text": "Karnımda derinlerde bir yerlerde sanki bir damar atıyor ve bu durum beni çok endişelendiriyor.",
-      "mode": "positive",
-      "symptomId": "anevrizma_belirti",
-      "matchedIds": [
-        null,
-        null,
-        null
-      ],
-      "primaryDepartment": null,
-      "departmentMatched": null,
-      "symptomMatched": false
-    },
-    {
-      "index": 8,
-      "text": "Kafamın içinde sanki bir bomba patladı, acıdan gözlerimi bile açamıyorum.",
-      "mode": "positive",
-      "symptomId": "siddetli_bas_agrisi",
-      "matchedIds": [
-        null,
-        null,
-        null,
-        null,
-        null
-      ],
-      "primaryDepartment": null,
-      "departmentMatched": null,
-      "symptomMatched": false
-    },
-    {
-      "index": 9,
-      "text": "Bir anda başlayan ve dayanılmaz bir seviyeye ulaşan, zonklayıcı bir ağrı hissediyorum.",
-      "mode": "positive",
-      "symptomId": "siddetli_bas_agrisi",
-      "matchedIds": [
-        "mide_ulser"
-      ],
-      "primaryDepartment": "gastroenteroloji",
-      "departmentMatched": false,
-      "symptomMatched": false
-    },
-    {
-      "index": 10,
-      "text": "Ensemden başlayıp tüm kafama yayılan, daha önce hiç yaşamadığım kadar keskin bir sızı var.",
-      "mode": "positive",
-      "symptomId": "siddetli_bas_agrisi",
-      "matchedIds": [
-        "vajinal_kanama"
-      ],
-      "primaryDepartment": "kadin_dogum",
-      "departmentMatched": false,
-      "symptomMatched": false
-    },
-    {
-      "index": 12,
-      "text": "Sabah uyandığımda sağ tarafımı hiç hissedemiyordum ve hareket ettiremiyorum.",
-      "mode": "positive",
-      "symptomId": "felc",
-      "matchedIds": [],
-      "primaryDepartment": null,
-      "departmentMatched": null,
-      "symptomMatched": false
-    },
-    {
-      "index": 13,
-      "text": "Bir anda ağzım yana kaydı ve kelimeleri düzgün telaffuz edemez hale geldim.",
-      "mode": "positive",
-      "symptomId": "felc",
-      "matchedIds": [
-        null,
-        null,
-        null,
-        null,
-        null,
-        null
-      ],
-      "primaryDepartment": null,
-      "departmentMatched": null,
-      "symptomMatched": false
-    },
-    {
-      "index": 14,
-      "text": "Sol bacağım ve kolum aniden boşaldı, şu an hiçbir şekilde yerinden oynatamıyorum.",
-      "mode": "positive",
-      "symptomId": "felc",
-      "matchedIds": [
-        null,
-        null,
-        null,
-        null,
-        null
-      ],
-      "primaryDepartment": null,
-      "departmentMatched": null,
-      "symptomMatched": false
-    },
-    {
-      "index": 16,
-      "text": "Bir anda etrafımdaki her şey silikleşti ve hiçbir şeyi seçemez oldum.",
-      "mode": "positive",
-      "symptomId": "gorme_kaybi",
-      "matchedIds": [],
-      "primaryDepartment": null,
-      "departmentMatched": null,
-      "symptomMatched": false
-    },
-    {
-      "index": 17,
-      "text": "Sağ gözümün önünde sanki siyah bir tül varmış gibi hiçbir detayı ayırt edemiyorum.",
-      "mode": "positive",
-      "symptomId": "gorme_kaybi",
-      "matchedIds": [
-        null,
-        null,
-        null,
-        null
-      ],
-      "primaryDepartment": null,
-      "departmentMatched": null,
-      "symptomMatched": false
-    },
-    {
-      "index": 18,
-      "text": "Bakış alanım tamamen karanlığa gömüldü, hiçbir nesneyi fark edemiyorum.",
-      "mode": "positive",
-      "symptomId": "gorme_kaybi",
-      "matchedIds": [
-        null,
-        null
-      ],
-      "primaryDepartment": null,
-      "departmentMatched": null,
-      "symptomMatched": false
-    },
-    {
-      "index": 20,
-      "text": "Sol bacağımda aniden başlayan şiddetli bir hassasiyet ve gözle görülür bir şişkinlik fark ettim.",
-      "mode": "positive",
-      "symptomId": "derin_ven_trombozu",
-      "matchedIds": [
-        "siskinlik",
-        "reflü",
-        "cilt_sisligi",
-        "cilt_dokuntu"
-      ],
-      "primaryDepartment": "dermatoloji",
-      "departmentMatched": false,
-      "symptomMatched": false
-    },
-    {
-      "index": 21,
-      "text": "Uzun süreli otobüs yolculuğumdan sonra sağ alt ekstremitemde zonklayıcı bir sızı ve gerginlik hissetmeye başladım.",
-      "mode": "positive",
-      "symptomId": "derin_ven_trombozu",
-      "matchedIds": [
-        "siskinlik",
-        "reflü",
-        "sag_alt_karin",
-        "cilt_sisligi",
-        "depresyon"
-      ],
-      "primaryDepartment": "dahiliye",
-      "departmentMatched": false,
-      "symptomMatched": false
-    },
-    {
-      "index": 22,
-      "text": "Baldırımda sanki bir kütle varmış gibi bir dolgunluk ve üzerine bastığımda ciddi bir acı hissediyorum.",
-      "mode": "positive",
-      "symptomId": "derin_ven_trombozu",
-      "matchedIds": [
-        null,
-        null,
-        null,
-        null,
-        null,
-        null
-      ],
-      "primaryDepartment": null,
-      "departmentMatched": null,
-      "symptomMatched": false
-    },
-    {
-      "index": 24,
-      "text": "Tansiyon aletim büyük değerin 20'nin üzerinde olduğunu gösteriyor, kendimi çok kötü hissediyorum.",
-      "mode": "positive",
-      "symptomId": "tansiyon_krizi",
-      "matchedIds": [
-        null,
-        null,
-        null,
-        null
-      ],
-      "primaryDepartment": null,
-      "departmentMatched": null,
-      "symptomMatched": false
-    },
-    {
-      "index": 25,
-      "text": "Şiddetli bir ense ağrısıyla beraber kan basıncım tehlikeli seviyelere ulaştı.",
-      "mode": "positive",
-      "symptomId": "tansiyon_krizi",
-      "matchedIds": [],
-      "primaryDepartment": null,
-      "departmentMatched": null,
-      "symptomMatched": false
-    }
-  ]
+  "department_accuracy": 25.0,
+  "emergency_symptom_accuracy": 55.6,
+  "needs_more_info_symptom_accuracy": 25.0,
+  "generatedAt": "2026-07-11T13:16:12Z",
+  "resultsCount": 64
 }

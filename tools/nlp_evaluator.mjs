@@ -24,6 +24,22 @@ function getPrimaryDepartment(departments) {
     return entries.sort((a, b) => b[1] - a[1])[0][0];
 }
 
+// BUG DÜZELTMESİ: departmentMatched daha önce emergency/needsMoreInfo gibi
+// primaryDepartment alanı YAPISAL OLARAK bulunmayan yanıt şekillerinde de
+// "yanlış" sayılıyordu (null ile false aynı kefeye konuyordu), bu da
+// department_accuracy'yi yapay şekilde çok düşük gösteriyordu. Şimdi her
+// sonucun hangi KATEGORİYE düştüğünü açıkça etiketliyoruz; department
+// doğruluğu SADECE 'resolved' kategorisinde ölçülür, diğerleri ayrı
+// kovalarda raporlanır (bkz. nlp_accuracy_test.py summarize_results).
+function categorizeResult(result) {
+    if (result.error) return 'error';
+    if (result.isEmergency) return 'emergency';
+    if (result.needsMoreInfo) return 'needsMoreInfo';
+    if (result.noMatch) return 'noMatch';
+    if (result.primaryDepartment) return 'resolved';
+    return 'unknown';
+}
+
 function dumpSymptoms() {
     const rounded = SYMPTOM_DATABASE.map(symptom => ({
         id: symptom.id,
@@ -65,7 +81,8 @@ function evaluate(inputPath) {
         }
 
         const symptomMatched = expectedSymptom ? matchedIds.includes(expectedSymptom) : null;
-        const departmentMatched = expectedDepartment && result.primaryDepartment
+        const resultCategory = categorizeResult(result);
+        const departmentMatched = resultCategory === 'resolved' && expectedDepartment
             ? result.primaryDepartment === expectedDepartment
             : null;
 
@@ -78,6 +95,7 @@ function evaluate(inputPath) {
             lang,
             result,
             matchedIds,
+            resultCategory,
             symptomMatched,
             departmentMatched,
             passed: item.expectNoMatch

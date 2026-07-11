@@ -200,21 +200,51 @@ def summarize_results(results):
         "positive_passed": 0,
         "negation": 0,
         "negation_passed": 0,
+        # BUG DÜZELTMESİ: department_correct/total artık SADECE result
+        # kategorisi 'resolved' (yani primaryDepartment alanı gerçekten
+        # var) olan vakalarda sayılıyor. Önceden emergency/needsMoreInfo
+        # gibi bu alanın yapısal olarak bulunmadığı durumlar da "yanlış"
+        # sayılıp payda şişiriliyordu.
         "department_correct": 0,
         "department_total": 0,
+        "category_counts": {},
+        # Emergency/needsMoreInfo vakalarında department ölçülemez ama
+        # doğru semptomu bulup bulmadığını (symptomMatched) hâlâ ayrı
+        # ayrı takip ediyoruz — bu, "en azından doğru şeyi tetikledi mi"
+        # sorusuna cevap verir.
+        "emergency_symptom_correct": 0,
+        "emergency_total": 0,
+        "needs_more_info_symptom_correct": 0,
+        "needs_more_info_total": 0,
         "symptom_mismatch_cases": [],
         "department_mismatch_cases": [],
     }
 
     for item in results:
+        category = item.get("resultCategory", "unknown")
+        summary["category_counts"][category] = (
+            summary["category_counts"].get(category, 0) + 1
+        )
+
         if item["mode"] == "positive":
             summary["positive"] += 1
             summary["positive_passed"] += int(item["passed"])
-            summary["department_total"] += 1
-            if item.get("departmentMatched"):
-                summary["department_correct"] += 1
-            else:
-                summary["department_mismatch_cases"].append(item)
+
+            if category == "resolved":
+                summary["department_total"] += 1
+                if item.get("departmentMatched"):
+                    summary["department_correct"] += 1
+                else:
+                    summary["department_mismatch_cases"].append(item)
+            elif category == "emergency":
+                summary["emergency_total"] += 1
+                if item.get("symptomMatched"):
+                    summary["emergency_symptom_correct"] += 1
+            elif category == "needsMoreInfo":
+                summary["needs_more_info_total"] += 1
+                if item.get("symptomMatched"):
+                    summary["needs_more_info_symptom_correct"] += 1
+
             if not item["passed"]:
                 summary["symptom_mismatch_cases"].append(item)
         else:
@@ -233,9 +263,28 @@ def summarize_results(results):
         if summary["negation"]
         else None
     )
+    # SADECE 'resolved' vakalar üzerinden — artık yapısal olarak
+    # uygulanamayan vakalarla şişirilmiş bir payda yok.
     summary["department_accuracy"] = (
         round(summary["department_correct"] / summary["department_total"] * 100, 1)
         if summary["department_total"]
+        else None
+    )
+    summary["emergency_symptom_accuracy"] = (
+        round(
+            summary["emergency_symptom_correct"] / summary["emergency_total"] * 100, 1
+        )
+        if summary["emergency_total"]
+        else None
+    )
+    summary["needs_more_info_symptom_accuracy"] = (
+        round(
+            summary["needs_more_info_symptom_correct"]
+            / summary["needs_more_info_total"]
+            * 100,
+            1,
+        )
+        if summary["needs_more_info_total"]
         else None
     )
     return summary
@@ -357,5 +406,9 @@ if __name__ == "__main__":
     )
     print(f"Accuracy report written to: {ARGS.report}")
     print(
-        f"Summary: positive={report['positive_accuracy']}% negation={report['negation_accuracy']}% department={report['department_accuracy']}%"
+        f"Summary: positive={report['positive_accuracy']}% negation={report['negation_accuracy']}% "
+        f"department={report['department_accuracy']}% (n={report['department_total']}) "
+        f"| emergency_symptom={report['emergency_symptom_accuracy']}% (n={report['emergency_total']}) "
+        f"| needs_more_info_symptom={report['needs_more_info_symptom_accuracy']}% (n={report['needs_more_info_total']}) "
+        f"| categories={report['category_counts']}"
     )
