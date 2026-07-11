@@ -50,7 +50,9 @@ import { tokenizeForMatching } from './nlp.js';
 // zaten nlp.js'te (compareTokens) ayrı bir "sadece tam eşleşme" kuralına
 // tabi, fuzzy tolerans uygulanmıyor, o yüzden ekstra varyant üretmeye gerek
 // yok.
-function deleteNeighborhood(token) {
+// nlp.js'teki keyword-seviyesi ön-filtre için de dışa açık — AYNI fonksiyon,
+// iki farklı yerde birbirinden bağımsız/tutarsız kopyalar olmasın diye.
+export function deleteNeighborhood(token) {
     if (!token || token.length <= 2) return token ? [token] : [];
     const variants = [token];
     for (let i = 0; i < token.length; i++) {

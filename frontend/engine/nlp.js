@@ -15,6 +15,7 @@
 // ============================================
 
 import { STOP_WORDS, SYNONYMS } from './symptom-db.js';
+import { deleteNeighborhood } from './keyword-index.js';
 
 // ─────────────────────────────────────────────
 // 1. TÜRKÇE KARAKTER NORMALIZASYONU
@@ -166,7 +167,7 @@ export function isNegated(text, keyword) {
  * tıbbi/konuşma dili eş anlamlıları buraya eklenir.
  * İki kaynak birleştirilerek tek bir Map oluşturulur.
  */
-const EXTENDED_SYNONYMS = {
+export const EXTENDED_SYNONYMS = {
   // Genel
   'ağrı': ['acı', 'sızı', 'sancı', 'sızlama', 'zonklama', 'batma', 'ağrıyor', 'acıyor', 'rahatsızlık'],
   'şiddetli': ['çok', 'aşırı', 'dayanılmaz', 'kötü', 'feci', 'korkunç'],
@@ -305,31 +306,63 @@ export function stemTurkish(word, foldFirst = true) {
 
 // ─────────────────────────────────────────────
 // İki kaynağı birleştir (db.js SYNONYMS + EXTENDED_SYNONYMS)
+//
+// BUG DÜZELTMESİ: Çok kelimeli varyant öbeklerinde ("su toplaması",
+// "damar atması" gibi) anahtar "4+ harfli İLK kelime" seçilerek türetiliyor.
+// Bu, jenerik/paylaşılan bir kelimenin (damar, toplaması...) YANLIŞLIKLA
+// tek bir semptoma sabitlenmesine yol açabiliyor — "damar" kelimesi hem
+// migren hem tansiyon hem damar tıkanıklığı hem anevrizma grubundan talep
+// ediliyordu, ilk yazılan (migren) sessizce kazanıyordu. Aşağıdaki
+// "claimants" takibi, bir anahtarı BİRDEN FAZLA FARKLI canonical talep
+// ederse bunu ÇAKIŞMA sayıp indeksten tamamen çıkarır — hangi grubun
+// "doğru sahip" olduğuna karar veremeyeceğimiz için, yanlış birine
+// sabitlemektense hiç sabitlememek (düz stem'e düşmek) daha güvenli.
+// Ölçüm: tools/measure_synonym_collisions.mjs → 762 anahtardan 133'ü çakışıyordu.
+export const _synonymIndexCollisions = [];
+
 function buildSynonymIndex() {
   const index = new Map();
+  const claimants = new Map(); // key -> Map(canonical -> [{base, variant}])
   const allSynonyms = { ...SYNONYMS, ...EXTENDED_SYNONYMS };
+
+  const deriveKey = (folded) => folded.includes(' ')
+    ? stemTurkish(folded.split(' ').find(t => t.length >= 4) || folded.split(' ')[0], false)
+    : stemTurkish(folded, false);
+
+  const recordClaim = (key, canonical, source) => {
+    if (!claimants.has(key)) claimants.set(key, new Map());
+    const byCanonical = claimants.get(key);
+    if (!byCanonical.has(canonical)) byCanonical.set(canonical, []);
+    byCanonical.get(canonical).push(source);
+    if (!index.has(key)) index.set(key, canonical);
+  };
 
   for (const [base, variants] of Object.entries(allSynonyms)) {
     const foldedBase = foldTurkish(base);
     // Multi-word base'leri (örn. "eklem ağrısı") → ilk anlamlı token'a çöz
     // Böylece 'artralji' → 'eklem' değil, 'eklem' kalır ve single-token karşılaştırma çalışır
-    const canonical = foldedBase.includes(' ')
-      ? stemTurkish(foldedBase.split(' ').find(t => t.length >= 4) || foldedBase.split(' ')[0], false)
-      : stemTurkish(foldedBase, false);
+    const canonical = deriveKey(foldedBase);
 
-    index.set(stemTurkish(foldedBase, false), canonical);
+    recordClaim(stemTurkish(foldedBase, false), canonical, { base, variant: '(base)' });
 
     for (const variant of variants) {
       const foldedVariant = foldTurkish(variant);
-      const variantKey = foldedVariant.includes(' ')
-        ? stemTurkish(foldedVariant.split(' ').find(t => t.length >= 4) || foldedVariant.split(' ')[0], false)
-        : stemTurkish(foldedVariant, false);
-
-      if (!index.has(variantKey)) {
-        index.set(variantKey, canonical);
-      }
+      const variantKey = deriveKey(foldedVariant);
+      recordClaim(variantKey, canonical, { base, variant });
     }
   }
+
+  _synonymIndexCollisions.length = 0;
+  for (const [key, byCanonical] of claimants.entries()) {
+    if (byCanonical.size > 1) {
+      index.delete(key);
+      _synonymIndexCollisions.push({
+        key,
+        claims: [...byCanonical.entries()].map(([canonical, sources]) => ({ canonical, sources })),
+      });
+    }
+  }
+
   return index;
 }
 
@@ -366,6 +399,12 @@ const CLEAN_STOP_WORDS = new Set(
 const FOLDED_STOP_WORDS = new Set(
   [...CLEAN_STOP_WORDS].map(w => foldTurkish(w))
 );
+// BUG DÜZELTMESİ: "şu" (işaret sıfatı, stopword) Türkçe katlama sonrası
+// (ş→s) "su" (sıvı, gerçek bir içerik kelimesi — "su toplaması" gibi
+// önemli semptom ifadelerinde geçiyor) ile birebir çakışıyordu. Bu yüzden
+// "su" kelimesi HER YERDE stopword sanılıp sessizce siliniyordu.
+// Ölçüm: tools/measure_stopword_collisions.mjs
+FOLDED_STOP_WORDS.delete('su');
 
 // ─────────────────────────────────────────────
 // 9. TOKENİZASYON
@@ -448,9 +487,15 @@ export function levenshteinDistance(a, b) {
   return prev[b.length];
 }
 
-export function fuzzyMatch(input, target, maxDistance = 2) {
-  const a = canonicalizeToken(input);
-  const b = canonicalizeToken(target);
+// Performans: fuzzyMatch her çağrıda canonicalizeToken'ı sıfırdan hesaplıyordu
+// (fold + stem + eşanlamlı çözümleme). compareTokens çağıran tarafta bu değer
+// zaten tokenizeForMatching() ile önceden hesaplanıp inputToken.canonical /
+// keywordToken.canonical olarak elde mevcut. fuzzyMatchCanonical, aynı
+// karşılaştırma mantığını (levenshtein/substring skorlama) DEĞİŞTİRMEDEN,
+// önceden hesaplanmış canonical string'leri doğrudan kabul eder — profilde
+// canonicalizeToken tek başına JS süresinin ~%61'ini yiyordu, bu fonksiyon
+// o tekrarlı hesaplamayı ortadan kaldırır.
+function fuzzyMatchCanonical(a, b, maxDistance = 2) {
   if (!a || !b) return { match: false, distance: Infinity, score: 0 };
 
   if (a === b) return { match: true, distance: 0, score: 1.0 };
@@ -477,6 +522,14 @@ export function fuzzyMatch(input, target, maxDistance = 2) {
   return { match: false, distance: dist, score: 0 };
 }
 
+// Genel kullanım için dışa açık API — davranışı önceki fuzzyMatch ile
+// birebir aynı (canonicalizeToken burada hâlâ çağrılıyor). Sadece
+// compareTokens gibi zaten canonical değeri elinde olan sıcak yol,
+// fuzzyMatchCanonical'ı doğrudan kullanarak bu hesaplamayı atlıyor.
+export function fuzzyMatch(input, target, maxDistance = 2) {
+  return fuzzyMatchCanonical(canonicalizeToken(input), canonicalizeToken(target), maxDistance);
+}
+
 // ─────────────────────────────────────────────
 // 11. TOKEN KARŞILAŞTIRMA
 // ─────────────────────────────────────────────
@@ -495,9 +548,20 @@ function compareTokens(inputToken, keywordToken) {
     return inputToken.stem === keywordToken.stem ? 0.9 : 0;
   }
 
-  const direct = fuzzyMatch(inputToken.original, keywordToken.original);
+  // ESKİ: fuzzyMatch(inputToken.original, keywordToken.original)
+  // inputToken.canonical === canonicalizeToken(inputToken.original) olduğu
+  // için (tokenizeForMatching bunu böyle üretiyor), bu çağrı önceden
+  // hesaplanmış canonical değerleri kullanarak birebir aynı sonucu üretir,
+  // sadece canonicalizeToken'ı bir daha çalıştırmaz.
+  const direct = fuzzyMatchCanonical(inputToken.canonical, keywordToken.canonical);
   if (direct.match && direct.score >= 0.78) return direct.score;
 
+  // NOT: Burada bilinçli olarak yine fuzzyMatch() (canonicalizeToken'ı TEKRAR
+  // uygulayan public fonksiyon) kullanılıyor — stemTurkish tek geçişte tek
+  // ek kaldırdığı için, canonical bir string'e ikinci kez canonicalizeToken
+  // uygulamak bazı çok-ekli kelimelerde farklı (daha kısa) bir kök üretebilir.
+  // Bu ikinci-geçiş davranışı mevcut eşleştirme sonuçlarının bir parçası,
+  // bu yüzden burası performans için dokunulmadan bırakıldı.
   const canonical = fuzzyMatch(inputToken.canonical, keywordToken.canonical, 1);
   if (canonical.match && canonical.score >= 0.82) return canonical.score * 0.95;
 
@@ -526,17 +590,71 @@ function minimumCoverage(keywordLength) {
 // hesaplanmıyor.
 const _keywordTokenCache = new WeakMap();
 
+function computeVariantSet(tokens) {
+  // buildIndex() (keyword-index.js) ile BİREBİR aynı formül: canonical'ın
+  // silme-komşuluğu + (varsa) uzun ve farklı bir stem. Symptom-seviyesi
+  // indeksle matematiksel olarak tutarlı kalması için aynı formül.
+  const set = new Set();
+  for (const t of tokens) {
+    if (!t.canonical) continue;
+    for (const v of deleteNeighborhood(t.canonical)) set.add(v);
+    if (t.stem && t.stem.length >= 4 && t.stem !== t.canonical) set.add(t.stem);
+  }
+  return set;
+}
+
+function intersectionEmpty(a, b) {
+  const [small, large] = a.size <= b.size ? [a, b] : [b, a];
+  for (const v of small) {
+    if (large.has(v)) return false;
+  }
+  return true;
+}
+
 function getCachedKeywordData(keywords) {
   let cached = _keywordTokenCache.get(keywords);
   if (cached) return cached;
-  cached = keywords.map(keyword => ({
-    keyword,
-    normalized: foldTurkish(keyword),
-    tokens: tokenizeForMatching(keyword),
-  }));
+  cached = keywords.map(keyword => {
+    const normalized = foldTurkish(keyword);
+    // Performans: bu regex matchKeywords() içinde her çağrıda yeniden
+    // derleniyordu (binlerce keyword × her analiz). normalizedKeyword sabit
+    // olduğu için burada bir kere derleyip saklamak yeterli — davranış aynı,
+    // sadece derleme (compile) maliyeti tekrarlanmıyor.
+    const exactPattern = normalized.length >= 4
+      ? new RegExp(`(^|\\s)${escapeRegex(normalized)}($|\\s)`)
+      : null;
+    const tokens = tokenizeForMatching(keyword);
+    return {
+      keyword,
+      normalized,
+      tokens,
+      exactPattern,
+      variantSet: computeVariantSet(tokens),
+    };
+  });
   _keywordTokenCache.set(keywords, cached);
   return cached;
 }
+
+// ─────────────────────────────────────────────────────────────────
+// GÖLGE MOD — keyword-seviyesi ön-filtre doğrulaması
+// ─────────────────────────────────────────────────────────────────
+// getCandidateSymptomIds() SEMPTOM seviyesinde daraltıyor ama bir aday
+// semptomun ~100 keyword'ünün TAMAMI yine de taranıyordu — asıl maliyet
+// burada. Bu da AYNI silme-komşuluğu tekniğiyle KEYWORD seviyesinde bir
+// ön-filtre: girdiyle hiçbir ortak varyantı olmayan keyword'ler nested-loop
+// taramaya hiç girmeden atlanabilir.
+//
+// Bunu DOĞRUDAN gerçek yola koymak yerine, matchKeywords() şu an iki
+// "en iyi skor" takipçisini PARALEL tutuyor: (1) exhaustive — mevcut/gerçek
+// davranış, dönen sonuç budur, HİÇ DEĞİŞMEDİ; (2) filtered — sadece
+// filtreyi geçen keyword'leri sayan gölge kanal. İkisi arasında fark
+// (matched/score/keyword) varsa _shadowMismatches'e kaydediliyor.
+// Doğrulama script'i: tools/keyword_filter_shadow_check.mjs
+// Fark yoksa (bkz. o script'in raporu), filtreyi gerçek yol yapmak
+// güvenli demektir — o zamana kadar dönen sonuca etkisi SIFIR.
+export const _shadowMismatches = [];
+export function _resetShadowMismatches() { _shadowMismatches.length = 0; }
 
 export function matchKeywords(inputText, keywords) {
   const normalizedInput = foldTurkish(inputText);
@@ -549,20 +667,25 @@ export function matchKeywords(inputText, keywords) {
   let bestScore = 0;
   let bestKeyword = null;
 
+  // Gölge kanal — sadece filtreyi geçen keyword'lerin en iyisi
+  let bestScoreFiltered = 0;
+  let bestKeywordFiltered = null;
+  const inputVariantSet = computeVariantSet(inputTokens);
+
   const keywordData = getCachedKeywordData(keywords);
 
-  for (const { keyword, normalized: normalizedKeyword, tokens: keywordTokens } of keywordData) {
+  for (const { keyword, normalized: normalizedKeyword, tokens: keywordTokens, exactPattern, variantSet } of keywordData) {
     if (!normalizedKeyword || keywordTokens.length === 0) continue;
 
     // ── Hızlı tam eşleşme ──────────────────────
-    const exactPattern = new RegExp(
-      `(^|\\s)${escapeRegex(normalizedKeyword)}($|\\s)`
-    );
-    if (normalizedKeyword.length >= 4 && exactPattern.test(normalizedInput)) {
+    if (exactPattern && exactPattern.test(normalizedInput)) {
       const score = normalizedKeyword === normalizedInput ? 1.0 : 0.98;
       if (score > bestScore) { bestScore = score; bestKeyword = keyword; }
+      if (score > bestScoreFiltered) { bestScoreFiltered = score; bestKeywordFiltered = keyword; }
       continue;
     }
+
+    const passesFilter = !intersectionEmpty(variantSet, inputVariantSet);
 
     // ── Sıra bağımsız token eşleştirme ─────────
     // Her keyword token için input token havuzunda en iyi eşi bul
@@ -594,13 +717,29 @@ export function matchKeywords(inputText, keywords) {
     const finalScore = (coverage * 0.65 + avgTokenScore * 0.35) * compactPenalty;
 
     if (finalScore > bestScore) { bestScore = finalScore; bestKeyword = keyword; }
+    if (passesFilter && finalScore > bestScoreFiltered) { bestScoreFiltered = finalScore; bestKeywordFiltered = keyword; }
   }
 
-  return {
+  const result = {
     matched: bestScore >= 0.78,
     score: Number(bestScore.toFixed(3)),
     keyword: bestKeyword
   };
+
+  const filteredResult = {
+    matched: bestScoreFiltered >= 0.78,
+    score: Number(bestScoreFiltered.toFixed(3)),
+    keyword: bestKeywordFiltered
+  };
+  if (
+    filteredResult.matched !== result.matched ||
+    filteredResult.keyword !== result.keyword ||
+    Math.abs(filteredResult.score - result.score) > 0.0001
+  ) {
+    _shadowMismatches.push({ inputText, exhaustive: result, filtered: filteredResult });
+  }
+
+  return result;
 }
 
 // ─────────────────────────────────────────────
