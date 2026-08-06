@@ -1508,6 +1508,92 @@ textarea {
   white-space: nowrap;
 }
 
+/* ── Semantik Fallback (lexical eşleşme bulunamayınca) ── */
+.semantic-suggestion-box {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--r-2xl);
+  box-shadow: var(--shadow-sm);
+  padding: 24px 24px 20px;
+  animation: fadeSlideUp 0.35s ease;
+}
+
+.semantic-disclaimer {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  font-size: 14px;
+  line-height: 1.5;
+  color: var(--text-2);
+  background: var(--surface-2);
+  border-radius: var(--r-lg);
+  padding: 12px 14px;
+  margin-bottom: 18px;
+}
+
+.semantic-disclaimer .material-symbols-outlined {
+  font-size: 18px;
+  color: var(--teal-700);
+  flex-shrink: 0;
+}
+
+.semantic-pick-prompt {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--text-3);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  margin-bottom: 10px;
+}
+
+.semantic-suggestion-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.semantic-suggestion-card {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  padding: 14px 16px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg);
+  font-family: var(--font-body);
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--blue-800);
+  cursor: pointer;
+  text-align: left;
+  transition: border-color .15s ease, background .15s ease;
+}
+
+.semantic-suggestion-card:hover {
+  border-color: var(--teal-700);
+  background: var(--blue-50);
+}
+
+.semantic-suggestion-icon {
+  font-size: 20px;
+  line-height: 1;
+}
+
+.semantic-none-btn {
+  display: block;
+  width: 100%;
+  padding: 10px;
+  background: none;
+  border: none;
+  color: var(--text-3);
+  font-family: var(--font-body);
+  font-size: 13px;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
 .alt-tag {
   font-size: 13px;
   padding: 4px 12px;

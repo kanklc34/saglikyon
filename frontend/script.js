@@ -3,9 +3,10 @@
 // Dil desteği: TR / EN toggle
 // ============================================
 
-import { analyzeSymptoms } from './engine/analyzer.js';
+import { analyzeSymptoms, DEPARTMENTS } from './engine/analyzer.js';
 import { STRINGS } from './engine/i18n.js';
 import { RATE_LIMIT_CONFIG, getRateLimitState, recordRateLimitHit, formatCooldown } from './engine/rate-limit.js';
+import { getSemanticCandidates } from './engine/semantic-fallback.js';
 
 const RATE_KEY = 'sy_rl';
 
@@ -312,7 +313,7 @@ async function startAnalysis() {
     const result = analyzeSymptoms(text, null, state.lang, t().followUpUniversal);
 
     if (result.error) { showScreen('screenInput'); showError(result.error); }
-    else if (result.noMatch) { showScreen('screenInput'); showError(result.message || t().errorNoMatch); }
+    else if (result.noMatch) { await tryShowSemanticSuggestions(text); }
     else if (result.isEmergency) { showEmergency(result, text); }
     else if (result.needsMoreInfo) { startFollowUp(result, text); }
     else { showResult(result, text); }
@@ -336,6 +337,91 @@ function animateSteps() {
 function showError(msg) {
   DOM.errorMsg.innerHTML = `<span class="material-symbols-outlined">warning</span><span>${msg}</span>`;
   DOM.errorMsg.classList.remove('hidden');
+}
+
+// ── Semantik Fallback ─────────────────────
+// Lexical motor hiçbir eşleşme bulamadığında (noMatch: true) devreye
+// girer. Model 118MB olduğu için burada ilk kez indirilir — kasıtlı
+// olarak lazy, çoğu kullanıcı bu koda hiç girmeyecek.
+async function tryShowSemanticSuggestions(text) {
+  showScreen('loading');
+  const candidates = await getSemanticCandidates(text, 3);
+  if (candidates.length === 0) {
+    // Model inemedi, ağ sorunu, ya da anlamsal olarak da hiçbir şey
+    // bulunamadı — eski, düz "anlayamadım" mesajına düşüyoruz.
+    showScreen('screenInput');
+    showError(t().errorNoMatch);
+    return;
+  }
+  showSemanticSuggestionScreen(candidates, text);
+}
+
+function showSemanticSuggestionScreen(candidates, text) {
+  const s = t();
+
+  const cardsHtml = candidates.map(c => {
+    const dept = DEPARTMENTS[c.department];
+    const name = dept?.name || c.department;
+    const icon = dept?.icon || '';
+    return `
+      <button class="semantic-suggestion-card" data-department="${c.department}" type="button">
+        <span class="semantic-suggestion-icon">${icon}</span>
+        <span>${name}</span>
+      </button>`;
+  }).join('');
+
+  DOM.resultContent.innerHTML = `
+    <div class="semantic-suggestion-box">
+      <div class="semantic-disclaimer">
+        <span class="material-symbols-outlined">info</span>
+        <span>${s.semanticDisclaimer}</span>
+      </div>
+      <p class="semantic-pick-prompt">${s.semanticPickPrompt}</p>
+      <div class="semantic-suggestion-list">${cardsHtml}</div>
+      <button class="semantic-none-btn" id="semanticNoneBtn" type="button">${s.semanticNoneApply}</button>
+    </div>`;
+
+  showScreen('screenResult');
+
+  DOM.resultContent.querySelectorAll('.semantic-suggestion-card').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const department = btn.dataset.department;
+      showSemanticConfirmedResult(department, text);
+    });
+  });
+
+  document.getElementById('semanticNoneBtn')?.addEventListener('click', () => {
+    showScreen('screenInput');
+    showError(t().errorNoMatch);
+  });
+}
+
+// Kullanıcı 3 adaydan birini seçtikten sonraki basit onay kartı.
+// BİLİNÇLİ OLARAK renderDeptCard'ın güven-yüzdesi barını (conf-row)
+// EKLEMİYORUZ — embedding benzerlik skoru, lexical motorun 0-100 güven
+// skalasıyla aynı anlama gelmiyor; ikisini aynı görselde göstermek
+// yanlış bir kesinlik izlenimi verir. Görsel iskeleti (.dept-card,
+// .dept-overline) mevcut renderDeptCard ile TUTARLI tutuyoruz, sadece
+// güven barını ve semptom/alternatif bölümlerini çıkarıyoruz.
+function showSemanticConfirmedResult(department, text) {
+  const s = t();
+  const dept = DEPARTMENTS[department];
+  const name = dept?.name || department;
+
+  DOM.resultContent.innerHTML = `
+    <div class="dept-card">
+      <div class="dept-card-glow"></div>
+      <div class="dept-card-body">
+        <div class="dept-overline">
+          <span class="material-symbols-outlined">stethoscope</span>
+          ${s.suggestedDept}
+        </div>
+        <div class="dept-name">${name}</div>
+        <p class="dept-reasoning">${s.semanticDisclaimer}</p>
+      </div>
+    </div>`;
+
+  showScreen('screenResult');
 }
 
 // ── Emergency ─────────────────────────────

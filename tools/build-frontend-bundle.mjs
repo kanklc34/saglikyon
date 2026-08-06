@@ -15,6 +15,7 @@ const sources = [
   'frontend/engine/analyzer.js',
   'frontend/engine/rate-limit.js',
   'frontend/engine/i18n.js',
+  'frontend/engine/semantic-fallback.js',
   'frontend/script.js'
 ];
 
@@ -50,6 +51,27 @@ fs.mkdirSync(distDir, { recursive: true });
 
 for (const fileName of staticFiles) {
   fs.copyFileSync(path.join(frontendDir, fileName), path.join(distDir, fileName));
+}
+
+// semantic-corpus.json (semantic-fallback.js'in fetch('./semantic-corpus.json')
+// ile çağırdığı, önceden hesaplanmış embedding verisi) BİLİNÇLİ OLARAK
+// staticFiles listesinde DEĞİL — o liste eksik dosyada build'i kırıyor,
+// ama bu dosya sadece embedding entegrasyonu tamamlandıktan sonra
+// (tools/precompute_semantic_corpus.py çalıştırılıp frontend/ köküne
+// konduktan sonra) var olacak. Eksikse build'i kırmak yerine sadece
+// uyarıyoruz — semantik fallback o durumda sessizce devre dışı kalır
+// (getSemanticCandidates boş dizi döner), site geri kalanı çalışmaya
+// devam eder.
+const semanticCorpusPath = path.join(frontendDir, 'semantic-corpus.json');
+if (fs.existsSync(semanticCorpusPath)) {
+  fs.copyFileSync(semanticCorpusPath, path.join(distDir, 'semantic-corpus.json'));
+} else {
+  console.warn(
+    "UYARI: frontend/semantic-corpus.json bulunamadı — semantik fallback " +
+    "dist/ derlemesinde devre dışı kalacak (getSemanticCandidates boş dizi " +
+    "dönecek). tools/precompute_semantic_corpus.py çıktısını frontend/ " +
+    "köküne koyup tekrar derle."
+  );
 }
 
 // script.js içinde STATİK değil DİNAMİK import() kullanılan dosyalar var

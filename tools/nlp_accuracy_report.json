@@ -4,18 +4,18 @@
   "positive_passed": 10,
   "negation": 16,
   "negation_passed": 15,
-  "department_correct": 2,
-  "department_total": 8,
+  "department_correct": 3,
+  "department_total": 9,
   "category_counts": {
-    "resolved": 11,
-    "emergency": 10,
-    "needsMoreInfo": 23,
-    "noMatch": 20
+    "resolved": 12,
+    "emergency": 9,
+    "needsMoreInfo": 22,
+    "noMatch": 21
   },
   "emergency_symptom_correct": 5,
   "emergency_total": 9,
-  "needs_more_info_symptom_correct": 5,
-  "needs_more_info_total": 20,
+  "needs_more_info_symptom_correct": 4,
+  "needs_more_info_total": 19,
   "symptom_mismatch_cases": [
     {
       "index": 0,
@@ -49,7 +49,7 @@
         "careSummary": "Belirtileriniz aynı gün doktor tarafından değerlendirilmelidir.",
         "careAdvice": "Mümkünse bugün içinde acil servis veya ilgili branşa başvurun.",
         "note": "Mümkünse bugün içinde acil servis veya ilgili branşa başvurun. Bu öneri teşhis değildir; kesin tanı için doktor muayenesi gerekir.",
-        "timestamp": "2026-07-11T13:13:39.363Z",
+        "timestamp": "2026-07-11T13:56:51.320Z",
         "lang": "tr",
         "ageBand": "yetiskin",
         "ageBandWasAssumed": true
@@ -253,7 +253,7 @@
         "careSummary": "Belirtileriniz aynı gün doktor tarafından değerlendirilmelidir.",
         "careAdvice": "Mümkünse bugün içinde acil servis veya ilgili branşa başvurun.",
         "note": "Mümkünse bugün içinde acil servis veya ilgili branşa başvurun. Bu öneri teşhis değildir; kesin tanı için doktor muayenesi gerekir.",
-        "timestamp": "2026-07-11T13:14:02.369Z",
+        "timestamp": "2026-07-11T13:56:55.175Z",
         "lang": "tr",
         "ageBand": "yetiskin",
         "ageBandWasAssumed": true
@@ -424,7 +424,7 @@
         "careSummary": "Belirtileriniz aynı gün doktor tarafından değerlendirilmelidir.",
         "careAdvice": "Mümkünse bugün içinde acil servis veya ilgili branşa başvurun.",
         "note": "Mümkünse bugün içinde acil servis veya ilgili branşa başvurun. Bu öneri teşhis değildir; kesin tanı için doktor muayenesi gerekir.",
-        "timestamp": "2026-07-11T13:14:14.465Z",
+        "timestamp": "2026-07-11T13:56:56.863Z",
         "lang": "tr",
         "ageBand": "yetiskin",
         "ageBandWasAssumed": true
@@ -517,7 +517,7 @@
         "careSummary": "Belirtileriniz acil görünmüyor ancak geciktirilmemeli.",
         "careAdvice": "İlgili bölümden yakın tarihe randevu almanız uygun olur.",
         "note": "İlgili bölümden yakın tarihe randevu almanız uygun olur. Bu öneri teşhis değildir; kesin tanı için doktor muayenesi gerekir.",
-        "timestamp": "2026-07-11T13:14:20.125Z",
+        "timestamp": "2026-07-11T13:56:57.455Z",
         "lang": "tr",
         "ageBand": "yetiskin",
         "ageBandWasAssumed": true
@@ -726,7 +726,7 @@
         "careSummary": "Belirtileriniz aynı gün doktor tarafından değerlendirilmelidir.",
         "careAdvice": "Mümkünse bugün içinde acil servis veya ilgili branşa başvurun.",
         "note": "Mümkünse bugün içinde acil servis veya ilgili branşa başvurun. Bu öneri teşhis değildir; kesin tanı için doktor muayenesi gerekir.",
-        "timestamp": "2026-07-11T13:14:32.319Z",
+        "timestamp": "2026-07-11T13:56:59.114Z",
         "lang": "tr",
         "ageBand": "yetiskin",
         "ageBandWasAssumed": true
@@ -771,7 +771,7 @@
         "careSummary": "Belirtileriniz aynı gün doktor tarafından değerlendirilmelidir.",
         "careAdvice": "Mümkünse bugün içinde acil servis veya ilgili branşa başvurun.",
         "note": "Mümkünse bugün içinde acil servis veya ilgili branşa başvurun. Bu öneri teşhis değildir; kesin tanı için doktor muayenesi gerekir.",
-        "timestamp": "2026-07-11T13:14:33.229Z",
+        "timestamp": "2026-07-11T13:56:59.162Z",
         "lang": "tr",
         "ageBand": "yetiskin",
         "ageBandWasAssumed": true
@@ -1106,9 +1106,8 @@
       "result": {
         "error": null,
         "noMatch": true,
-        "message": "Bu şikayet için net bir bölüm çıkarılamadı. İlk adım olarak aile hekiminizden destek alabilirsiniz.",
-        "ageBand": "yetiskin",
-        "ageBandWasAssumed": true
+        "message": "Şikayetinizi yeterince net anlayamadım. Lütfen daha detaylı yazın veya vücut haritasından destek alın.",
+        "suggestion": "Örnek: \"Başım ağrıyor ve mide bulantım var\" veya \"Göğsümde baskı hissediyorum\"."
       },
       "matchedIds": [],
       "resultCategory": "noMatch",
@@ -1186,7 +1185,7 @@
         "careSummary": "Belirtileriniz acil görünmüyor ancak geciktirilmemeli.",
         "careAdvice": "İlgili bölümden yakın tarihe randevu almanız uygun olur.",
         "note": "İlgili bölümden yakın tarihe randevu almanız uygun olur. Bu öneri teşhis değildir; kesin tanı için doktor muayenesi gerekir.",
-        "timestamp": "2026-07-11T13:14:57.527Z",
+        "timestamp": "2026-07-11T13:57:01.535Z",
         "lang": "tr",
         "ageBand": "yetiskin",
         "ageBandWasAssumed": true
@@ -1209,9 +1208,8 @@
       "result": {
         "error": null,
         "noMatch": true,
-        "message": "Bu şikayet için net bir bölüm çıkarılamadı. İlk adım olarak aile hekiminizden destek alabilirsiniz.",
-        "ageBand": "yetiskin",
-        "ageBandWasAssumed": true
+        "message": "Şikayetinizi yeterince net anlayamadım. Lütfen daha detaylı yazın veya vücut haritasından destek alın.",
+        "suggestion": "Örnek: \"Başım ağrıyor ve mide bulantım var\" veya \"Göğsümde baskı hissediyorum\"."
       },
       "matchedIds": [],
       "resultCategory": "noMatch",
@@ -1446,14 +1444,12 @@
           }
         ],
         "matchedSymptoms": [
-          "migren_aura",
           "cilt_dokuntu"
         ],
-        "primarySymptom": "migren_aura",
+        "primarySymptom": "cilt_dokuntu",
         "lang": "tr"
       },
       "matchedIds": [
-        "migren_aura",
         "cilt_dokuntu"
       ],
       "resultCategory": "needsMoreInfo",
@@ -1553,7 +1549,7 @@
         "careSummary": "Belirtileriniz aynı gün doktor tarafından değerlendirilmelidir.",
         "careAdvice": "Mümkünse bugün içinde acil servis veya ilgili branşa başvurun.",
         "note": "Mümkünse bugün içinde acil servis veya ilgili branşa başvurun. Bu öneri teşhis değildir; kesin tanı için doktor muayenesi gerekir.",
-        "timestamp": "2026-07-11T13:15:22.041Z",
+        "timestamp": "2026-07-11T13:57:03.935Z",
         "lang": "tr",
         "ageBand": "yetiskin",
         "ageBandWasAssumed": true
@@ -1651,7 +1647,7 @@
         "careSummary": "Belirtileriniz aynı gün doktor tarafından değerlendirilmelidir.",
         "careAdvice": "Mümkünse bugün içinde acil servis veya ilgili branşa başvurun.",
         "note": "Mümkünse bugün içinde acil servis veya ilgili branşa başvurun. Bu öneri teşhis değildir; kesin tanı için doktor muayenesi gerekir.",
-        "timestamp": "2026-07-11T13:15:31.802Z",
+        "timestamp": "2026-07-11T13:57:05.074Z",
         "lang": "tr",
         "ageBand": "yetiskin",
         "ageBandWasAssumed": true
@@ -1696,16 +1692,14 @@
         ],
         "matchedSymptoms": [
           "bacak_agrisi",
-          "kalp_yetmezligi",
-          "bacak_sislik"
+          "kalp_yetmezligi"
         ],
         "primarySymptom": "bacak_agrisi",
         "lang": "tr"
       },
       "matchedIds": [
         "bacak_agrisi",
-        "kalp_yetmezligi",
-        "bacak_sislik"
+        "kalp_yetmezligi"
       ],
       "resultCategory": "needsMoreInfo",
       "symptomMatched": false,
@@ -1746,7 +1740,7 @@
         "careSummary": "Belirtileriniz aynı gün doktor tarafından değerlendirilmelidir.",
         "careAdvice": "Mümkünse bugün içinde acil servis veya ilgili branşa başvurun.",
         "note": "Mümkünse bugün içinde acil servis veya ilgili branşa başvurun. Bu öneri teşhis değildir; kesin tanı için doktor muayenesi gerekir.",
-        "timestamp": "2026-07-11T13:14:02.369Z",
+        "timestamp": "2026-07-11T13:56:55.175Z",
         "lang": "tr",
         "ageBand": "yetiskin",
         "ageBandWasAssumed": true
@@ -1807,7 +1801,7 @@
         "careSummary": "Belirtileriniz acil görünmüyor ancak geciktirilmemeli.",
         "careAdvice": "İlgili bölümden yakın tarihe randevu almanız uygun olur.",
         "note": "İlgili bölümden yakın tarihe randevu almanız uygun olur. Bu öneri teşhis değildir; kesin tanı için doktor muayenesi gerekir.",
-        "timestamp": "2026-07-11T13:14:20.125Z",
+        "timestamp": "2026-07-11T13:56:57.455Z",
         "lang": "tr",
         "ageBand": "yetiskin",
         "ageBandWasAssumed": true
@@ -1853,7 +1847,7 @@
         "careSummary": "Belirtileriniz aynı gün doktor tarafından değerlendirilmelidir.",
         "careAdvice": "Mümkünse bugün içinde acil servis veya ilgili branşa başvurun.",
         "note": "Mümkünse bugün içinde acil servis veya ilgili branşa başvurun. Bu öneri teşhis değildir; kesin tanı için doktor muayenesi gerekir.",
-        "timestamp": "2026-07-11T13:14:32.319Z",
+        "timestamp": "2026-07-11T13:56:59.114Z",
         "lang": "tr",
         "ageBand": "yetiskin",
         "ageBandWasAssumed": true
@@ -1898,7 +1892,7 @@
         "careSummary": "Belirtileriniz acil görünmüyor ancak geciktirilmemeli.",
         "careAdvice": "İlgili bölümden yakın tarihe randevu almanız uygun olur.",
         "note": "İlgili bölümden yakın tarihe randevu almanız uygun olur. Bu öneri teşhis değildir; kesin tanı için doktor muayenesi gerekir.",
-        "timestamp": "2026-07-11T13:14:57.527Z",
+        "timestamp": "2026-07-11T13:57:01.535Z",
         "lang": "tr",
         "ageBand": "yetiskin",
         "ageBandWasAssumed": true
@@ -1984,7 +1978,7 @@
         "careSummary": "Belirtileriniz aynı gün doktor tarafından değerlendirilmelidir.",
         "careAdvice": "Mümkünse bugün içinde acil servis veya ilgili branşa başvurun.",
         "note": "Mümkünse bugün içinde acil servis veya ilgili branşa başvurun. Bu öneri teşhis değildir; kesin tanı için doktor muayenesi gerekir.",
-        "timestamp": "2026-07-11T13:15:22.041Z",
+        "timestamp": "2026-07-11T13:57:03.935Z",
         "lang": "tr",
         "ageBand": "yetiskin",
         "ageBandWasAssumed": true
@@ -2034,7 +2028,7 @@
         "careSummary": "Belirtileriniz aynı gün doktor tarafından değerlendirilmelidir.",
         "careAdvice": "Mümkünse bugün içinde acil servis veya ilgili branşa başvurun.",
         "note": "Mümkünse bugün içinde acil servis veya ilgili branşa başvurun. Bu öneri teşhis değildir; kesin tanı için doktor muayenesi gerekir.",
-        "timestamp": "2026-07-11T13:15:31.802Z",
+        "timestamp": "2026-07-11T13:57:05.074Z",
         "lang": "tr",
         "ageBand": "yetiskin",
         "ageBandWasAssumed": true
@@ -2050,9 +2044,9 @@
   ],
   "positive_accuracy": 20.8,
   "negation_accuracy": 93.8,
-  "department_accuracy": 25.0,
+  "department_accuracy": 33.3,
   "emergency_symptom_accuracy": 55.6,
-  "needs_more_info_symptom_accuracy": 25.0,
-  "generatedAt": "2026-07-11T13:16:12Z",
+  "needs_more_info_symptom_accuracy": 21.1,
+  "generatedAt": "2026-07-11T13:57:34Z",
   "resultsCount": 64
 }

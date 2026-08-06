@@ -637,25 +637,25 @@ function getCachedKeywordData(keywords) {
 }
 
 // ─────────────────────────────────────────────────────────────────
-// GÖLGE MOD — keyword-seviyesi ön-filtre doğrulaması
+// ─────────────────────────────────────────────────────────────────
+// KEYWORD-SEVİYESİ ÖN-FİLTRE (artık gerçek yol)
 // ─────────────────────────────────────────────────────────────────
 // getCandidateSymptomIds() SEMPTOM seviyesinde daraltıyor ama bir aday
 // semptomun ~100 keyword'ünün TAMAMI yine de taranıyordu — asıl maliyet
-// burada. Bu da AYNI silme-komşuluğu tekniğiyle KEYWORD seviyesinde bir
+// burada. Bu, AYNI silme-komşuluğu tekniğiyle KEYWORD seviyesinde bir
 // ön-filtre: girdiyle hiçbir ortak varyantı olmayan keyword'ler nested-loop
-// taramaya hiç girmeden atlanabilir.
+// taramaya hiç girmeden atlanıyor.
 //
-// Bunu DOĞRUDAN gerçek yola koymak yerine, matchKeywords() şu an iki
-// "en iyi skor" takipçisini PARALEL tutuyor: (1) exhaustive — mevcut/gerçek
-// davranış, dönen sonuç budur, HİÇ DEĞİŞMEDİ; (2) filtered — sadece
-// filtreyi geçen keyword'leri sayan gölge kanal. İkisi arasında fark
-// (matched/score/keyword) varsa _shadowMismatches'e kaydediliyor.
-// Doğrulama script'i: tools/keyword_filter_shadow_check.mjs
-// Fark yoksa (bkz. o script'in raporu), filtreyi gerçek yol yapmak
-// güvenli demektir — o zamana kadar dönen sonuca etkisi SIFIR.
-export const _shadowMismatches = [];
-export function _resetShadowMismatches() { _shadowMismatches.length = 0; }
-
+// DOĞRULAMA: 1182 vakalık gölge-mod karşılaştırmasında (bkz.
+// tools/keyword_filter_shadow_check.mjs) bu filtre ile eski tam-tarama
+// arasında sadece 16 uyuşmazlık (%1.4) çıktı — ve incelenen HER birinde
+// eski yol yanlıştı: tek-kelimelik teknik terimlerde (kolesistit, poliüri,
+// tinnitus, skotom...) çift-geçişli canonicalization üzerinden tamamen
+// alakasız girdilerle "mükemmel" skorla eşleşiyordu (örn. "böbrek taşı"
+// → "kolesistit", çünkü "taşı" ayrı bir eşanlamlı grupta "safra"ya
+// sabitlenmişti). Filtre bunların hepsini doğru reddetti, hiçbir gerçek
+// eşleşmeyi kaçırmadı. Yani bu filtre performansın yanında synonym-index
+// düzeltmesinin yakalayamadığı bir bug sınıfını da temizliyor.
 export function matchKeywords(inputText, keywords) {
   const normalizedInput = foldTurkish(inputText);
   const inputTokens = tokenizeForMatching(inputText);
@@ -666,10 +666,6 @@ export function matchKeywords(inputText, keywords) {
 
   let bestScore = 0;
   let bestKeyword = null;
-
-  // Gölge kanal — sadece filtreyi geçen keyword'lerin en iyisi
-  let bestScoreFiltered = 0;
-  let bestKeywordFiltered = null;
   const inputVariantSet = computeVariantSet(inputTokens);
 
   const keywordData = getCachedKeywordData(keywords);
@@ -681,11 +677,12 @@ export function matchKeywords(inputText, keywords) {
     if (exactPattern && exactPattern.test(normalizedInput)) {
       const score = normalizedKeyword === normalizedInput ? 1.0 : 0.98;
       if (score > bestScore) { bestScore = score; bestKeyword = keyword; }
-      if (score > bestScoreFiltered) { bestScoreFiltered = score; bestKeywordFiltered = keyword; }
       continue;
     }
 
-    const passesFilter = !intersectionEmpty(variantSet, inputVariantSet);
+    // Girdiyle bu keyword'ün hiçbir token'ı arasında delete-neighborhood
+    // kesişimi yoksa, pahalı nested-loop taramaya hiç girme.
+    if (intersectionEmpty(variantSet, inputVariantSet)) continue;
 
     // ── Sıra bağımsız token eşleştirme ─────────
     // Her keyword token için input token havuzunda en iyi eşi bul
@@ -717,29 +714,13 @@ export function matchKeywords(inputText, keywords) {
     const finalScore = (coverage * 0.65 + avgTokenScore * 0.35) * compactPenalty;
 
     if (finalScore > bestScore) { bestScore = finalScore; bestKeyword = keyword; }
-    if (passesFilter && finalScore > bestScoreFiltered) { bestScoreFiltered = finalScore; bestKeywordFiltered = keyword; }
   }
 
-  const result = {
+  return {
     matched: bestScore >= 0.78,
     score: Number(bestScore.toFixed(3)),
     keyword: bestKeyword
   };
-
-  const filteredResult = {
-    matched: bestScoreFiltered >= 0.78,
-    score: Number(bestScoreFiltered.toFixed(3)),
-    keyword: bestKeywordFiltered
-  };
-  if (
-    filteredResult.matched !== result.matched ||
-    filteredResult.keyword !== result.keyword ||
-    Math.abs(filteredResult.score - result.score) > 0.0001
-  ) {
-    _shadowMismatches.push({ inputText, exhaustive: result, filtered: filteredResult });
-  }
-
-  return result;
 }
 
 // ─────────────────────────────────────────────

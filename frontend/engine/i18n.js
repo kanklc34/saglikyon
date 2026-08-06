@@ -96,6 +96,12 @@ export const STRINGS = {
         errorSuggestion: 'Örnek: "Başım ağrıyor ve mide bulantım var" veya "Göğsümde baskı hissediyorum".',
         errorAnalysis: 'Analiz hatası. Lütfen tekrar deneyin.',
 
+        // Semantik fallback (lexical eşleşme bulunamayınca)
+        semanticSearching: 'Daha yakından bakıyorum…',
+        semanticDisclaimer: 'Net bir eşleşme bulamadım, ama anlam olarak şunlara benziyor olabilir. Bu bir tahmindir, kesin bir teşhis değildir:',
+        semanticPickPrompt: 'Size en yakın olanı seçin:',
+        semanticNoneApply: 'Hiçbiri uymuyor',
+
         // Voice
         voiceListening: 'Dinliyorum…',
         voiceAdded: '"{t}" eklendi',
@@ -237,6 +243,12 @@ export const STRINGS = {
         errorNoMatch: 'Could not understand your complaint clearly. Please describe in more detail or use the body map.',
         errorSuggestion: 'Example: "I have a headache and nausea" or "I feel pressure in my chest".',
         errorAnalysis: 'Analysis error. Please try again.',
+
+        // Semantic fallback (when lexical matching finds nothing)
+        semanticSearching: 'Taking a closer look…',
+        semanticDisclaimer: "I couldn't find an exact match, but this might be similar in meaning. This is a guess, not a diagnosis:",
+        semanticPickPrompt: 'Choose the one closest to your situation:',
+        semanticNoneApply: 'None of these apply',
 
         // Voice
         voiceListening: 'Listening…',

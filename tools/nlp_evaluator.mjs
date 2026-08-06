@@ -51,7 +51,7 @@ function dumpSymptoms() {
         keywords: symptom.keywords || [],
         keywords_en: symptom.keywords_en || []
     }));
-    process.stdout.write(JSON.stringify({ symptoms: rounded, departments: DEPARTMENTS }, null, 2));
+    return JSON.stringify({ symptoms: rounded, departments: DEPARTMENTS }, null, 2);
 }
 
 function evaluate(inputPath) {
@@ -106,7 +106,7 @@ function evaluate(inputPath) {
         };
     });
 
-    process.stdout.write(JSON.stringify(results, null, 2));
+    return JSON.stringify(results, null, 2);
 }
 
 if (args.length === 0) {
@@ -114,15 +114,22 @@ if (args.length === 0) {
     process.exit(0);
 }
 
+// BUG DÜZELTMESİ: process.stdout.write() büyük veride, çıktı bir PİPE'a
+// bağlıyken (Python subprocess.run(capture_output=True) gibi — dosyaya
+// yönlendirmede sorun yok çünkü o senkron) ASENKRON tamamlanır. Hemen
+// ardından process.exit() çağırmak, yazma bitmeden süreci sonlandırıp
+// çıktıyı sessizce kesebiliyordu (gözlemlenen: tam 131072 bayt/128KB'ta
+// kesiliyordu — pipe buffer sınırı). Düzeltme: exit'i write'ın callback'ine
+// bağlayıp yazmanın gerçekten bittiğinden emin olmak.
+function writeAndExit(text, code = 0) {
+    process.stdout.write(text, () => process.exit(code));
+}
+
 if (args[0] === '--dump-symptoms') {
-    dumpSymptoms();
-    process.exit(0);
+    writeAndExit(dumpSymptoms());
+} else if (args[0] === '--evaluate' && args[1]) {
+    writeAndExit(evaluate(args[1]));
+} else {
+    help();
+    process.exit(1);
 }
-
-if (args[0] === '--evaluate' && args[1]) {
-    evaluate(args[1]);
-    process.exit(0);
-}
-
-help();
-process.exit(1);

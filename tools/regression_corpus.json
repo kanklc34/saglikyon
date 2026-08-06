@@ -1,0 +1,4662 @@
+{
+  "purpose": "regression_eval",
+  "createdAt": "2026-07-23T09:37:57Z",
+  "generator": "gemini-3.1-flash-lite",
+  "symptomCount": 142,
+  "totalExamples": 517,
+  "examples": [
+    {
+      "symptomId": "burun_tikanklik",
+      "symptomLabel": "burun_tikanklik",
+      "expectedDepartment": "kbb",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Sürekli bir taraftan hava geçişi zorlanıyor, sanki içeride bir engel var.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "burun_tikanklik",
+      "symptomLabel": "burun_tikanklik",
+      "expectedDepartment": "kbb",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Gece uyurken nefes almakta güçlük çekiyorum, sürekli ağzımdan solumak zorunda kalıyorum.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "burun_tikanklik",
+      "symptomLabel": "burun_tikanklik",
+      "expectedDepartment": "kbb",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Burnumun içi tamamen dolmuş gibi hissediyorum, hiçbir şekilde hava akışı olmuyor.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "burun_tikanklik",
+      "symptomLabel": "burun_tikanklik",
+      "expectedDepartment": "kbb",
+      "mode": "negation",
+      "expectNoMatch": true,
+      "text": "Nefes almamda herhangi bir problem yok, burnum gayet rahat.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "yorgunluk",
+      "symptomLabel": "yorgunluk",
+      "expectedDepartment": "dahiliye",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Son zamanlarda en basit işleri yaparken bile nefes nefese kalıyorum ve sürekli uzanma ihtiyacı duyuyorum.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "yorgunluk",
+      "symptomLabel": "yorgunluk",
+      "expectedDepartment": "dahiliye",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Vücudumda sanki hiç hareket edecek mecalim kalmadı, sürekli bir ağırlık çöküyor üzerime.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "yorgunluk",
+      "symptomLabel": "yorgunluk",
+      "expectedDepartment": "dahiliye",
+      "mode": "negation",
+      "expectNoMatch": true,
+      "text": "Kendimi gayet zinde ve dinç hissediyorum, herhangi bir bitkinlik durumum yok.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "vajinal_akinti",
+      "symptomLabel": "vajinal_akinti",
+      "expectedDepartment": "kadin_dogum",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Özel bölgemden gelen yoğun ve rahatsız edici bir sıvıdan şikayetçiyim.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "vajinal_akinti",
+      "symptomLabel": "vajinal_akinti",
+      "expectedDepartment": "kadin_dogum",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Son günlerde iç çamaşırımda sürekli ıslaklık ve farklı bir sıvı birikimi fark ediyorum.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "vajinal_akinti",
+      "symptomLabel": "vajinal_akinti",
+      "expectedDepartment": "kadin_dogum",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Genital bölgemde normalden farklı, yoğun kıvamlı bir sıvı çıkışı yaşıyorum.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "vajinal_akinti",
+      "symptomLabel": "vajinal_akinti",
+      "expectedDepartment": "kadin_dogum",
+      "mode": "negation",
+      "expectNoMatch": true,
+      "text": "Herhangi bir akıntı şikayetim yok, sadece karın ağrım var.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "meme_sorunu",
+      "symptomLabel": "meme_sorunu",
+      "expectedDepartment": "kadin_dogum",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Sol göğsümün içinde elime gelen sert bir yapı fark ettim.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "meme_sorunu",
+      "symptomLabel": "meme_sorunu",
+      "expectedDepartment": "kadin_dogum",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Emzirme döneminde olmamama rağmen göğüs uçlarımdan sıvı geldiğini fark ettim.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "meme_sorunu",
+      "symptomLabel": "meme_sorunu",
+      "expectedDepartment": "kadin_dogum",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Göğüs bölgemde son birkaç gündür geçmeyen bir hassasiyet ve dolgunluk hissediyorum.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "meme_sorunu",
+      "symptomLabel": "meme_sorunu",
+      "expectedDepartment": "kadin_dogum",
+      "mode": "negation",
+      "expectNoMatch": true,
+      "text": "Göğüslerimde herhangi bir şişlik veya ele gelen bir sertlik bulunmuyor.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "bacak_agrisi",
+      "symptomLabel": "bacak_agrisi",
+      "expectedDepartment": "ortopedi",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Alt uzuvlarımda gün boyu geçmeyen şiddetli bir zonklama hissediyorum.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "bacak_agrisi",
+      "symptomLabel": "bacak_agrisi",
+      "expectedDepartment": "ortopedi",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Yürürken dizimin alt kısmında sanki bir şey batıyormuş gibi bir acı duyuyorum.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "bacak_agrisi",
+      "symptomLabel": "bacak_agrisi",
+      "expectedDepartment": "ortopedi",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Gece uyurken alt ekstremitelerimde tarif edemediğim bir huzursuzluk ve sancı oluyor.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "bacak_agrisi",
+      "symptomLabel": "bacak_agrisi",
+      "expectedDepartment": "ortopedi",
+      "mode": "negation",
+      "expectNoMatch": true,
+      "text": "Dizlerimin altındaki bölgelerde herhangi bir sızı veya rahatsızlık hissetmiyorum.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "adet_duzensizligi",
+      "symptomLabel": "adet_duzensizligi",
+      "expectedDepartment": "kadin_dogum",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Son birkaç aydır kanama tarihlerim sürekli değişiyor, ne zaman olacağımı kestiremiyorum.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "adet_duzensizligi",
+      "symptomLabel": "adet_duzensizligi",
+      "expectedDepartment": "kadin_dogum",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Normalde düzenli olan periyodum bu sefer iki hafta gecikti ve çok sancılı geçiyor.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "adet_duzensizligi",
+      "symptomLabel": "adet_duzensizligi",
+      "expectedDepartment": "kadin_dogum",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Her ay yaşadığım kanama süreci artık çok dengesizleşti, bazen çok yoğun bazen de çok az oluyor.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "adet_duzensizligi",
+      "symptomLabel": "adet_duzensizligi",
+      "expectedDepartment": "kadin_dogum",
+      "mode": "negation",
+      "expectNoMatch": true,
+      "text": "Kanama döngülerimle ilgili herhangi bir sorun yaşamıyorum, her şey vaktinde gerçekleşiyor.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "cilt_mantari",
+      "symptomLabel": "cilt_mantari",
+      "expectedDepartment": "dermatoloji",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Vücudumun çeşitli yerlerinde kırmızı, kaşıntılı ve kenarları belirgin yuvarlak lekeler oluştu.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "cilt_mantari",
+      "symptomLabel": "cilt_mantari",
+      "expectedDepartment": "dermatoloji",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Ayak parmaklarımın arasında sürekli bir kaşıntı, kızarıklık ve deri soyulması yaşıyorum.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "cilt_mantari",
+      "symptomLabel": "cilt_mantari",
+      "expectedDepartment": "dermatoloji",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Kasık bölgemde yayılmaya başlayan ve beni çok rahatsız eden kaşıntılı bir kızarıklık fark ettim.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "cilt_mantari",
+      "symptomLabel": "cilt_mantari",
+      "expectedDepartment": "dermatoloji",
+      "mode": "negation",
+      "expectNoMatch": true,
+      "text": "Vücudumda herhangi bir döküntü veya kaşıntılı leke bulunmuyor, cildim gayet sağlıklı görünüyor.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "gorme_kaybi",
+      "symptomLabel": "gorme_kaybi",
+      "expectedDepartment": "goz",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Aniden dünyam karardı, şu an hiçbir şekilde görüntü alamıyorum.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "tiroid_sisme",
+      "symptomLabel": "tiroid_sisme",
+      "expectedDepartment": "endokrinoloji",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Aynaya baktığımda boğazımın alt kısmında belirgin bir kabarıklık fark ettim.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "tiroid_sisme",
+      "symptomLabel": "tiroid_sisme",
+      "expectedDepartment": "endokrinoloji",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Son zamanlarda sanki nefes alırken veya bir şeyler yerken boğazımda bir kitle varmış gibi hissediyorum.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "tiroid_sisme",
+      "symptomLabel": "tiroid_sisme",
+      "expectedDepartment": "endokrinoloji",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Boynumun ön tarafında dışarıdan bakınca görünen bir sertlik ve büyüme oluştu.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "tiroid_sisme",
+      "symptomLabel": "tiroid_sisme",
+      "expectedDepartment": "endokrinoloji",
+      "mode": "negation",
+      "expectNoMatch": true,
+      "text": "Boynumda herhangi bir şişlik veya anormal bir kitle bulunmuyor.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "dikkat_eksikligi",
+      "symptomLabel": "dikkat_eksikligi",
+      "expectedDepartment": "psikiyatri",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Ders çalışırken veya bir işle uğraşırken zihnim sürekli başka yerlere kayıyor, bir türlü başladığım işi bitiremiyorum.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "dikkat_eksikligi",
+      "symptomLabel": "dikkat_eksikligi",
+      "expectedDepartment": "psikiyatri",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Okuduğum sayfayı birkaç kez tekrar etmeme rağmen ne anladığımı hatırlayamıyorum, sanki zihnimde bir sis perdesi var.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "dikkat_eksikligi",
+      "symptomLabel": "dikkat_eksikligi",
+      "expectedDepartment": "psikiyatri",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Günlük rutinlerimi takip etmekte zorlanıyorum, en basit görevlerde bile detayları kaçırıp hemen başka bir şeye yöneliyorum.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "dikkat_eksikligi",
+      "symptomLabel": "dikkat_eksikligi",
+      "expectedDepartment": "psikiyatri",
+      "mode": "negation",
+      "expectNoMatch": true,
+      "text": "Zihinsel olarak oldukça berrağım, uzun süre boyunca tek bir konu üzerinde çalışırken hiçbir sorun yaşamıyorum.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "omuz_agrisi",
+      "symptomLabel": "omuz_agrisi",
+      "expectedDepartment": "ortopedi",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Gece yatarken üstüne yattığımda bölgede yoğun bir zonklama başlıyor.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "omuz_agrisi",
+      "symptomLabel": "omuz_agrisi",
+      "expectedDepartment": "ortopedi",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Üst ekstremitemi yukarı doğru hareket ettirmekte ciddi zorluk çekiyorum ve keskin bir acı duyuyorum.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "omuz_agrisi",
+      "symptomLabel": "omuz_agrisi",
+      "expectedDepartment": "ortopedi",
+      "mode": "negation",
+      "expectNoMatch": true,
+      "text": "Vücudumun üst kısmında herhangi bir sızı veya hareket kısıtlılığı yaşamıyorum.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "fitik",
+      "symptomLabel": "fitik",
+      "expectedDepartment": "genel_cerrahi",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Karnımın alt bölgesinde öksürdüğümde belirginleşen bir kabarıklık fark ettim.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "fitik",
+      "symptomLabel": "fitik",
+      "expectedDepartment": "genel_cerrahi",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Göbek deliğimin hemen yanında dışarıya doğru bir çıkıntı oluştu ve dokunduğumda elime geliyor.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "fitik",
+      "symptomLabel": "fitik",
+      "expectedDepartment": "genel_cerrahi",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Bacak aramın üst kısmında sanki bir doku dışarı doğru sarkmış gibi duruyor, özellikle ayaktayken çok rahatsız ediyor.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "fitik",
+      "symptomLabel": "fitik",
+      "expectedDepartment": "genel_cerrahi",
+      "mode": "negation",
+      "expectNoMatch": true,
+      "text": "Vücudumun herhangi bir yerinde dışarıdan görünen bir şişlik veya doku çıkıntısı bulunmuyor.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "panik_atak",
+      "symptomLabel": "panik_atak",
+      "expectedDepartment": "psikiyatri",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Durup dururken göğsüm sıkışıyor, sanki nefes alamıyorum ve başıma kötü bir şey gelecekmiş gibi hissediyorum.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "panik_atak",
+      "symptomLabel": "panik_atak",
+      "expectedDepartment": "psikiyatri",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Bir anda içimi büyük bir huzursuzluk kapladı, kalbim yerinden çıkacakmış gibi çarpıyor ve titremeye başladım.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "panik_atak",
+      "symptomLabel": "panik_atak",
+      "expectedDepartment": "psikiyatri",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Hiçbir sebep yokken kendimi çok kötü hissettim, sanki kontrolümü kaybediyorum ve her an bayılacakmışım gibi geliyor.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "panik_atak",
+      "symptomLabel": "panik_atak",
+      "expectedDepartment": "psikiyatri",
+      "mode": "negation",
+      "expectNoMatch": true,
+      "text": "Şu an yaşadığım yoğun kaygı hissi beni çok rahatsız ediyor ama daha önce hiç panik nöbeti yaşamadım.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "idrar_kanamasi",
+      "symptomLabel": "idrar_kanamasi",
+      "expectedDepartment": "uroloji",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Son birkaç gündür idrar rengimin normalden çok daha koyu ve pembeleşmiş olduğunu görüyorum.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "idrar_kanamasi",
+      "symptomLabel": "idrar_kanamasi",
+      "expectedDepartment": "uroloji",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "İdrarımı yaparken renginin sanki suya boya karışmış gibi kırmızıya döndüğünü gözlemledim.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "ses_kisikligi",
+      "symptomLabel": "ses_kisikligi",
+      "expectedDepartment": "kbb",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Konuşurken zorlanıyorum, sanki boğazımda bir düğüm var ve sesim normalden çok daha farklı çıkıyor.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "ses_kisikligi",
+      "symptomLabel": "ses_kisikligi",
+      "expectedDepartment": "kbb",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Birkaç gündür konuşmaya çalıştığımda sadece fısıltı gibi bir ses geliyor, ses tellerimde bir sorun olduğunu düşünüyorum.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "ses_kisikligi",
+      "symptomLabel": "ses_kisikligi",
+      "expectedDepartment": "kbb",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Sabah uyandığımdan beri ses tonumda belirgin bir değişim var, sanki sesim tamamen gitmiş gibi hissediyorum.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "ses_kisikligi",
+      "symptomLabel": "ses_kisikligi",
+      "expectedDepartment": "kbb",
+      "mode": "negation",
+      "expectNoMatch": true,
+      "text": "Boğazımda bir ağrı var ama sesimde herhangi bir değişiklik ya da bozulma hissetmiyorum.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "uyku_bozuklugu",
+      "symptomLabel": "uyku_bozuklugu",
+      "expectedDepartment": "psikiyatri",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Yatağa girdiğimde zihnim bir türlü susmuyor, saatlerce tavanı izlemek zorunda kalıyorum.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "uyku_bozuklugu",
+      "symptomLabel": "uyku_bozuklugu",
+      "expectedDepartment": "psikiyatri",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Geceleri sürekli bölünen bir dinlenme sürecim var, sabahları ise hiç uyumamış gibi hissediyorum.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "uyku_bozuklugu",
+      "symptomLabel": "uyku_bozuklugu",
+      "expectedDepartment": "psikiyatri",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Akşamları yorgun olmama rağmen bir türlü dalışa geçemiyorum, saatler geçmek bilmiyor.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "uyku_bozuklugu",
+      "symptomLabel": "uyku_bozuklugu",
+      "expectedDepartment": "psikiyatri",
+      "mode": "negation",
+      "expectNoMatch": true,
+      "text": "Uyku düzenimle ilgili herhangi bir şikayetim yok, başımı yastığa koyduğum an derin bir şekilde uyuyabiliyorum.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "migren",
+      "symptomLabel": "migren",
+      "expectedDepartment": "noroloji",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Kafamın sadece sağ tarafında sanki bir damar atıyormuş gibi şiddetli bir sızı hissediyorum.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "migren",
+      "symptomLabel": "migren",
+      "expectedDepartment": "noroloji",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Gözlerimin arkasından başlayıp kafamın bir yarısını tamamen etkisi altına alan çok yoğun bir ağrım var.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "migren",
+      "symptomLabel": "migren",
+      "expectedDepartment": "noroloji",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Başımın tek bir noktasında ritmik bir şekilde vuran, ışığa karşı hassasiyet yaratan bir sancı çekiyorum.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "migren",
+      "symptomLabel": "migren",
+      "expectedDepartment": "noroloji",
+      "mode": "negation",
+      "expectNoMatch": true,
+      "text": "Başımda herhangi bir atma ya da tek taraflı bir ağrı hissetmiyorum, sadece genel bir yorgunluk var.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "gece_terleme",
+      "symptomLabel": "gece_terleme",
+      "expectedDepartment": "dahiliye",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Geceleri uykumun ortasında vücudumun sular içinde kaldığını fark ederek uyanıyorum.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "gece_terleme",
+      "symptomLabel": "gece_terleme",
+      "expectedDepartment": "dahiliye",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Son zamanlarda uyku esnasında vücudumdan yoğun bir şekilde sıvı boşalıyor, yastığım bile nemleniyor.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "gece_terleme",
+      "symptomLabel": "gece_terleme",
+      "expectedDepartment": "dahiliye",
+      "mode": "negation",
+      "expectNoMatch": true,
+      "text": "Uyurken vücudumda herhangi bir ıslaklık veya aşırı sıcaklık hissetmiyorum.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "vitiligo",
+      "symptomLabel": "vitiligo",
+      "expectedDepartment": "dermatoloji",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Vücudumun çeşitli bölgelerinde aniden ortaya çıkan süt beyazı renk değişimleri fark ettim.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "vitiligo",
+      "symptomLabel": "vitiligo",
+      "expectedDepartment": "dermatoloji",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Cildimin bazı kısımlarında kendi ten rengimden çok daha açık, belirgin soluk alanlar oluşmaya başladı.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "vitiligo",
+      "symptomLabel": "vitiligo",
+      "expectedDepartment": "dermatoloji",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Diz kapaklarımda ve ellerimde zamanla yayılan, pigmentasyonun tamamen kaybolduğu açık renkli bölgeler var.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "vitiligo",
+      "symptomLabel": "vitiligo",
+      "expectedDepartment": "dermatoloji",
+      "mode": "negation",
+      "expectNoMatch": true,
+      "text": "Cildimde herhangi bir renk açılması veya beyazlaşma gibi bir durum söz konusu değil.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "derin_ven_trombozu",
+      "symptomLabel": "derin_ven_trombozu",
+      "expectedDepartment": "kardiyoloji",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Sol bacağımda aniden başlayan şiddetli bir sızı ve gözle görülür bir şişkinlik fark ettim.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "derin_ven_trombozu",
+      "symptomLabel": "derin_ven_trombozu",
+      "expectedDepartment": "kardiyoloji",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Uzun süren uçuşumdan indikten sonra sağ alt ekstremitemde gerginlik ve üzerine basınca artan bir hassasiyet oluştu.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "derin_ven_trombozu",
+      "symptomLabel": "derin_ven_trombozu",
+      "expectedDepartment": "kardiyoloji",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Baldırımda sanki bir kütle varmış gibi hissediyorum ve dokunduğumda bölgenin normalden daha sıcak olduğunu fark ettim.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "el_uyusma",
+      "symptomLabel": "el_uyusma",
+      "expectedDepartment": "noroloji",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Avuç içlerimde ve parmak uçlarımda sürekli bir hissizlik ve iğne batması gibi bir durum yaşıyorum.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "el_uyusma",
+      "symptomLabel": "el_uyusma",
+      "expectedDepartment": "noroloji",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Gece uyurken ellerimde sanki kan dolaşımı durmuş gibi bir hisle uyanıyorum, sanki uzuvlarım bana ait değilmiş gibi.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "el_uyusma",
+      "symptomLabel": "el_uyusma",
+      "expectedDepartment": "noroloji",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Gün içinde ellerimde sık sık geçici bir duyarsızlık ve sızlama meydana geliyor.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "el_uyusma",
+      "symptomLabel": "el_uyusma",
+      "expectedDepartment": "noroloji",
+      "mode": "negation",
+      "expectNoMatch": true,
+      "text": "Ellerimde herhangi bir his kaybı veya karıncalanma şikayetim bulunmuyor.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "karaciger_sorunu",
+      "symptomLabel": "karaciger_sorunu",
+      "expectedDepartment": "gastroenteroloji",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Kaburgalarımın hemen altındaki sağ tarafta sürekli bir sızı hissediyorum.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "karaciger_sorunu",
+      "symptomLabel": "karaciger_sorunu",
+      "expectedDepartment": "gastroenteroloji",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Doktorum kan tahlillerimde karaciğer değerlerimin normalin üzerinde olduğunu söyledi.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "karaciger_sorunu",
+      "symptomLabel": "karaciger_sorunu",
+      "expectedDepartment": "gastroenteroloji",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Karnımın sağ üst kısmında baskı yapan bir rahatsızlık ve dolgunluk hissediyorum.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "karaciger_sorunu",
+      "symptomLabel": "karaciger_sorunu",
+      "expectedDepartment": "gastroenteroloji",
+      "mode": "negation",
+      "expectNoMatch": true,
+      "text": "Karaciğerimle ilgili herhangi bir ağrı veya şikayetim bulunmuyor.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "egzama",
+      "symptomLabel": "egzama",
+      "expectedDepartment": "dermatoloji",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Vücudumun çeşitli yerlerinde sürekli tekrarlayan, çok rahatsız edici bir kaşıntı ve döküntü problemi yaşıyorum.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "egzama",
+      "symptomLabel": "egzama",
+      "expectedDepartment": "dermatoloji",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Cildim aşırı derecede kurudu ve yer yer beyaz kabuklanmalar oluşmaya başladı, bu durum beni çok huzursuz ediyor.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "egzama",
+      "symptomLabel": "egzama",
+      "expectedDepartment": "dermatoloji",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Bacaklarımda ve kollarımda geçmek bilmeyen, kızarık ve pütürlü bir doku oluştu, sürekli kaşımaktan yara oldu.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "egzama",
+      "symptomLabel": "egzama",
+      "expectedDepartment": "dermatoloji",
+      "mode": "negation",
+      "expectNoMatch": true,
+      "text": "Cildimde herhangi bir döküntü, kızarıklık veya kaşıntılı bir lezyon bulunmuyor.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "cilt_kasinti",
+      "symptomLabel": "cilt_kasinti",
+      "expectedDepartment": "dermatoloji",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Son birkaç gündür vücudumda geçmek bilmeyen bir huzursuzluk ve sürekli tırmalama isteği var.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "cilt_kasinti",
+      "symptomLabel": "cilt_kasinti",
+      "expectedDepartment": "dermatoloji",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Tenimde sanki karıncalar yürüyormuş gibi bir his oluşuyor ve kendimi durmadan ovalamak zorunda kalıyorum.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "cilt_kasinti",
+      "symptomLabel": "cilt_kasinti",
+      "expectedDepartment": "dermatoloji",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Bacaklarımda ve kollarımda dayanılmaz bir rahatsızlık hissediyorum, sürekli bir yerleri kaşıma ihtiyacı duyuyorum.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "cilt_kasinti",
+      "symptomLabel": "cilt_kasinti",
+      "expectedDepartment": "dermatoloji",
+      "mode": "negation",
+      "expectNoMatch": true,
+      "text": "Vücudumda herhangi bir rahatsızlık veya kaşınma hissi bulunmuyor.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "travma_ptsd",
+      "symptomLabel": "travma_ptsd",
+      "expectedDepartment": "psikiyatri",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Yaşadığım o korkunç kazanın görüntüleri sürekli gözümün önüne geliyor, sanki o anı tekrar yaşıyormuşum gibi hissediyorum.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "travma_ptsd",
+      "symptomLabel": "travma_ptsd",
+      "expectedDepartment": "psikiyatri",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Geceleri uykuya daldığımda sürekli aynı dehşet verici sahneleri görüyorum ve huzursuz bir şekilde uyanıyorum.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "travma_ptsd",
+      "symptomLabel": "travma_ptsd",
+      "expectedDepartment": "psikiyatri",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Zihnimden atamadığım o kötü olay yüzünden günlük hayatıma odaklanmakta çok zorlanıyorum, sürekli tetikteyim.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "travma_ptsd",
+      "symptomLabel": "travma_ptsd",
+      "expectedDepartment": "psikiyatri",
+      "mode": "negation",
+      "expectNoMatch": true,
+      "text": "Geçmişte yaşadığım zorlukların şu anki ruh halim üzerinde herhangi bir etkisi olduğunu düşünmüyorum, o günleri tamamen geride bıraktım.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "sarilik",
+      "symptomLabel": "sarilik",
+      "expectedDepartment": "gastroenteroloji",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Son günlerde aynaya baktığımda ten rengimin belirgin bir şekilde soluk ve sarımtırak bir tona döndüğünü fark ettim.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "sarilik",
+      "symptomLabel": "sarilik",
+      "expectedDepartment": "gastroenteroloji",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Göz aklarımın rengi değişti, sanki normal beyazlığından uzaklaşıp daha koyu bir tona büründü.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "sarilik",
+      "symptomLabel": "sarilik",
+      "expectedDepartment": "gastroenteroloji",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Vücudumdaki renk değişimleri dikkatimi çekiyor, özellikle ellerim ve yüzümdeki deri rengi oldukça farklı görünüyor.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "sarilik",
+      "symptomLabel": "sarilik",
+      "expectedDepartment": "gastroenteroloji",
+      "mode": "negation",
+      "expectNoMatch": true,
+      "text": "Ten rengimde herhangi bir sararma veya gözlerimde bir renk değişimi gözlemlemedim.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "prostat_sorunu",
+      "symptomLabel": "prostat_sorunu",
+      "expectedDepartment": "uroloji",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Tuvalete gittiğimde idrarımı boşaltmakta zorlanıyorum ve kesik kesik geliyor.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "prostat_sorunu",
+      "symptomLabel": "prostat_sorunu",
+      "expectedDepartment": "uroloji",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Mesanem tam boşalmıyor gibi hissediyorum, idrar yaparken akış hızı çok düştü.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "prostat_sorunu",
+      "symptomLabel": "prostat_sorunu",
+      "expectedDepartment": "uroloji",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "İdrarımı yapmaya başlarken ciddi bir zorlanma yaşıyorum ve sonrasında damlama oluyor.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "prostat_sorunu",
+      "symptomLabel": "prostat_sorunu",
+      "expectedDepartment": "uroloji",
+      "mode": "negation",
+      "expectNoMatch": true,
+      "text": "İdrar yaparken herhangi bir zorluk veya akış problemi yaşamıyorum.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "nöbet",
+      "symptomLabel": "nöbet",
+      "expectedDepartment": "noroloji",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Vücudumda istemsiz titremeler oldu ve bir an için bilincimi kaybettim.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "nöbet",
+      "symptomLabel": "nöbet",
+      "expectedDepartment": "noroloji",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Bir anda yere yığıldım, vücudumun kontrolünü kaybettim ve gözlerim kaydı.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "nöbet",
+      "symptomLabel": "nöbet",
+      "expectedDepartment": "noroloji",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Aniden donup kaldım, etrafımdakiler vücudumun sertleştiğini ve titrediğimi söyledi.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "nöbet",
+      "symptomLabel": "nöbet",
+      "expectedDepartment": "noroloji",
+      "mode": "negation",
+      "expectNoMatch": true,
+      "text": "Daha önce hiç bilinç kaybı yaşamadım veya vücudumda kontrolsüz hareketler olmadı.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "goz_agrisi",
+      "symptomLabel": "goz_agrisi",
+      "expectedDepartment": "goz",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Göz kürelerimde şiddetli bir sızı hissediyorum.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "goz_agrisi",
+      "symptomLabel": "goz_agrisi",
+      "expectedDepartment": "goz",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Bakışlarımı odakladığımda gözlerimin içinde keskin bir acı oluşuyor.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "goz_agrisi",
+      "symptomLabel": "goz_agrisi",
+      "expectedDepartment": "goz",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Gözlerimin çevresinde sanki bir baskı ve zonklama var.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "goz_agrisi",
+      "symptomLabel": "goz_agrisi",
+      "expectedDepartment": "goz",
+      "mode": "negation",
+      "expectNoMatch": true,
+      "text": "Gözlerimde herhangi bir acı veya rahatsızlık hissetmiyorum.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "terleme",
+      "symptomLabel": "terleme",
+      "expectedDepartment": "dahiliye",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Yastığım ve çarşaflarım sabahları tamamen ıslanmış oluyor.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "terleme",
+      "symptomLabel": "terleme",
+      "expectedDepartment": "dahiliye",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Gün içinde en ufak bir hareketimde bile vücudumdan şakır şakır sıvı boşalıyor.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "terleme",
+      "symptomLabel": "terleme",
+      "expectedDepartment": "dahiliye",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Kıyafetlerim tenime yapışıyor, sanki duştan yeni çıkmışım gibi hissediyorum.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "terleme",
+      "symptomLabel": "terleme",
+      "expectedDepartment": "dahiliye",
+      "mode": "negation",
+      "expectNoMatch": true,
+      "text": "Vücut ısımda veya nem oranımda herhangi bir artış gözlemlemiyorum.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "cift_gorme",
+      "symptomLabel": "cift_gorme",
+      "expectedDepartment": "noroloji",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Baktığım nesneler sanki yan yana iki tane gibi duruyor, odaklanmakta zorlanıyorum.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "cift_gorme",
+      "symptomLabel": "cift_gorme",
+      "expectedDepartment": "noroloji",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Gözlerimi açtığımda etrafımdaki her şeyin gölgeli ve ikilenmiş olduğunu fark ettim.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "cift_gorme",
+      "symptomLabel": "cift_gorme",
+      "expectedDepartment": "noroloji",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Bir noktaya odaklandığımda görüntüler üst üste biniyor ve net bir şekilde göremiyorum.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "cift_gorme",
+      "symptomLabel": "cift_gorme",
+      "expectedDepartment": "noroloji",
+      "mode": "negation",
+      "expectNoMatch": true,
+      "text": "Görüşümde herhangi bir ikilenme veya bulanıklık gibi bir şikayetim yok.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "gogus_agrisi",
+      "symptomLabel": "gogus_agrisi",
+      "expectedDepartment": "kardiyoloji",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Sol tarafımda sanki bir ağırlık var ve hareket ettikçe şiddetleniyor.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "gogus_agrisi",
+      "symptomLabel": "gogus_agrisi",
+      "expectedDepartment": "kardiyoloji",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Kaburgalarımın olduğu bölgede sanki bir şey batıyor gibi hissediyorum.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "gogus_agrisi",
+      "symptomLabel": "gogus_agrisi",
+      "expectedDepartment": "kardiyoloji",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Kalp bölgemde zonklama şeklinde bir sızı hissediyorum.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "gogus_agrisi",
+      "symptomLabel": "gogus_agrisi",
+      "expectedDepartment": "kardiyoloji",
+      "mode": "negation",
+      "expectNoMatch": true,
+      "text": "Kalp bölgemde herhangi bir rahatsızlık veya sızı hissetmiyorum.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "diz_agrisi",
+      "symptomLabel": "diz_agrisi",
+      "expectedDepartment": "ortopedi",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Merdiven çıkarken bacak eklemimde keskin bir sızı hissediyorum.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "diz_agrisi",
+      "symptomLabel": "diz_agrisi",
+      "expectedDepartment": "ortopedi",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Yürüyüş yaparken bacağımın orta kısmında ciddi bir rahatsızlık ve zorlanma yaşıyorum.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "diz_agrisi",
+      "symptomLabel": "diz_agrisi",
+      "expectedDepartment": "ortopedi",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Bacak eklemimdeki hassasiyet nedeniyle üzerine basmakta güçlük çekiyorum.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "diz_agrisi",
+      "symptomLabel": "diz_agrisi",
+      "expectedDepartment": "ortopedi",
+      "mode": "negation",
+      "expectNoMatch": true,
+      "text": "Bacak eklemlerimde herhangi bir sızı veya rahatsızlık hissetmiyorum.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "sag_alt_karin",
+      "symptomLabel": "sag_alt_karin",
+      "expectedDepartment": "genel_cerrahi",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Göbeğimin sağ alt kısmında şiddetli bir batma hissediyorum.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "sag_alt_karin",
+      "symptomLabel": "sag_alt_karin",
+      "expectedDepartment": "genel_cerrahi",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Vücudumun sağ alt bölgesinde yürürken bile zorlandığım bir sızı var.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "sag_alt_karin",
+      "symptomLabel": "sag_alt_karin",
+      "expectedDepartment": "genel_cerrahi",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Karnımın sağ tarafının alt kısmında sürekli bir ağrı mevcut.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "sag_alt_karin",
+      "symptomLabel": "sag_alt_karin",
+      "expectedDepartment": "genel_cerrahi",
+      "mode": "negation",
+      "expectNoMatch": true,
+      "text": "Karnımın sağ alt tarafında herhangi bir ağrı ya da rahatsızlık hissetmiyorum.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "irritabl_barsak",
+      "symptomLabel": "irritabl_barsak",
+      "expectedDepartment": "gastroenteroloji",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Karnımda sürekli bir şişkinlik ve kramplar oluyor, tuvalete çıkınca biraz rahatlıyorum ama geçmiyor.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "irritabl_barsak",
+      "symptomLabel": "irritabl_barsak",
+      "expectedDepartment": "gastroenteroloji",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Ne zaman stresli bir dönem geçirsem karnımda şiddetli sancılar başlıyor ve bağırsak düzenim tamamen bozuluyor.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "irritabl_barsak",
+      "symptomLabel": "irritabl_barsak",
+      "expectedDepartment": "gastroenteroloji",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Sürekli karın ağrısı çekiyorum, bazen kabız bazen ishal oluyorum ve bu durum günlük hayatımı çok etkiliyor.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "irritabl_barsak",
+      "symptomLabel": "irritabl_barsak",
+      "expectedDepartment": "gastroenteroloji",
+      "mode": "negation",
+      "expectNoMatch": true,
+      "text": "Karnımda herhangi bir ağrı veya bağırsak hareketlerimde bir düzensizlik hissetmiyorum.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "burun_kanamasi",
+      "symptomLabel": "burun_kanamasi",
+      "expectedDepartment": "kbb",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Sabah uyandığımda yastığımda kırmızı lekeler gördüm, sanırım burnumun içinden sızıntı olmuş.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "burun_kanamasi",
+      "symptomLabel": "burun_kanamasi",
+      "expectedDepartment": "kbb",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Bir süredir burnumun içinden durduk yere kırmızı bir sıvı akıyor, durdurmakta zorlanıyorum.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "burun_kanamasi",
+      "symptomLabel": "burun_kanamasi",
+      "expectedDepartment": "kbb",
+      "mode": "negation",
+      "expectNoMatch": true,
+      "text": "Burnumdan herhangi bir akıntı veya kırmızı bir sızıntı gelmiyor, sadece tıkanıklık hissediyorum.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "kilo_alma",
+      "symptomLabel": "kilo_alma",
+      "expectedDepartment": "endokrinoloji",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Son birkaç aydır tartıdaki rakamlar sürekli yukarı doğru gidiyor.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "kilo_alma",
+      "symptomLabel": "kilo_alma",
+      "expectedDepartment": "endokrinoloji",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Eski kıyafetlerimin içine girmekte zorlanmaya başladım, vücudumda bir genişleme var.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "kilo_alma",
+      "symptomLabel": "kilo_alma",
+      "expectedDepartment": "endokrinoloji",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Diyetimi değiştirmememe rağmen bedenimde gözle görülür bir irileşme fark ediyorum.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "kilo_alma",
+      "symptomLabel": "kilo_alma",
+      "expectedDepartment": "endokrinoloji",
+      "mode": "negation",
+      "expectNoMatch": true,
+      "text": "Vücut ağırlığımda herhangi bir değişiklik gözlemlemedim, aksine formumu koruyorum.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "tansiyon_krizi",
+      "symptomLabel": "tansiyon_krizi",
+      "expectedDepartment": "kardiyoloji",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Büyük tansiyonum 190'a çıktı ve şu an çok ciddi bir baş ağrısı yaşıyorum.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "tansiyon_krizi",
+      "symptomLabel": "tansiyon_krizi",
+      "expectedDepartment": "kardiyoloji",
+      "mode": "negation",
+      "expectNoMatch": true,
+      "text": "Tansiyon değerlerim normal seyrediyor, herhangi bir yükselme durumu yok.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "isitme_kaybi",
+      "symptomLabel": "isitme_kaybi",
+      "expectedDepartment": "kbb",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Son zamanlarda çevremdeki konuşmaları takip etmekte zorlanıyorum, sanki sesler çok uzaktan geliyor.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "isitme_kaybi",
+      "symptomLabel": "isitme_kaybi",
+      "expectedDepartment": "kbb",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Televizyonun sesini normalden çok daha fazla açmama rağmen yine de net bir şekilde anlayamıyorum.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "isitme_kaybi",
+      "symptomLabel": "isitme_kaybi",
+      "expectedDepartment": "kbb",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Kulaklarımda bir tıkanıklık hissi var ve etrafımdaki insanların ne dediğini anlamak için sürekli tekrar ettirmek zorunda kalıyorum.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "isitme_kaybi",
+      "symptomLabel": "isitme_kaybi",
+      "expectedDepartment": "kbb",
+      "mode": "negation",
+      "expectNoMatch": true,
+      "text": "Kulaklarımda herhangi bir duyma problemi yaşamıyorum, sesleri gayet net bir şekilde algılayabiliyorum.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "susuzluk",
+      "symptomLabel": "susuzluk",
+      "expectedDepartment": "endokrinoloji",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Ne kadar su tüketirsem tüketeyim bir türlü hararetim sönmüyor.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "susuzluk",
+      "symptomLabel": "susuzluk",
+      "expectedDepartment": "endokrinoloji",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Gün boyu kendimi sürekli bir şeyler içme ihtiyacı hissederken buluyorum.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "susuzluk",
+      "symptomLabel": "susuzluk",
+      "expectedDepartment": "endokrinoloji",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Sanki vücudumdaki tüm sıvı çekilmiş gibi hissediyorum, sürekli bir su arayışındayım.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "susuzluk",
+      "symptomLabel": "susuzluk",
+      "expectedDepartment": "endokrinoloji",
+      "mode": "negation",
+      "expectNoMatch": true,
+      "text": "Su içme konusunda herhangi bir aşırılık veya alışılmadık bir durum yaşamıyorum.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "kalp_carpintisi",
+      "symptomLabel": "kalp_carpintisi",
+      "expectedDepartment": "kardiyoloji",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Göğüs kafesimin içinde sanki bir kuş kanat çırpıyor gibi hissediyorum.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "kalp_carpintisi",
+      "symptomLabel": "kalp_carpintisi",
+      "expectedDepartment": "kardiyoloji",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Dinlenirken bile nabzımın çok yüksek olduğunu ve göğsümde düzensiz vuruşlar hissettiğimi fark ettim.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "kalp_carpintisi",
+      "symptomLabel": "kalp_carpintisi",
+      "expectedDepartment": "kardiyoloji",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Aniden başlayan ve sanki göğsümden dışarı fırlayacakmış gibi hissettiren bir ritim bozukluğu yaşıyorum.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "ates",
+      "symptomLabel": "ates",
+      "expectedDepartment": "dahiliye",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Vücut ısımın çok yükseldiğini hissediyorum, kendimi oldukça sıcak hissediyorum.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "ates",
+      "symptomLabel": "ates",
+      "expectedDepartment": "dahiliye",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Gece boyunca titremeyle birlikte vücudumda ciddi bir hararet oluştu.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "ates",
+      "symptomLabel": "ates",
+      "expectedDepartment": "dahiliye",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Termometreye baktığımda değerlerin normalin üzerinde olduğunu fark ettim.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "ates",
+      "symptomLabel": "ates",
+      "expectedDepartment": "dahiliye",
+      "mode": "negation",
+      "expectNoMatch": true,
+      "text": "Vücut ısımda herhangi bir yükselme veya sıcaklık artışı söz konusu değil.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "burun_akintisi",
+      "symptomLabel": "burun_akintisi",
+      "expectedDepartment": "kbb",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Sürekli peçete kullanmaktan burnumun ucu kızardı, durduramıyorum.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "burun_akintisi",
+      "symptomLabel": "burun_akintisi",
+      "expectedDepartment": "kbb",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Burnumdan su gibi berrak bir sıvı geliyor, sürekli silmek zorunda kalıyorum.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "burun_akintisi",
+      "symptomLabel": "burun_akintisi",
+      "expectedDepartment": "kbb",
+      "mode": "negation",
+      "expectNoMatch": true,
+      "text": "Burnumda herhangi bir akıntı yok, sadece hapşırıyorum.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "idrar_tutamama",
+      "symptomLabel": "idrar_tutamama",
+      "expectedDepartment": "uroloji",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Gülerken veya hapşırırken istemsizce pantolonum ıslanıyor.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "idrar_tutamama",
+      "symptomLabel": "idrar_tutamama",
+      "expectedDepartment": "uroloji",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Tuvalete yetişemeden üzerime damlatıyorum, bu durum beni çok zorluyor.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "idrar_tutamama",
+      "symptomLabel": "idrar_tutamama",
+      "expectedDepartment": "uroloji",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Mesanemi kontrol etmekte güçlük çekiyorum ve gün içinde kıyafetlerim ıslanıyor.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "idrar_tutamama",
+      "symptomLabel": "idrar_tutamama",
+      "expectedDepartment": "uroloji",
+      "mode": "negation",
+      "expectNoMatch": true,
+      "text": "Tuvaletimi yapma konusunda herhangi bir kontrol kaybı yaşamıyorum.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "sedef_hastaligi",
+      "symptomLabel": "sedef_hastaligi",
+      "expectedDepartment": "dermatoloji",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Diz kapaklarımda ve dirseklerimde zamanla sertleşen, beyazımsı tabakalar oluştu.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "sedef_hastaligi",
+      "symptomLabel": "sedef_hastaligi",
+      "expectedDepartment": "dermatoloji",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Cildimdeki bu döküntüler sürekli tekrarlıyor ve üzerleri sanki ince bir tabaka gibi soyuluyor.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "sedef_hastaligi",
+      "symptomLabel": "sedef_hastaligi",
+      "expectedDepartment": "dermatoloji",
+      "mode": "negation",
+      "expectNoMatch": true,
+      "text": "Cildimde herhangi bir döküntü, kabuklanma veya alışılmadık bir kızarıklık bulunmuyor.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "hemoptizi",
+      "symptomLabel": "hemoptizi",
+      "expectedDepartment": "gogus",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Öksürdüğüm zaman mendilime parlak kırmızı bir sıvı bulaşıyor.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "hemoptizi",
+      "symptomLabel": "hemoptizi",
+      "expectedDepartment": "gogus",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Birkaç gündür nefes darlığıyla birlikte boğazımdan gelen kanlı bir akıntı fark ediyorum.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "hemoptizi",
+      "symptomLabel": "hemoptizi",
+      "expectedDepartment": "gogus",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Derin nefes alıp öksürdüğümde ciğerlerimden gelen kan ağzıma doluyor.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "hemoptizi",
+      "symptomLabel": "hemoptizi",
+      "expectedDepartment": "gogus",
+      "mode": "negation",
+      "expectNoMatch": true,
+      "text": "Öksürürken herhangi bir kanama veya renk değişikliği gözlemlemedim.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "tiroid_hipo_hiper",
+      "symptomLabel": "tiroid_hipo_hiper",
+      "expectedDepartment": "endokrinoloji",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Son zamanlarda aşırı terleme, çarpıntı ve ellerimde titreme şikayetlerim başladı.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "tiroid_hipo_hiper",
+      "symptomLabel": "tiroid_hipo_hiper",
+      "expectedDepartment": "endokrinoloji",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Sürekli bir halsizlik ve yorgunluk içindeyim, ayrıca saçlarımda ciddi dökülmeler olmaya başladı.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "tiroid_hipo_hiper",
+      "symptomLabel": "tiroid_hipo_hiper",
+      "expectedDepartment": "endokrinoloji",
+      "mode": "negation",
+      "expectNoMatch": true,
+      "text": "Doktor bey, bezelerimde veya metabolik değerlerimde herhangi bir anormallik bulunmadığını biliyorum.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "tansiyon",
+      "symptomLabel": "tansiyon",
+      "expectedDepartment": "kardiyoloji",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Son zamanlarda ölçümlerimde değerlerin normalin çok üzerinde çıktığını fark ettim.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "tansiyon",
+      "symptomLabel": "tansiyon",
+      "expectedDepartment": "kardiyoloji",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Kan basıncımın sürekli dalgalanması nedeniyle kendimi çok halsiz ve yorgun hissediyorum.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "tansiyon",
+      "symptomLabel": "tansiyon",
+      "expectedDepartment": "kardiyoloji",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Doktor bey, ölçüm yaptığımda cihazdaki rakamların olması gerekenden çok daha aşağıda olduğunu görüyorum.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "tansiyon",
+      "symptomLabel": "tansiyon",
+      "expectedDepartment": "kardiyoloji",
+      "mode": "negation",
+      "expectNoMatch": true,
+      "text": "Kan basıncı değerlerimle ilgili herhangi bir şikayetim veya sıra dışı bir durumum yok.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "bobrek_agrisi",
+      "symptomLabel": "bobrek_agrisi",
+      "expectedDepartment": "uroloji",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Sırtımın sağ tarafında, kaburgalarımın hemen altında şiddetli ve keskin bir sızı hissediyorum.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "bobrek_agrisi",
+      "symptomLabel": "bobrek_agrisi",
+      "expectedDepartment": "uroloji",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Bel bölgemden başlayıp ön tarafa doğru yayılan, beni iki büklüm eden bir sancı yaşıyorum.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "bobrek_agrisi",
+      "symptomLabel": "bobrek_agrisi",
+      "expectedDepartment": "uroloji",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Vücudumun arka kısmında, bel hizasında sanki bir şey batıyormuş gibi rahatsız edici bir ağrı var.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "mide_bulantisi",
+      "symptomLabel": "mide_bulantisi",
+      "expectedDepartment": "gastroenteroloji",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Sabahları yataktan kalktığımda kendimi çok kötü hissediyorum, sanki yediklerim boğazıma diziliyor.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "mide_bulantisi",
+      "symptomLabel": "mide_bulantisi",
+      "expectedDepartment": "gastroenteroloji",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Bir şeyler yediğimde karnımda bir huzursuzluk oluyor ve ağzıma acı bir su geliyor.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "mide_bulantisi",
+      "symptomLabel": "mide_bulantisi",
+      "expectedDepartment": "gastroenteroloji",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Gün boyu süren bir rahatsızlık hissi var, sanki her an çıkaracakmışım gibi hissediyorum.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "mide_bulantisi",
+      "symptomLabel": "mide_bulantisi",
+      "expectedDepartment": "gastroenteroloji",
+      "mode": "negation",
+      "expectNoMatch": true,
+      "text": "Karnımda bir ağrı var ama herhangi bir çıkarma isteğim veya öğürme durumum yok.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "adet_agrisi",
+      "symptomLabel": "adet_agrisi",
+      "expectedDepartment": "kadin_dogum",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Her ay dönemim geldiğinde karnımın alt kısmında şiddetli bir sancı hissediyorum.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "adet_agrisi",
+      "symptomLabel": "adet_agrisi",
+      "expectedDepartment": "kadin_dogum",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Regl olduğum günlerde ayakta durmakta zorlanacak kadar sancı çekiyorum.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "adet_agrisi",
+      "symptomLabel": "adet_agrisi",
+      "expectedDepartment": "kadin_dogum",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Döngüm başladığından beri kasıklarımda bıçak saplanır gibi bir sızı var.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "adet_agrisi",
+      "symptomLabel": "adet_agrisi",
+      "expectedDepartment": "kadin_dogum",
+      "mode": "negation",
+      "expectNoMatch": true,
+      "text": "Dönemlerim oldukça rahat geçiyor, herhangi bir sancı ya da sızı yaşamıyorum.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "siskinlik",
+      "symptomLabel": "siskinlik",
+      "expectedDepartment": "gastroenteroloji",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Yemeklerden sonra karnımda aşırı bir gerginlik ve doluluk hissi oluşuyor.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "siskinlik",
+      "symptomLabel": "siskinlik",
+      "expectedDepartment": "gastroenteroloji",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Sanki içimde birikmiş bir hava var ve midem sürekli rahatsız ediyor.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "siskinlik",
+      "symptomLabel": "siskinlik",
+      "expectedDepartment": "gastroenteroloji",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Karnımın bölgesi sanki bir balon gibi sertleşti ve çok rahatsız hissediyorum.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "siskinlik",
+      "symptomLabel": "siskinlik",
+      "expectedDepartment": "gastroenteroloji",
+      "mode": "negation",
+      "expectNoMatch": true,
+      "text": "Karnımda herhangi bir gerginlik veya doluluk hissi yaşamıyorum.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "seker_hastaligi",
+      "symptomLabel": "seker_hastaligi",
+      "expectedDepartment": "endokrinoloji",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Son zamanlarda çok sık idrara çıkıyorum ve ağzım sürekli kurumuş halde, vücudumdaki glikoz dengesinden endişeliyim.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "seker_hastaligi",
+      "symptomLabel": "seker_hastaligi",
+      "expectedDepartment": "endokrinoloji",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Açlık kan değerlerimin normalin üzerinde seyrettiğini fark ettim, bu durum metabolik bir rahatsızlığa işaret ediyor olabilir mi?",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "seker_hastaligi",
+      "symptomLabel": "seker_hastaligi",
+      "expectedDepartment": "endokrinoloji",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Sürekli bir halsizlik ve ağız kuruluğu yaşıyorum, vücudumun glikozu işleyemediğini düşünüyorum.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "seker_hastaligi",
+      "symptomLabel": "seker_hastaligi",
+      "expectedDepartment": "endokrinoloji",
+      "mode": "negation",
+      "expectNoMatch": true,
+      "text": "Kan değerlerimde herhangi bir glikoz düzensizliği veya metabolik bir sorun bulunmuyor.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "yuz_agrisi",
+      "symptomLabel": "yuz_agrisi",
+      "expectedDepartment": "kbb",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Burnumun kenarlarında ve gözlerimin altında baskı hissiyle beraber zonklayıcı bir sızı var.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "yuz_agrisi",
+      "symptomLabel": "yuz_agrisi",
+      "expectedDepartment": "kbb",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Şakaklarımdan başlayıp yanaklarıma doğru yayılan şiddetli bir rahatsızlık hissediyorum.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "yuz_agrisi",
+      "symptomLabel": "yuz_agrisi",
+      "expectedDepartment": "kbb",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Özellikle öne eğildiğimde kafatasımın ön kısmında ve yüz bölgemde yoğun bir sancı oluşuyor.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "yuz_agrisi",
+      "symptomLabel": "yuz_agrisi",
+      "expectedDepartment": "kbb",
+      "mode": "negation",
+      "expectNoMatch": true,
+      "text": "Yüzümde herhangi bir ağrı ya da sızı hissetmiyorum, sadece hafif bir baş dönmem var.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "bas_donmesi",
+      "symptomLabel": "bas_donmesi",
+      "expectedDepartment": "noroloji",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Ayağa kalktığım anda etrafımdaki her şeyin hızla hareket ettiğini hissediyorum.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "bas_donmesi",
+      "symptomLabel": "bas_donmesi",
+      "expectedDepartment": "noroloji",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Bir süredir ayakta durmakta zorlanıyorum, sanki sürekli bir tarafa doğru çekiliyormuşum gibi hissediyorum.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "bas_donmesi",
+      "symptomLabel": "bas_donmesi",
+      "expectedDepartment": "noroloji",
+      "mode": "negation",
+      "expectNoMatch": true,
+      "text": "Herhangi bir şekilde yerin ayağımın altından kayması veya çevrenin dönmesi gibi bir şikayetim yok.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "soguk_alginligi",
+      "symptomLabel": "soguk_alginligi",
+      "expectedDepartment": "aile_hekimi",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Boğazımda bir yanma var ve sürekli peçete kullanmak zorunda kalıyorum, sanırım vücudum direncini kaybetti.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "soguk_alginligi",
+      "symptomLabel": "soguk_alginligi",
+      "expectedDepartment": "aile_hekimi",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Vücudumda kırgınlık var, sürekli aksırıyorum ve burnum tıkalı, sanki yatak döşek yatacak gibiyim.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "soguk_alginligi",
+      "symptomLabel": "soguk_alginligi",
+      "expectedDepartment": "aile_hekimi",
+      "mode": "negation",
+      "expectNoMatch": true,
+      "text": "Ateşim veya herhangi bir nezle belirtim yok, sadece karnımda bir ağrı var.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "eklem_agrisi",
+      "symptomLabel": "eklem_agrisi",
+      "expectedDepartment": "ortopedi",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Dirseklerimdeki ve parmaklarımdaki huzursuz edici sancılar yüzünden günlük işlerimi yapmakta zorlanıyorum.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "eklem_agrisi",
+      "symptomLabel": "eklem_agrisi",
+      "expectedDepartment": "ortopedi",
+      "mode": "negation",
+      "expectNoMatch": true,
+      "text": "Vücudumun hiçbir yerinde herhangi bir sızlama veya hareket kısıtlılığı yaşamıyorum.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "bas_agrisi",
+      "symptomLabel": "bas_agrisi",
+      "expectedDepartment": "noroloji",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Şakaklarımda sanki bir mengene varmış gibi şiddetli bir baskı hissediyorum.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "bas_agrisi",
+      "symptomLabel": "bas_agrisi",
+      "expectedDepartment": "noroloji",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Gözlerimin arkasında başlayan ve tüm kafatasımı saran keskin bir sızı var.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "bas_agrisi",
+      "symptomLabel": "bas_agrisi",
+      "expectedDepartment": "noroloji",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Alnımda sürekli devam eden ve beni günlük işlerimden alıkoyan bir ağırlık mevcut.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "bas_agrisi",
+      "symptomLabel": "bas_agrisi",
+      "expectedDepartment": "noroloji",
+      "mode": "negation",
+      "expectNoMatch": true,
+      "text": "Şu an herhangi bir kafa rahatsızlığım veya sızım bulunmuyor.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "yeme_bozuklugu",
+      "symptomLabel": "yeme_bozuklugu",
+      "expectedDepartment": "psikiyatri",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Son zamanlarda aynaya baktığımda kendimi olduğumdan çok daha kilolu görüyorum ve bu yüzden öğünlerimi tamamen atlıyorum.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "yeme_bozuklugu",
+      "symptomLabel": "yeme_bozuklugu",
+      "expectedDepartment": "psikiyatri",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Yemek yedikten hemen sonra büyük bir suçluluk duyuyorum ve yediklerini vücudumdan uzaklaştırmak için kendimi zorluyorum.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "yeme_bozuklugu",
+      "symptomLabel": "yeme_bozuklugu",
+      "expectedDepartment": "psikiyatri",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "İştahım tamamen kapandı, lokma yutmak bile bana çok zor geliyor ve sürekli kalori hesabı yapmaktan hayatım kısıtlandı.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "konusma_bozuklugu",
+      "symptomLabel": "konusma_bozuklugu",
+      "expectedDepartment": "noroloji",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Düşüncelerimi ifade ederken doğru ifadeleri seçmekte zorlanıyorum, sanki dilim damağıma yapışıyor.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "konusma_bozuklugu",
+      "symptomLabel": "konusma_bozuklugu",
+      "expectedDepartment": "noroloji",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Bir şeyler anlatmaya çalışırken ağzımdan çıkan sesler birbirine karışıyor ve karşımdakiler beni anlamıyor.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "konusma_bozuklugu",
+      "symptomLabel": "konusma_bozuklugu",
+      "expectedDepartment": "noroloji",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Cümle kurarken zihnimdeki kelimeler bir türlü ağzımdan dökülmüyor, sanki bir tıkanıklık yaşıyorum.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "konusma_bozuklugu",
+      "symptomLabel": "konusma_bozuklugu",
+      "expectedDepartment": "noroloji",
+      "mode": "negation",
+      "expectNoMatch": true,
+      "text": "Konuşmamda herhangi bir aksaklık ya da ifade güçlüğü yaşamıyorum, gayet rahatım.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "endometriozis",
+      "symptomLabel": "endometriozis",
+      "expectedDepartment": "kadin_dogum",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Her ay regl dönemim geldiğinde karnımın alt kısmında dayanılmaz bir sancı hissediyorum ve günlük hayatımı sürdüremiyorum.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "endometriozis",
+      "symptomLabel": "endometriozis",
+      "expectedDepartment": "kadin_dogum",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Eşimle birlikte olurken sürekli bir acı duyuyorum, bu durum artık yaşam kalitemi ciddi anlamda düşürdü.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "endometriozis",
+      "symptomLabel": "endometriozis",
+      "expectedDepartment": "kadin_dogum",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Doktorlar yumurtalığımda koyu renkli bir kist olduğunu söylediler ve sürekli kasık bölgemde geçmeyen bir sızı var.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "endometriozis",
+      "symptomLabel": "endometriozis",
+      "expectedDepartment": "kadin_dogum",
+      "mode": "negation",
+      "expectNoMatch": true,
+      "text": "Adet dönemlerim oldukça rahat geçiyor, herhangi bir ağrı veya kist şikayetim bulunmuyor.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "bilek_agrisi",
+      "symptomLabel": "bilek_agrisi",
+      "expectedDepartment": "ortopedi",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Son birkaç gündür el ve kolumun birleştiği noktada şiddetli bir zonklama var.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "bilek_agrisi",
+      "symptomLabel": "bilek_agrisi",
+      "expectedDepartment": "ortopedi",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Eşyaları tutarken veya bileğimi bükerken ciddi bir acı yaşıyorum.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "bilek_agrisi",
+      "symptomLabel": "bilek_agrisi",
+      "expectedDepartment": "ortopedi",
+      "mode": "negation",
+      "expectNoMatch": true,
+      "text": "Elimde veya kolumun eklem bölgesinde herhangi bir ağrı ya da rahatsızlık hissetmiyorum.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "karin_agrisi",
+      "symptomLabel": "karin_agrisi",
+      "expectedDepartment": "dahiliye",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Karnımın orta kısmında batma hissi var ve bir türlü geçmiyor.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "karin_agrisi",
+      "symptomLabel": "karin_agrisi",
+      "expectedDepartment": "dahiliye",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Bölgemde şiddetli bir huzursuzluk ve kıvrandıran bir sızı hissediyorum.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "karin_agrisi",
+      "symptomLabel": "karin_agrisi",
+      "expectedDepartment": "dahiliye",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Sindirim sistemimde ciddi bir rahatsızlık ve baskı duyuyorum.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "karin_agrisi",
+      "symptomLabel": "karin_agrisi",
+      "expectedDepartment": "dahiliye",
+      "mode": "negation",
+      "expectNoMatch": true,
+      "text": "Herhangi bir karın bölgemde sızı veya rahatsızlık hissetmiyorum.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "kulak_agrisi",
+      "symptomLabel": "kulak_agrisi",
+      "expectedDepartment": "kbb",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Sağ tarafımdaki işitme organımda şiddetli bir sancı hissediyorum.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "kulak_agrisi",
+      "symptomLabel": "kulak_agrisi",
+      "expectedDepartment": "kbb",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Dün geceden beri işitme kanalında sanki bir şey batıyormuş gibi bir acı var.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "kulak_agrisi",
+      "symptomLabel": "kulak_agrisi",
+      "expectedDepartment": "kbb",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "İşitme organımın iç kısmında sürekli bir sızlama ve rahatsızlık duyuyorum.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "kulak_agrisi",
+      "symptomLabel": "kulak_agrisi",
+      "expectedDepartment": "kbb",
+      "mode": "negation",
+      "expectNoMatch": true,
+      "text": "İşitme organlarımda herhangi bir sızı veya acı hissetmiyorum.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "sosyal_fobi",
+      "symptomLabel": "sosyal_fobi",
+      "expectedDepartment": "psikiyatri",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "İnsanların olduğu ortamlara girdiğimde kendimi çok huzursuz hissediyorum ve sürekli izleniyormuşum gibi geliyor.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "sosyal_fobi",
+      "symptomLabel": "sosyal_fobi",
+      "expectedDepartment": "psikiyatri",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Kalabalık bir gruba hitap etmem gerektiğinde elim ayağım birbirine dolanıyor, konuşamıyorum.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "sosyal_fobi",
+      "symptomLabel": "sosyal_fobi",
+      "expectedDepartment": "psikiyatri",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Başkalarının beni yargılayacağı düşüncesiyle davetlere katılmaktan sürekli kaçınıyorum.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "sosyal_fobi",
+      "symptomLabel": "sosyal_fobi",
+      "expectedDepartment": "psikiyatri",
+      "mode": "negation",
+      "expectNoMatch": true,
+      "text": "İnsanlarla iletişim kurarken veya kalabalık yerlerde bulunurken herhangi bir gerginlik ya da çekince yaşamıyorum.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "safra_kesesi",
+      "symptomLabel": "safra_kesesi",
+      "expectedDepartment": "genel_cerrahi",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Özellikle ağır ve kızartmalı bir öğün tükettikten sonra karnımın sağ üst kısmında şiddetli bir sancı hissediyorum.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "safra_kesesi",
+      "symptomLabel": "safra_kesesi",
+      "expectedDepartment": "genel_cerrahi",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Kaburgalarımın hemen altında, sağ tarafta bıçak saplanır gibi bir ağrı var ve bu durum yemeklerden sonra daha da kötüleşiyor.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "safra_kesesi",
+      "symptomLabel": "safra_kesesi",
+      "expectedDepartment": "genel_cerrahi",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Sırtıma ve sağ omzuma vuran, geçmek bilmeyen bir karın ağrısı yaşıyorum, sanki içeride bir tıkanıklık varmış gibi hissediyorum.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "safra_kesesi",
+      "symptomLabel": "safra_kesesi",
+      "expectedDepartment": "genel_cerrahi",
+      "mode": "negation",
+      "expectNoMatch": true,
+      "text": "Karnımın sağ üst tarafında herhangi bir ağrı veya yemeklerden sonra gelişen bir rahatsızlık hissetmiyorum.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "oksuruk",
+      "symptomLabel": "oksuruk",
+      "expectedDepartment": "gogus",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Gece yattığımda nefes borumda bir rahatsızlık hissediyorum ve sürekli tıkanarak uyanıyorum.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "oksuruk",
+      "symptomLabel": "oksuruk",
+      "expectedDepartment": "gogus",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Göğsümde bir doluluk var, sürekli bir şeyler çıkarma ihtiyacı duyuyorum ve sesim çıkmıyor.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "oksuruk",
+      "symptomLabel": "oksuruk",
+      "expectedDepartment": "gogus",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Bir haftadır geçmeyen bir rahatsızlığım var, sürekli bir şeyler boğazımı tırmalıyor ve kendimi durduramıyorum.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "oksuruk",
+      "symptomLabel": "oksuruk",
+      "expectedDepartment": "gogus",
+      "mode": "negation",
+      "expectNoMatch": true,
+      "text": "Nefes alıp vermemde herhangi bir sorun yok, sadece hafif bir halsizlik hissediyorum.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "aritmi",
+      "symptomLabel": "aritmi",
+      "expectedDepartment": "kardiyoloji",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Göğsümde sanki kalbim bir an durup sonra tekrar hızla çalışıyormuş gibi bir his var.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "aritmi",
+      "symptomLabel": "aritmi",
+      "expectedDepartment": "kardiyoloji",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Bazen göğüs kafesimin içinde sanki bir şeyler takılıyormuş veya sekteye uğruyormuş gibi hissediyorum.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "aritmi",
+      "symptomLabel": "aritmi",
+      "expectedDepartment": "kardiyoloji",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Kalp atışlarımın düzeni sürekli değişiyor, bazen çok hızlı bazen de çok yavaş vuruyor.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "aritmi",
+      "symptomLabel": "aritmi",
+      "expectedDepartment": "kardiyoloji",
+      "mode": "negation",
+      "expectNoMatch": true,
+      "text": "Kalp atışlarımda herhangi bir düzensizlik veya tuhaflık hissetmiyorum, gayet normal seyrediyor.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "kabizlik",
+      "symptomLabel": "kabizlik",
+      "expectedDepartment": "gastroenteroloji",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Günlerdir bağırsak hareketlerimde ciddi bir yavaşlama var ve dışkılamakta çok zorlanıyorum.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "kabizlik",
+      "symptomLabel": "kabizlik",
+      "expectedDepartment": "gastroenteroloji",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Bir haftadır normal düzenim bozuldu, ne kadar uğraşsam da bağırsaklarımı boşaltamıyorum.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "kabizlik",
+      "symptomLabel": "kabizlik",
+      "expectedDepartment": "gastroenteroloji",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Dışkım çok katı olduğu için lavaboya gitmek benim için oldukça sancılı ve zahmetli bir sürece dönüştü.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "kas_agrisi_genel",
+      "symptomLabel": "kas_agrisi_genel",
+      "expectedDepartment": "dahiliye",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Son birkaç gündür sanki üzerimden kamyon geçmiş gibi her yerim sızlıyor.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "kas_agrisi_genel",
+      "symptomLabel": "kas_agrisi_genel",
+      "expectedDepartment": "dahiliye",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Bacaklarımda ve kollarımda tarif etmesi zor bir kırgınlık ve çekilme hissi var.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "kas_agrisi_genel",
+      "symptomLabel": "kas_agrisi_genel",
+      "expectedDepartment": "dahiliye",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Sabahları yataktan kalktığımda sanki bütün eklemlerim ve dokularım birbirine yapışmış gibi acı çekiyorum.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "kas_agrisi_genel",
+      "symptomLabel": "kas_agrisi_genel",
+      "expectedDepartment": "dahiliye",
+      "mode": "negation",
+      "expectNoMatch": true,
+      "text": "Herhangi bir yerimde sızı veya fiziksel bir ağrı hissetmiyorum, sadece biraz halsizim.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "boyun_agrisi",
+      "symptomLabel": "boyun_agrisi",
+      "expectedDepartment": "ortopedi",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Sabah uyandığımdan beri başımı sağa sola çevirmekte çok zorlanıyorum, sanki bir şey saplanıyor.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "boyun_agrisi",
+      "symptomLabel": "boyun_agrisi",
+      "expectedDepartment": "ortopedi",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Omurgamın üst kısmında, kafatasımın hemen altında şiddetli bir sızı hissediyorum.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "boyun_agrisi",
+      "symptomLabel": "boyun_agrisi",
+      "expectedDepartment": "ortopedi",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Başımı hareket ettirdiğimde omuzlarıma doğru yayılan bir gerginlik ve acı yaşıyorum.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "boyun_agrisi",
+      "symptomLabel": "boyun_agrisi",
+      "expectedDepartment": "ortopedi",
+      "mode": "negation",
+      "expectNoMatch": true,
+      "text": "Sırtımda ve omuzlarımda ciddi bir rahatsızlık var ama başımı destekleyen bölgede herhangi bir sızı hissetmiyorum.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "kilo_kaybi",
+      "symptomLabel": "kilo_kaybi",
+      "expectedDepartment": "dahiliye",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Son birkaç aydır hiçbir diyet yapmamama rağmen tartıda sürekli daha düşük rakamlar görüyorum.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "kilo_kaybi",
+      "symptomLabel": "kilo_kaybi",
+      "expectedDepartment": "dahiliye",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Üzerimdeki kıyafetler artık bol gelmeye başladı, vücudumun gözle görülür şekilde küçüldüğünü fark ediyorum.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "kilo_kaybi",
+      "symptomLabel": "kilo_kaybi",
+      "expectedDepartment": "dahiliye",
+      "mode": "negation",
+      "expectNoMatch": true,
+      "text": "Vücut ağırlığımda herhangi bir azalma söz konusu değil, aksine kilom gayet stabil seyrediyor.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "susuzluk_cok_idrar",
+      "symptomLabel": "susuzluk_cok_idrar",
+      "expectedDepartment": "endokrinoloji",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Son günlerde sürekli ağız kuruluğu yaşıyorum ve tuvalete çıkma sıklığımda ciddi bir artış oldu.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "susuzluk_cok_idrar",
+      "symptomLabel": "susuzluk_cok_idrar",
+      "expectedDepartment": "endokrinoloji",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Gün boyu ne kadar su tüketirsem tüketeyim susuzluğum geçmiyor ve sürekli idrara çıkma ihtiyacı duyuyorum.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "susuzluk_cok_idrar",
+      "symptomLabel": "susuzluk_cok_idrar",
+      "expectedDepartment": "endokrinoloji",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Sürekli bir şeyler içme isteğiyle uyanıyorum ve gün içinde idrar miktarının normalden çok daha fazla olduğunu fark ettim.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "susuzluk_cok_idrar",
+      "symptomLabel": "susuzluk_cok_idrar",
+      "expectedDepartment": "endokrinoloji",
+      "mode": "negation",
+      "expectNoMatch": true,
+      "text": "Su tüketimim normal seviyelerde ve idrara çıkma sıklığımda herhangi bir değişiklik gözlemlemedim.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "bipolar_bozukluk",
+      "symptomLabel": "bipolar_bozukluk",
+      "expectedDepartment": "psikiyatri",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Duygularım bir hız treni gibi; bir gün her şeyi yapabilecekmişim gibi çok neşeliyim, ertesi gün ise hiçbir şeyden zevk alamaz hale geliyorum.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "bipolar_bozukluk",
+      "symptomLabel": "bipolar_bozukluk",
+      "expectedDepartment": "psikiyatri",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Zihnimin bir anda çok hızlandığı ve yerimde duramadığım dönemlerin ardından, uzun süren yoğun bir karamsarlık ve isteksizlik süreci yaşıyorum.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "bipolar_bozukluk",
+      "symptomLabel": "bipolar_bozukluk",
+      "expectedDepartment": "psikiyatri",
+      "mode": "negation",
+      "expectNoMatch": true,
+      "text": "Ruh halimde uçlarda yaşanan ani değişimler veya aşırı coşkulu dönemler gibi bir sorunum kesinlikle yok.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "sac_dokulmesi",
+      "symptomLabel": "sac_dokulmesi",
+      "expectedDepartment": "dermatoloji",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Yastığımda her sabah çok sayıda saç teli buluyorum, bu durum beni endişelendiriyor.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "sac_dokulmesi",
+      "symptomLabel": "sac_dokulmesi",
+      "expectedDepartment": "dermatoloji",
+      "mode": "negation",
+      "expectNoMatch": true,
+      "text": "Saçlarımda herhangi bir azalma veya dökülme problemi yaşamıyorum.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "cilt_yanik",
+      "symptomLabel": "cilt_yanik",
+      "expectedDepartment": "dermatoloji",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Dün plajda çok fazla kaldım, şu an vücudumun üst kısmı kıpkırmızı ve dokunduğumda acı veriyor.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "cilt_yanik",
+      "symptomLabel": "cilt_yanik",
+      "expectedDepartment": "dermatoloji",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Elimi yanlışlıkla sıcak tencereye değdirdim, bölgede beyaz bir tabaka oluştu ve çok sızlıyor.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "cilt_yanik",
+      "symptomLabel": "cilt_yanik",
+      "expectedDepartment": "dermatoloji",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Kaynar su döküldüğü için kolumda içi sıvı dolu küçük şişlikler meydana geldi.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "cilt_yanik",
+      "symptomLabel": "cilt_yanik",
+      "expectedDepartment": "dermatoloji",
+      "mode": "negation",
+      "expectNoMatch": true,
+      "text": "Vücudumun herhangi bir yerinde sıcak bir maddeyle temas sonucu oluşan bir yara veya tahriş bulunmuyor.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "urtiker",
+      "symptomLabel": "urtiker",
+      "expectedDepartment": "dermatoloji",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Vücudumun çeşitli yerlerinde aniden beliren, çok şiddetli kaşınan kırmızı şişlikler oluştu.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "urtiker",
+      "symptomLabel": "urtiker",
+      "expectedDepartment": "dermatoloji",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Cildimde sanki bir şey ısırmış gibi aniden ortaya çıkan ve bir süre sonra başka yere kayan kızarık kabartılar var.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "urtiker",
+      "symptomLabel": "urtiker",
+      "expectedDepartment": "dermatoloji",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Deri yüzeyimde yama şeklinde yayılan, dokununca sıcaklık hissettiğim kaşıntılı döküntülerden şikayetçiyim.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "urtiker",
+      "symptomLabel": "urtiker",
+      "expectedDepartment": "dermatoloji",
+      "mode": "negation",
+      "expectNoMatch": true,
+      "text": "Cildimde herhangi bir kabarma veya kızarıklık gibi bir durum gözlemlemedim.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "ms_belirtisi",
+      "symptomLabel": "ms_belirtisi",
+      "expectedDepartment": "noroloji",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Son zamanlarda başımı öne eğdiğimde omurgamdan aşağı doğru aniden yayılan bir sızı hissediyorum.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "ms_belirtisi",
+      "symptomLabel": "ms_belirtisi",
+      "expectedDepartment": "noroloji",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Bacaklarımda sık sık geçici hissizlik ve yürümemi zorlaştıran bir kuvvetsizlik yaşıyorum.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "ms_belirtisi",
+      "symptomLabel": "ms_belirtisi",
+      "expectedDepartment": "noroloji",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Bir gözümde aniden gelişen bulanıklık ve vücudumun çeşitli yerlerinde tekrarlayan karıncalanmalar başladı.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "ms_belirtisi",
+      "symptomLabel": "ms_belirtisi",
+      "expectedDepartment": "noroloji",
+      "mode": "negation",
+      "expectNoMatch": true,
+      "text": "Vücudumda herhangi bir uyuşma, güç kaybı veya ani elektriklenme gibi şikayetlerim bulunmuyor.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "cilt_sisligi",
+      "symptomLabel": "cilt_sisligi",
+      "expectedDepartment": "dermatoloji",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Vücudumun çeşitli yerlerinde aniden beliren sert ve ağrılı yumrular fark ettim.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "cilt_sisligi",
+      "symptomLabel": "cilt_sisligi",
+      "expectedDepartment": "dermatoloji",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Bacağımın üzerinde dokunduğumda elime gelen, dışarıdan da belirgin bir kabarıklık oluştu.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "cilt_sisligi",
+      "symptomLabel": "cilt_sisligi",
+      "expectedDepartment": "dermatoloji",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Cildimin altında sanki bir kitle varmış gibi bir dolgunluk hissediyorum ve bölge oldukça hassas.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "cilt_sisligi",
+      "symptomLabel": "cilt_sisligi",
+      "expectedDepartment": "dermatoloji",
+      "mode": "negation",
+      "expectNoMatch": true,
+      "text": "Tenimde herhangi bir şişkinlik veya anormal bir kabarıklık gözlemlemedim.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "idrar_yapamama",
+      "symptomLabel": "idrar_yapamama",
+      "expectedDepartment": "uroloji",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Mesanemin dolu olduğunu hissediyorum ama ne kadar zorlasam da bir türlü boşaltamıyorum.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "idrar_yapamama",
+      "symptomLabel": "idrar_yapamama",
+      "expectedDepartment": "uroloji",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Saatlerdir tuvalete gitme ihtiyacı duyuyorum fakat idrar kanalım sanki tamamen kapalı gibi, hiçbir şekilde çıkış olmuyor.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "idrar_yapamama",
+      "symptomLabel": "idrar_yapamama",
+      "expectedDepartment": "uroloji",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Alt tarafımda ciddi bir baskı var, idrarımı yapmaya çalışıyorum ama vücudumdan dışarıya hiçbir sıvı akışı gerçekleşmiyor.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "idrar_yapamama",
+      "symptomLabel": "idrar_yapamama",
+      "expectedDepartment": "uroloji",
+      "mode": "negation",
+      "expectNoMatch": true,
+      "text": "Tuvalete çıkma konusunda herhangi bir sıkıntım yok, idrarımı gayet rahat bir şekilde yapabiliyorum.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "balgam",
+      "symptomLabel": "balgam",
+      "expectedDepartment": "gogus",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Öksürdüğümde ağzıma yoğun ve koyu kıvamlı bir sıvı geliyor.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "balgam",
+      "symptomLabel": "balgam",
+      "expectedDepartment": "gogus",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Sabahları uyandığımda boğazımda biriken o yapışkan maddeyi dışarı atmak zorunda kalıyorum.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "balgam",
+      "symptomLabel": "balgam",
+      "expectedDepartment": "gogus",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Nefes alırken hırıltı duyuyorum ve öksürükle birlikte akciğerlerimden gelen bir şeyler çıkarıyorum.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "balgam",
+      "symptomLabel": "balgam",
+      "expectedDepartment": "gogus",
+      "mode": "negation",
+      "expectNoMatch": true,
+      "text": "Öksürüyorum ama herhangi bir şekilde tükürüğümle birlikte bir sıvı gelmiyor.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "tirnak_sorunu",
+      "symptomLabel": "tirnak_sorunu",
+      "expectedDepartment": "dermatoloji",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Ayak parmağımdaki tırnağımın rengi tamamen değişti ve kalınlaşmaya başladı.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "tirnak_sorunu",
+      "symptomLabel": "tirnak_sorunu",
+      "expectedDepartment": "dermatoloji",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Tırnaklarımın üzerinde beyaz lekeler oluştu ve sürekli olarak kat kat ayrılıyorlar.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "tirnak_sorunu",
+      "symptomLabel": "tirnak_sorunu",
+      "expectedDepartment": "dermatoloji",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Tırnağımın kenarındaki deri çok şişti ve dokunduğumda şiddetli bir acı hissediyorum.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "tirnak_sorunu",
+      "symptomLabel": "tirnak_sorunu",
+      "expectedDepartment": "dermatoloji",
+      "mode": "negation",
+      "expectNoMatch": true,
+      "text": "Tırnaklarımda herhangi bir şekil bozukluğu veya renk değişimi gibi bir şikayetim yok.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "nefes_darligi",
+      "symptomLabel": "nefes_darligi",
+      "expectedDepartment": "gogus",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Merdiven çıkarken sanki ciğerlerime hava gitmiyor, tıkanıp kalıyorum.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "nefes_darligi",
+      "symptomLabel": "nefes_darligi",
+      "expectedDepartment": "gogus",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Yatarken sanki göğsümün üzerinde ağır bir yük varmış gibi hissediyorum ve zorlanıyorum.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "nefes_darligi",
+      "symptomLabel": "nefes_darligi",
+      "expectedDepartment": "gogus",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Derin bir nefes almaya çalıştığımda sanki akciğerlerim tam açılmıyor gibi bir his yaşıyorum.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "nefes_darligi",
+      "symptomLabel": "nefes_darligi",
+      "expectedDepartment": "gogus",
+      "mode": "negation",
+      "expectNoMatch": true,
+      "text": "Herhangi bir solunum sıkıntısı çekmiyorum, rahatça nefes alabiliyorum.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "felc",
+      "symptomLabel": "felc",
+      "expectedDepartment": "noroloji",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Bir anda ağzım kaydı ve kelimeleri düzgün bir şekilde telaffuz edemez hale geldim.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "felc",
+      "symptomLabel": "felc",
+      "expectedDepartment": "noroloji",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Sol bacağım ve kolum tamamen güçsüzleşti, yerimden kalkmaya çalıştığımda yere yığılıyorum.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "felc",
+      "symptomLabel": "felc",
+      "expectedDepartment": "noroloji",
+      "mode": "negation",
+      "expectNoMatch": true,
+      "text": "Vücudumun herhangi bir yerinde his kaybı ya da hareket kısıtlılığı gibi bir durum yaşamıyorum.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "bagisiklik_sorunu",
+      "symptomLabel": "bagisiklik_sorunu",
+      "expectedDepartment": "dahiliye",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Vücut direncim çok düştü, kış boyunca bir türlü iyileşemiyorum ve sürekli ateşleniyorum.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "bagisiklik_sorunu",
+      "symptomLabel": "bagisiklik_sorunu",
+      "expectedDepartment": "dahiliye",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Son zamanlarda vücudumda açıklanamayan döküntüler çıkıyor ve eklemlerimde şiddetli ağrılar hissediyorum.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "bagisiklik_sorunu",
+      "symptomLabel": "bagisiklik_sorunu",
+      "expectedDepartment": "dahiliye",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Ne zaman bir hastalık geçse mutlaka bana bulaşıyor, sanki vücudum mikroplara karşı hiçbir savunma yapamıyor.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "bagisiklik_sorunu",
+      "symptomLabel": "bagisiklik_sorunu",
+      "expectedDepartment": "dahiliye",
+      "mode": "negation",
+      "expectNoMatch": true,
+      "text": "Bağışıklık sistemimle ilgili herhangi bir şikayetim yok, sadece hafif bir baş ağrısı yaşıyorum.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "alerji",
+      "symptomLabel": "alerji",
+      "expectedDepartment": "dermatoloji",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Vücudumun çeşitli bölgelerinde aniden beliren kabarcıklar ve şiddetli bir yanma hissi yaşıyorum.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "alerji",
+      "symptomLabel": "alerji",
+      "expectedDepartment": "dermatoloji",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Yeni kullandığım bir kremden sonra cildimde yaygın bir hassasiyet ve pütürlü bir yapı oluştu.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "alerji",
+      "symptomLabel": "alerji",
+      "expectedDepartment": "dermatoloji",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Tenimde oluşan bu kırmızı lekeler gün boyu beni çok rahatsız ediyor ve sürekli kaşınma isteği uyandırıyor.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "alerji",
+      "symptomLabel": "alerji",
+      "expectedDepartment": "dermatoloji",
+      "mode": "negation",
+      "expectNoMatch": true,
+      "text": "Cildimde herhangi bir bozulma veya sıra dışı bir tepkime gözlemlemedim.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "periferik_noropati",
+      "symptomLabel": "periferik_noropati",
+      "expectedDepartment": "noroloji",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Ayak parmak uçlarımda sanki iğne batıyormuş gibi bir his var ve bazen sanki eldiven giymişim gibi ellerimde bir tuhaflık hissediyorum.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "periferik_noropati",
+      "symptomLabel": "periferik_noropati",
+      "expectedDepartment": "noroloji",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Son zamanlarda ayak tabanlarımda geçmeyen bir sızı ve karıncalanma şikayetiyle uyuyamıyorum.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "periferik_noropati",
+      "symptomLabel": "periferik_noropati",
+      "expectedDepartment": "noroloji",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Bacaklarımda ve kollarımda sürekli bir uyuşma ve sanki cildim ateşle temas ediyormuş gibi bir sızlama mevcut.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "periferik_noropati",
+      "symptomLabel": "periferik_noropati",
+      "expectedDepartment": "noroloji",
+      "mode": "negation",
+      "expectNoMatch": true,
+      "text": "Ellerimde veya ayaklarımda herhangi bir karıncalanma, yanma ya da his kaybı gibi bir durum yaşamıyorum.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "bobrek_tasi",
+      "symptomLabel": "bobrek_tasi",
+      "expectedDepartment": "uroloji",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Belimin sağ tarafında aniden başlayan ve kasıklarıma doğru vuran şiddetli bir sızı hissediyorum.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "bobrek_tasi",
+      "symptomLabel": "bobrek_tasi",
+      "expectedDepartment": "uroloji",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "İdrarımı yaparken zorlanıyorum ve karnımın alt kısmında bıçak saplanır gibi keskin bir acı var.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "bobrek_tasi",
+      "symptomLabel": "bobrek_tasi",
+      "expectedDepartment": "uroloji",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Sırtımda kıvrandıran bir ağrı var, sanki içimde bir şey hareket ediyor ve acısı bacaklarıma kadar iniyor.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "bobrek_tasi",
+      "symptomLabel": "bobrek_tasi",
+      "expectedDepartment": "uroloji",
+      "mode": "negation",
+      "expectNoMatch": true,
+      "text": "Belimdeki ağrının herhangi bir taş oluşumuyla ilgili olmadığını, sadece yanlış bir hareket sonucu kas tutulması yaşadığımı düşünüyorum.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "crohn_kolit",
+      "symptomLabel": "crohn_kolit",
+      "expectedDepartment": "gastroenteroloji",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Aylardır süren ve bir türlü geçmek bilmeyen, dışkımda kanla beraber seyreden şiddetli karın ağrılarım var.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "crohn_kolit",
+      "symptomLabel": "crohn_kolit",
+      "expectedDepartment": "gastroenteroloji",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Sürekli tuvalete çıkma ihtiyacı hissediyorum ve dışkılama sırasında kan görmekten çok endişeleniyorum.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "crohn_kolit",
+      "symptomLabel": "crohn_kolit",
+      "expectedDepartment": "gastroenteroloji",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Sindirim sistemimdeki bu bitmek bilmeyen iltihaplanma süreci nedeniyle ciddi kilo kaybı ve halsizlik yaşıyorum.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "crohn_kolit",
+      "symptomLabel": "crohn_kolit",
+      "expectedDepartment": "gastroenteroloji",
+      "mode": "negation",
+      "expectNoMatch": true,
+      "text": "Dışkımda herhangi bir kanama veya bağırsaklarımda kronik bir iltihaplanma şikayetim kesinlikle bulunmuyor.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "kalp_yetmezligi",
+      "symptomLabel": "kalp_yetmezligi",
+      "expectedDepartment": "kardiyoloji",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Geceleri düz yattığımda sanki boğuluyormuşum gibi hissediyorum, bu yüzden yastık sayımı artırmak zorunda kalıyorum.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "kalp_yetmezligi",
+      "symptomLabel": "kalp_yetmezligi",
+      "expectedDepartment": "kardiyoloji",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Son zamanlarda ayak bileklerimde belirgin bir şişlik oluştu ve merdiven çıkarken nefesim yetmiyor.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "kalp_yetmezligi",
+      "symptomLabel": "kalp_yetmezligi",
+      "expectedDepartment": "kardiyoloji",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Uzanır uzanmaz göğsümde bir baskı hissediyorum ve nefes almakta zorlandığım için hemen oturma ihtiyacı duyuyorum.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "kalp_yetmezligi",
+      "symptomLabel": "kalp_yetmezligi",
+      "expectedDepartment": "kardiyoloji",
+      "mode": "negation",
+      "expectNoMatch": true,
+      "text": "Yatarken nefes darlığı çekmiyorum, rahatça düz bir şekilde uyuyabiliyorum.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "madde_kullanimi",
+      "symptomLabel": "madde_kullanimi",
+      "expectedDepartment": "psikiyatri",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Son zamanlarda kontrolümü kaybedip sürekli keyif verici maddelere yöneliyorum, bu durumdan kurtulmak istiyorum.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "madde_kullanimi",
+      "symptomLabel": "madde_kullanimi",
+      "expectedDepartment": "psikiyatri",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Günlük hayatımı sürdürebilmek için sürekli o maddeleri tüketmem gerekiyor, kendimi durduramıyorum.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "madde_kullanimi",
+      "symptomLabel": "madde_kullanimi",
+      "expectedDepartment": "psikiyatri",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Zihnimi boşaltmak için sürekli farklı kimyasal maddeler kullanıyorum ve artık kendi başıma bırakamıyorum.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "madde_kullanimi",
+      "symptomLabel": "madde_kullanimi",
+      "expectedDepartment": "psikiyatri",
+      "mode": "negation",
+      "expectNoMatch": true,
+      "text": "Hayatımda hiçbir zaman herhangi bir zararlı madde veya bağımlılık yapıcı ürün kullanmadım.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "periferik_damar",
+      "symptomLabel": "periferik_damar",
+      "expectedDepartment": "kardiyoloji",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Birkaç yüz metre yürüdükten sonra baldırlarımda şiddetli bir sızı başlıyor, biraz dinlenince hemen rahatlıyorum.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "periferik_damar",
+      "symptomLabel": "periferik_damar",
+      "expectedDepartment": "kardiyoloji",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Sol ayağımda sürekli bir üşüme ve karıncalanma hissi var, sanki kan gitmiyormuş gibi hissediyorum.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "periferik_damar",
+      "symptomLabel": "periferik_damar",
+      "expectedDepartment": "kardiyoloji",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Yürüyüş yaparken bacaklarıma kramp giriyor ve bu durum hareket etmemi imkansız hale getiriyor.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "periferik_damar",
+      "symptomLabel": "periferik_damar",
+      "expectedDepartment": "kardiyoloji",
+      "mode": "negation",
+      "expectNoMatch": true,
+      "text": "Yürürken bacaklarımda herhangi bir ağrı veya kramp hissetmiyorum, damarlarımla ilgili bir şikayetim yok.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "vajinal_kanama",
+      "symptomLabel": "vajinal_kanama",
+      "expectedDepartment": "kadin_dogum",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Son birkaç gündür döngümün dışında bir lekelenme yaşıyorum.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "vajinal_kanama",
+      "symptomLabel": "vajinal_kanama",
+      "expectedDepartment": "kadin_dogum",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Cinsel birliktelikten hemen sonra iç çamaşırımda kırmızı bir sıvı fark ettim.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "vajinal_kanama",
+      "symptomLabel": "vajinal_kanama",
+      "expectedDepartment": "kadin_dogum",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Menopoza gireli yıllar olmasına rağmen bugün tekrar kanamam başladı.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "vajinal_kanama",
+      "symptomLabel": "vajinal_kanama",
+      "expectedDepartment": "kadin_dogum",
+      "mode": "negation",
+      "expectNoMatch": true,
+      "text": "Şu an herhangi bir kanama şikayetim yok, sadece karın ağrım var.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "sik_idrar",
+      "symptomLabel": "sik_idrar",
+      "expectedDepartment": "uroloji",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Son günlerde tuvalet ihtiyacım normalden çok daha fazla arttı, neredeyse yarım saatte bir lavaboya koşuyorum.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "sik_idrar",
+      "symptomLabel": "sik_idrar",
+      "expectedDepartment": "uroloji",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Gün içinde çok fazla sıvı tüketmediğim halde sürekli kendimi tuvalette buluyorum.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "sik_idrar",
+      "symptomLabel": "sik_idrar",
+      "expectedDepartment": "uroloji",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Uykuya daldıktan kısa bir süre sonra tekrar uyanıp idrar yapma ihtiyacı duyuyorum, bu durum artık uykularımı bölmeye başladı.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "sik_idrar",
+      "symptomLabel": "sik_idrar",
+      "expectedDepartment": "uroloji",
+      "mode": "negation",
+      "expectNoMatch": true,
+      "text": "Tuvalete gitme sıklığımda herhangi bir artış yok, eskisi gibi normal düzenimde devam ediyorum.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "ayak_agrisi",
+      "symptomLabel": "ayak_agrisi",
+      "expectedDepartment": "ortopedi",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Sabahları yataktan kalktığımda adım atmakta zorlanıyorum, sanki ayağımın altı batıyor.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "ayak_agrisi",
+      "symptomLabel": "ayak_agrisi",
+      "expectedDepartment": "ortopedi",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Gün boyu ayakta kaldıktan sonra alt uzuvlarımda zonklayıcı bir sızı hissediyorum.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "ayak_agrisi",
+      "symptomLabel": "ayak_agrisi",
+      "expectedDepartment": "ortopedi",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Yürürken bileklerimin üzerinde yoğun bir baskı ve acı duyuyorum.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "ayak_agrisi",
+      "symptomLabel": "ayak_agrisi",
+      "expectedDepartment": "ortopedi",
+      "mode": "negation",
+      "expectNoMatch": true,
+      "text": "Bacaklarımda veya ayak bölgemde herhangi bir rahatsızlık ya da acı hissetmiyorum.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "dis_agrisi",
+      "symptomLabel": "dis_agrisi",
+      "expectedDepartment": "dis",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Azı dişimde yemek yerken keskin bir sızı hissediyorum.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "dis_agrisi",
+      "symptomLabel": "dis_agrisi",
+      "expectedDepartment": "dis",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Çenemin sağ tarafında sürekli bir sancı var, gece uyutmuyor.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "dis_agrisi",
+      "symptomLabel": "dis_agrisi",
+      "expectedDepartment": "dis",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Sıcak bir şeyler içtiğimde dişimde şiddetli bir sızlama oluyor.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "dis_agrisi",
+      "symptomLabel": "dis_agrisi",
+      "expectedDepartment": "dis",
+      "mode": "negation",
+      "expectNoMatch": true,
+      "text": "Dişlerimde herhangi bir sızı veya rahatsızlık hissetmiyorum.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "cinsel_saglik",
+      "symptomLabel": "cinsel_saglik",
+      "expectedDepartment": "uroloji",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Partnerimle olan birlikteliklerimde bir süredir beklediğim performansı sergileyemiyorum.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "cinsel_saglik",
+      "symptomLabel": "cinsel_saglik",
+      "expectedDepartment": "uroloji",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Yatak odasında kendimi eskisi gibi hissetmiyorum, fiziksel olarak bir yetersizlik yaşıyorum.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "cinsel_saglik",
+      "symptomLabel": "cinsel_saglik",
+      "expectedDepartment": "uroloji",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "İlişki sırasında vücudumun tepki vermemesi beni oldukça endişelendiriyor.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "cinsel_saglik",
+      "symptomLabel": "cinsel_saglik",
+      "expectedDepartment": "uroloji",
+      "mode": "negation",
+      "expectNoMatch": true,
+      "text": "Özel hayatımda veya fiziksel yakınlık konusunda herhangi bir şikayetim ya da sıkıntım bulunmuyor.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "el_titremes",
+      "symptomLabel": "el_titremes",
+      "expectedDepartment": "noroloji",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Bardak tutarken parmaklarımın kontrolsüzce hareket ettiğini fark ediyorum.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "el_titremes",
+      "symptomLabel": "el_titremes",
+      "expectedDepartment": "noroloji",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Bir şeyler yazmaya çalışırken kalem elimde sürekli hareket ediyor, sabit tutamıyorum.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "el_titremes",
+      "symptomLabel": "el_titremes",
+      "expectedDepartment": "noroloji",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Gün içinde aniden uzuvlarımda istemsiz bir hareketlenme başlıyor.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "el_titremes",
+      "symptomLabel": "el_titremes",
+      "expectedDepartment": "noroloji",
+      "mode": "negation",
+      "expectNoMatch": true,
+      "text": "Vücudumun hiçbir yerinde herhangi bir sarsılma veya kontrol kaybı yaşamıyorum.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "kasik_agrisi",
+      "symptomLabel": "kasik_agrisi",
+      "expectedDepartment": "uroloji",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Vücudumun alt kısmında, göbek deliğimin altında kalan bölgede batma tarzında bir acı var.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "kasik_agrisi",
+      "symptomLabel": "kasik_agrisi",
+      "expectedDepartment": "uroloji",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Erkeklik organımın yan tarafındaki bölgede günlerdir geçmeyen bir huzursuzluk ve ağrı mevcut.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "kasik_agrisi",
+      "symptomLabel": "kasik_agrisi",
+      "expectedDepartment": "uroloji",
+      "mode": "negation",
+      "expectNoMatch": true,
+      "text": "Alt karın bölgemde veya bacak aramda herhangi bir sızı ya da rahatsızlık hissetmiyorum.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "anevrizma_belirti",
+      "symptomLabel": "anevrizma_belirti",
+      "expectedDepartment": "kardiyoloji",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Göğsümün içinden sırtıma doğru yayılan, sanki bir şeylerin koptuğunu hissettiren çok şiddetli bir sancı başladı.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "anevrizma_belirti",
+      "symptomLabel": "anevrizma_belirti",
+      "expectedDepartment": "kardiyoloji",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Karın bölgemde dışarıdan da fark edilebilecek kadar güçlü bir zonklama ve buna eşlik eden bel ağrım var.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "anevrizma_belirti",
+      "symptomLabel": "anevrizma_belirti",
+      "expectedDepartment": "kardiyoloji",
+      "mode": "negation",
+      "expectNoMatch": true,
+      "text": "Karnımda herhangi bir atma veya göğsümde yırtılma gibi bir şikayetim kesinlikle yok.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "bacak_uyusma",
+      "symptomLabel": "bacak_uyusma",
+      "expectedDepartment": "noroloji",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Dizimden aşağısında sanki kan dolaşımı durmuş gibi bir his var.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "bacak_uyusma",
+      "symptomLabel": "bacak_uyusma",
+      "expectedDepartment": "noroloji",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Sağ alt tarafımda zaman zaman geçici hissizlik ve sızlama oluyor.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "bacak_uyusma",
+      "symptomLabel": "bacak_uyusma",
+      "expectedDepartment": "noroloji",
+      "mode": "negation",
+      "expectNoMatch": true,
+      "text": "Alt uzuvlarımda herhangi bir his kaybı veya karıncalanma şikayetim bulunmuyor.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "obsesif_kompulsif",
+      "symptomLabel": "obsesif_kompulsif",
+      "expectedDepartment": "psikiyatri",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Aklımda sürekli aynı kötü senaryolar dönüp duruyor ve bunları kafamdan atamıyorum.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "obsesif_kompulsif",
+      "symptomLabel": "obsesif_kompulsif",
+      "expectedDepartment": "psikiyatri",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Evden çıkarken ocağı veya kapıyı kilitlediğimden emin olamayıp defalarca geri dönüp bakmak zorunda kalıyorum.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "obsesif_kompulsif",
+      "symptomLabel": "obsesif_kompulsif",
+      "expectedDepartment": "psikiyatri",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Zihnimdeki huzursuz edici fikirleri susturabilmek için sürekli aynı hareketleri yapma ihtiyacı duyuyorum.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "obsesif_kompulsif",
+      "symptomLabel": "obsesif_kompulsif",
+      "expectedDepartment": "psikiyatri",
+      "mode": "negation",
+      "expectNoMatch": true,
+      "text": "Zihnimde beni rahatsız eden veya sürekli tekrarlanan herhangi bir düşünce yapısı bulunmuyor.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "sivilce_akne",
+      "symptomLabel": "sivilce_akne",
+      "expectedDepartment": "dermatoloji",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Özellikle çene bölgemde geçmek bilmeyen deri altı şişliklerinden şikayetçiyim.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "sivilce_akne",
+      "symptomLabel": "sivilce_akne",
+      "expectedDepartment": "dermatoloji",
+      "mode": "negation",
+      "expectNoMatch": true,
+      "text": "Cildim oldukça pürüzsüz, herhangi bir leke veya kabarıklık problemim yok.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "lenf_sisme",
+      "symptomLabel": "lenf_sisme",
+      "expectedDepartment": "dahiliye",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Boynumun yan tarafında elime gelen sert ve ağrılı bir kitle fark ettim.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "lenf_sisme",
+      "symptomLabel": "lenf_sisme",
+      "expectedDepartment": "dahiliye",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Koltuk altımda son birkaç gündür giderek büyüyen bir yumru var.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "lenf_sisme",
+      "symptomLabel": "lenf_sisme",
+      "expectedDepartment": "dahiliye",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Kasık bölgemde nohut büyüklüğünde bir kabarıklık oluştu, dokunduğumda acıyor.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "lenf_sisme",
+      "symptomLabel": "lenf_sisme",
+      "expectedDepartment": "dahiliye",
+      "mode": "negation",
+      "expectNoMatch": true,
+      "text": "Vücudumun herhangi bir yerinde ele gelen bir şişlik veya yumru bulunmuyor.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "hemoroid",
+      "symptomLabel": "hemoroid",
+      "expectedDepartment": "genel_cerrahi",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Dışkılama sırasında anüs bölgemde parlak kırmızı renkte kan görüyorum ve bölgede ciddi bir hassasiyet var.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "hemoroid",
+      "symptomLabel": "hemoroid",
+      "expectedDepartment": "genel_cerrahi",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Büyük tuvaletimi yaparken zorlanıyorum ve sonrasında dışarı doğru sarkan bir kitle hissediyorum.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "hemoroid",
+      "symptomLabel": "hemoroid",
+      "expectedDepartment": "genel_cerrahi",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Anal bölgemde sürekli devam eden bir rahatsızlık hissi ve otururken beni zorlayan bir dolgunluk mevcut.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "hemoroid",
+      "symptomLabel": "hemoroid",
+      "expectedDepartment": "genel_cerrahi",
+      "mode": "negation",
+      "expectNoMatch": true,
+      "text": "Tuvalet alışkanlıklarımda herhangi bir anormallik yok ve makat bölgemde herhangi bir şişlik veya kanama şikayetim bulunmuyor.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "menopoz",
+      "symptomLabel": "menopoz",
+      "expectedDepartment": "kadin_dogum",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Bir süredir regl dönemlerim tamamen durdu ve sürekli aniden gelen ateş basmaları yaşıyorum.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "menopoz",
+      "symptomLabel": "menopoz",
+      "expectedDepartment": "kadin_dogum",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Yaşım ilerlediği için mi bilmiyorum ama artık yumurtlama dönemlerim bitti ve uykularımı bölen yoğun terlemelerim oluyor.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "menopoz",
+      "symptomLabel": "menopoz",
+      "expectedDepartment": "kadin_dogum",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Son aylarda döngülerim düzensizleşti ve sonunda tamamen kesildi, ayrıca kendimi sürekli huzursuz hissediyorum.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "menopoz",
+      "symptomLabel": "menopoz",
+      "expectedDepartment": "kadin_dogum",
+      "mode": "negation",
+      "expectNoMatch": true,
+      "text": "Henüz hayatımın o dönemine girmedim, hala düzenli olarak regl olmaya devam ediyorum.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "hamilelik",
+      "symptomLabel": "hamilelik",
+      "expectedDepartment": "kadin_dogum",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Son zamanlarda sürekli mide bulantısı yaşıyorum ve regl dönemim normalden çok daha uzun süre gecikti.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "hamilelik",
+      "symptomLabel": "hamilelik",
+      "expectedDepartment": "kadin_dogum",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Vücudumda bazı değişimler hissediyorum, karnımda hafif bir şişkinlik var ve doktora gidip durumumu netleştirmek istiyorum.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "hamilelik",
+      "symptomLabel": "hamilelik",
+      "expectedDepartment": "kadin_dogum",
+      "mode": "negation",
+      "expectNoMatch": true,
+      "text": "Regl dönemim gecikti ama yaptığım testler negatif çıktı, yani şu an bir çocuk sahibi olma durumum yok.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "ishal",
+      "symptomLabel": "ishal",
+      "expectedDepartment": "gastroenteroloji",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Dünden beri dışkım tamamen sıvı kıvamda geliyor ve sürekli lavaboya çıkma ihtiyacı hissediyorum.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "ishal",
+      "symptomLabel": "ishal",
+      "expectedDepartment": "gastroenteroloji",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Midem bulanıyor ve bağırsaklarım çok hızlı çalışıyor, gün içinde defalarca tuvalete gitmek zorunda kaldım.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "ishal",
+      "symptomLabel": "ishal",
+      "expectedDepartment": "gastroenteroloji",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Karın bölgemde şiddetli kramplar var ve dışkılama düzenim tamamen bozuldu, tuvaletten çıkamaz hale geldim.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "hafiza_sorunu",
+      "symptomLabel": "hafiza_sorunu",
+      "expectedDepartment": "noroloji",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Son zamanlarda yaptığım işleri hemen aklımdan çıkarıyorum, sanki zihnim boşalıyor.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "hafiza_sorunu",
+      "symptomLabel": "hafiza_sorunu",
+      "expectedDepartment": "noroloji",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Eşyalarımı nereye koyduğumu sürekli karıştırıyorum ve bazen tanıdık yüzleri hatırlamakta zorlanıyorum.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "hafiza_sorunu",
+      "symptomLabel": "hafiza_sorunu",
+      "expectedDepartment": "noroloji",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Geçmişte yaşadığım olayları anımsamakta güçlük çekiyorum, zihinsel bir bulanıklık yaşıyorum.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "hafiza_sorunu",
+      "symptomLabel": "hafiza_sorunu",
+      "expectedDepartment": "noroloji",
+      "mode": "negation",
+      "expectNoMatch": true,
+      "text": "Zihnim oldukça berrak, geçmişe dair olayları veya günlük detayları hatırlama konusunda hiçbir sıkıntı yaşamıyorum.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "bacak_sislik",
+      "symptomLabel": "bacak_sislik",
+      "expectedDepartment": "kardiyoloji",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Akşam saatlerinde alt uzuvlarımda belirgin bir gerginlik ve hacim artışı fark ediyorum.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "bacak_sislik",
+      "symptomLabel": "bacak_sislik",
+      "expectedDepartment": "kardiyoloji",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Diz altı bölgelerim normalden çok daha kalın görünüyor ve üzerine bastığımda çukur oluşuyor.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "bacak_sislik",
+      "symptomLabel": "bacak_sislik",
+      "expectedDepartment": "kardiyoloji",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Gün sonunda ayakkabılarımı giymekte zorlanıyorum çünkü alt kısımlarımda ciddi bir dolgunluk var.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "bacak_sislik",
+      "symptomLabel": "bacak_sislik",
+      "expectedDepartment": "kardiyoloji",
+      "mode": "negation",
+      "expectNoMatch": true,
+      "text": "Alt uzuvlarımda herhangi bir şişkinlik veya alışılmadık bir görüntü söz konusu değil.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "cilt_dokuntu",
+      "symptomLabel": "cilt_dokuntu",
+      "expectedDepartment": "dermatoloji",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Tenimde aniden beliren pütürlü ve kaşıntılı kabarıklıklar fark ettim.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "cilt_dokuntu",
+      "symptomLabel": "cilt_dokuntu",
+      "expectedDepartment": "dermatoloji",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Vücudumun çeşitli yerlerinde yaygınlaşan kırmızı renkli benekler oluştu.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "cilt_dokuntu",
+      "symptomLabel": "cilt_dokuntu",
+      "expectedDepartment": "dermatoloji",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Cildimin üzerinde sanki bir alerjik reaksiyon varmış gibi geniş bir alana yayılan renk değişimleri var.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "cilt_dokuntu",
+      "symptomLabel": "cilt_dokuntu",
+      "expectedDepartment": "dermatoloji",
+      "mode": "negation",
+      "expectNoMatch": true,
+      "text": "Tenimde herhangi bir anormallik veya renk değişikliği gözlemlemiyorum.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "enfeksiyon_genel",
+      "symptomLabel": "enfeksiyon_genel",
+      "expectedDepartment": "dahiliye",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Vücudumda kırgınlık var ve kendimi çok bitkin hissediyorum, sanki bir hastalık başlangıcı yaşıyorum.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "enfeksiyon_genel",
+      "symptomLabel": "enfeksiyon_genel",
+      "expectedDepartment": "dahiliye",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Birkaç gündür devam eden yüksek vücut ısım ve eklemlerimdeki sızılar nedeniyle yataktan çıkamıyorum.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "enfeksiyon_genel",
+      "symptomLabel": "enfeksiyon_genel",
+      "expectedDepartment": "dahiliye",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Sürekli bir yorgunluk hali içerisindeyim, vücudum sanki bir şeylerle savaşıyor gibi hissediyorum.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "enfeksiyon_genel",
+      "symptomLabel": "enfeksiyon_genel",
+      "expectedDepartment": "dahiliye",
+      "mode": "negation",
+      "expectNoMatch": true,
+      "text": "Herhangi bir hastalık belirtisi göstermiyorum, sadece rutin bir kontrol için geldim.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "bogaz_agrisi",
+      "symptomLabel": "bogaz_agrisi",
+      "expectedDepartment": "kbb",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Sabah uyandığımdan beri tükürüğümü bile yutarken sanki bıçak saplanıyor gibi hissediyorum.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "bogaz_agrisi",
+      "symptomLabel": "bogaz_agrisi",
+      "expectedDepartment": "kbb",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Bademciklerimin olduğu bölgede ciddi bir hassasiyet ve batma hissi var.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "bogaz_agrisi",
+      "symptomLabel": "bogaz_agrisi",
+      "expectedDepartment": "kbb",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Boğazımın iç kısmında sürekli bir tahriş ve rahatsızlık hissiyle mücadele ediyorum.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "bogaz_agrisi",
+      "symptomLabel": "bogaz_agrisi",
+      "expectedDepartment": "kbb",
+      "mode": "negation",
+      "expectNoMatch": true,
+      "text": "Nezle olmama rağmen boğazımda herhangi bir acı veya yanma hissetmiyorum.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "anksiyete",
+      "symptomLabel": "anksiyete",
+      "expectedDepartment": "psikiyatri",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Geceleri uykuya dalarken zihnimdeki düşünceleri durduramıyorum, sürekli bir huzursuzluk halindeyim.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "anksiyete",
+      "symptomLabel": "anksiyete",
+      "expectedDepartment": "psikiyatri",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Göğsümde bir ağırlık var, sanki nefes alamıyormuşum gibi hissediyorum ve sürekli tetikteyim.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "anksiyete",
+      "symptomLabel": "anksiyete",
+      "expectedDepartment": "psikiyatri",
+      "mode": "negation",
+      "expectNoMatch": true,
+      "text": "Herhangi bir ruhsal sıkıntım veya huzursuzluk veren bir durumum yok, gayet iyiyim.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "gebelik_bulantisi",
+      "symptomLabel": "gebelik_bulantisi",
+      "expectedDepartment": "kadin_dogum",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Son birkaç haftadır özellikle sabahları yataktan kalkar kalkmaz kendimi çok kötü hissediyorum ve sürekli çıkarma isteği duyuyorum.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "gebelik_bulantisi",
+      "symptomLabel": "gebelik_bulantisi",
+      "expectedDepartment": "kadin_dogum",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Bebeğimi beklediğim bu dönemde gün boyu süren bir mide huzursuzluğu yaşıyorum, hiçbir şey yiyemez hale geldim.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "gebelik_bulantisi",
+      "symptomLabel": "gebelik_bulantisi",
+      "expectedDepartment": "kadin_dogum",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Hamileliğimin başından beri yemek kokularına karşı aşırı hassaslaştım ve sürekli bir öğürme hissiyle mücadele ediyorum.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "gebelik_bulantisi",
+      "symptomLabel": "gebelik_bulantisi",
+      "expectedDepartment": "kadin_dogum",
+      "mode": "negation",
+      "expectNoMatch": true,
+      "text": "Şu an hamileliğimin onuncu haftasındayım ancak herhangi bir mide bulantısı veya kusma şikayetim bulunmuyor.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "yara_iyilesmeme",
+      "symptomLabel": "yara_iyilesmeme",
+      "expectedDepartment": "dermatoloji",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Bacağımda haftalardır bir türlü kapanmak bilmeyen bir açıklık var.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "yara_iyilesmeme",
+      "symptomLabel": "yara_iyilesmeme",
+      "expectedDepartment": "dermatoloji",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Elimdeki kesik bölgesi bir türlü düzelmedi, sürekli sıvı geliyor.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "yara_iyilesmeme",
+      "symptomLabel": "yara_iyilesmeme",
+      "expectedDepartment": "dermatoloji",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Vücudumdaki bir bölge ne yaptıysam iyileşmiyor, sürekli açık kalıyor.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "yara_iyilesmeme",
+      "symptomLabel": "yara_iyilesmeme",
+      "expectedDepartment": "dermatoloji",
+      "mode": "negation",
+      "expectNoMatch": true,
+      "text": "Vücudumda iyileşmeyen herhangi bir yara veya benzeri bir durum bulunmuyor.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "yutma_agrisi",
+      "symptomLabel": "yutma_agrisi",
+      "expectedDepartment": "gastroenteroloji",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Ne zaman bir şeyler yutmaya çalışsam boğazımda sanki bıçak saplanıyormuş gibi bir acı hissediyorum.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "yutma_agrisi",
+      "symptomLabel": "yutma_agrisi",
+      "expectedDepartment": "gastroenteroloji",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Katı gıdaları tüketirken göğüs kafesimin arkasında ciddi bir sızı duyuyorum ve yutkunmakta zorlanıyorum.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "yutma_agrisi",
+      "symptomLabel": "yutma_agrisi",
+      "expectedDepartment": "gastroenteroloji",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Boğazımdan aşağı bir şeyler gönderirken ciddi bir yanma ve batma hissi yaşıyorum, bu yüzden yemek yemekten çekiniyorum.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "yutma_agrisi",
+      "symptomLabel": "yutma_agrisi",
+      "expectedDepartment": "gastroenteroloji",
+      "mode": "negation",
+      "expectNoMatch": true,
+      "text": "Yemek yerken herhangi bir acı veya yutkunma güçlüğü yaşamıyorum, sadece hafif bir iştahsızlığım var.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "ben_degisimi",
+      "symptomLabel": "ben_degisimi",
+      "expectedDepartment": "dermatoloji",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Sırtımdaki et beninin tonunun koyulaştığını ve yüzeyinin pürüzlü bir hal aldığını görüyorum.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "ben_degisimi",
+      "symptomLabel": "ben_degisimi",
+      "expectedDepartment": "dermatoloji",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Cildimdeki kahverengi noktanın yapısında bir farklılık oluştu, sanki kenarları düzensizleşmeye başladı.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "ben_degisimi",
+      "symptomLabel": "ben_degisimi",
+      "expectedDepartment": "dermatoloji",
+      "mode": "negation",
+      "expectNoMatch": true,
+      "text": "Vücudumdaki mevcut lekelerde veya et benlerimde herhangi bir farklılaşma ya da büyüme gözlemlemedim.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "anemi",
+      "symptomLabel": "anemi",
+      "expectedDepartment": "dahiliye",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Son zamanlarda kendimi çok halsiz hissediyorum ve aynaya baktığımda yüzümün renginin bembeyaz olduğunu fark ettim.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "anemi",
+      "symptomLabel": "anemi",
+      "expectedDepartment": "dahiliye",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Merdiven çıkarken nefes nefese kalıyorum ve sürekli bir bitkinlik hali içerisindeyim, kan değerlerimin düşük olmasından şüpheleniyorum.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "anemi",
+      "symptomLabel": "anemi",
+      "expectedDepartment": "dahiliye",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Vücudumdaki kan değerlerinin yetersiz olduğunu düşünüyorum çünkü gün boyu ayakta duracak enerjiyi kendimde bulamıyorum.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "anemi",
+      "symptomLabel": "anemi",
+      "expectedDepartment": "dahiliye",
+      "mode": "negation",
+      "expectNoMatch": true,
+      "text": "Kan değerlerimde herhangi bir düşüklük veya kansızlık gibi bir problemim bulunmuyor.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "migren_aura",
+      "symptomLabel": "migren_aura",
+      "expectedDepartment": "noroloji",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Başım ağrımaya başlamadan önce gözlerimin önünde sanki şimşekler çakıyor ve etrafı bulanık görüyorum.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "migren_aura",
+      "symptomLabel": "migren_aura",
+      "expectedDepartment": "noroloji",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Şiddetli ağrım gelmeden hemen önce görüş alanımda sanki bir perde inmiş gibi kararmalar ve parlak noktalar oluşuyor.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "migren_aura",
+      "symptomLabel": "migren_aura",
+      "expectedDepartment": "noroloji",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Gözlerimin önünde titreyen ışık hüzmeleri belirdikten kısa bir süre sonra başımın tek tarafında zonklama başlıyor.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "migren_aura",
+      "symptomLabel": "migren_aura",
+      "expectedDepartment": "noroloji",
+      "mode": "negation",
+      "expectNoMatch": true,
+      "text": "Baş ağrılarım çok şiddetli oluyor ancak ağrı başlamadan önce gözümün önünde herhangi bir ışık çakması ya da görme kaybı yaşamıyorum.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "pankreas_sorunu",
+      "symptomLabel": "pankreas_sorunu",
+      "expectedDepartment": "gastroenteroloji",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Karnımın tam ortasında başlayan ve sanki bir kemer gibi sırtıma doğru dolanan şiddetli bir sızı hissediyorum.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "pankreas_sorunu",
+      "symptomLabel": "pankreas_sorunu",
+      "expectedDepartment": "gastroenteroloji",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Son zamanlarda dışkımda belirgin bir yağlanma fark ettim ve karnımın üst kısmında geçmek bilmeyen bir huzursuzluk var.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "pankreas_sorunu",
+      "symptomLabel": "pankreas_sorunu",
+      "expectedDepartment": "gastroenteroloji",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Midemin üst bölgesinde yoğun bir sancı var, bu ağrı sanki arkadan sırtıma doğru saplanıyor.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "pankreas_sorunu",
+      "symptomLabel": "pankreas_sorunu",
+      "expectedDepartment": "gastroenteroloji",
+      "mode": "negation",
+      "expectNoMatch": true,
+      "text": "Karnımın üst kısmında veya sırtımda herhangi bir ağrı ya da sindirim sistemimle ilgili bir sorun yaşamıyorum.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "mide_ulser",
+      "symptomLabel": "mide_ulser",
+      "expectedDepartment": "gastroenteroloji",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Özellikle yemeklerden önce karnımın üst kısmında bıçak saplanır gibi bir sızı hissediyorum.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "mide_ulser",
+      "symptomLabel": "mide_ulser",
+      "expectedDepartment": "gastroenteroloji",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Midemde sürekli bir yanma ve kemirilme hissi var, sanki içten içe bir yara oluşmuş gibi.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "mide_ulser",
+      "symptomLabel": "mide_ulser",
+      "expectedDepartment": "gastroenteroloji",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Siyah renkli dışkılama ve şiddetli mide ağrısı şikayetiyle geldim, doktorlar bakteriyel bir durumdan şüpheleniyor.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "mide_ulser",
+      "symptomLabel": "mide_ulser",
+      "expectedDepartment": "gastroenteroloji",
+      "mode": "negation",
+      "expectNoMatch": true,
+      "text": "Midemde herhangi bir yara veya delinme gibi bir teşhisim yok, sadece hafif bir hazımsızlık yaşıyorum.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "siddetli_bas_agrisi",
+      "symptomLabel": "siddetli_bas_agrisi",
+      "expectedDepartment": "noroloji",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Ensemden başlayan ve tüm kafama yayılan, daha önce hiç yaşamadığım kadar keskin bir sızı var.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "kulak_cinlamasi",
+      "symptomLabel": "kulak_cinlamasi",
+      "expectedDepartment": "kbb",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Gece yattığımda kulağımdan gelen tiz bir ıslık sesi beni rahatsız ediyor.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "kulak_cinlamasi",
+      "symptomLabel": "kulak_cinlamasi",
+      "expectedDepartment": "kbb",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Kulağımın derinliklerinden gelen kesintisiz bir çınlama sesiyle uyandım.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "kulak_cinlamasi",
+      "symptomLabel": "kulak_cinlamasi",
+      "expectedDepartment": "kbb",
+      "mode": "negation",
+      "expectNoMatch": true,
+      "text": "Kulağımda herhangi bir çınlama veya garip bir ses duymuyorum.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "cilt_lekeleri",
+      "symptomLabel": "cilt_lekeleri",
+      "expectedDepartment": "dermatoloji",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Yanaklarımda son zamanlarda beliren renk değişimleri beni rahatsız etmeye başladı.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "cilt_lekeleri",
+      "symptomLabel": "cilt_lekeleri",
+      "expectedDepartment": "dermatoloji",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Vücudumun çeşitli yerlerinde ton farklılıkları ve koyu renkli bölgeler oluştu.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "cilt_lekeleri",
+      "symptomLabel": "cilt_lekeleri",
+      "expectedDepartment": "dermatoloji",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Cildimin genelinde ton eşitsizlikleri ve belirgin renk farklılaşmaları gözlemliyorum.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "cilt_lekeleri",
+      "symptomLabel": "cilt_lekeleri",
+      "expectedDepartment": "dermatoloji",
+      "mode": "negation",
+      "expectNoMatch": true,
+      "text": "Tenimde herhangi bir renk değişikliği ya da alışılmadık bir iz bulunmuyor.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "inme_belirtisi",
+      "symptomLabel": "inme_belirtisi",
+      "expectedDepartment": "noroloji",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Bir anda ağzımın bir tarafının kaydığını fark ettim ve kelimeleri düzgün telaffuz edemiyorum.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "inme_belirtisi",
+      "symptomLabel": "inme_belirtisi",
+      "expectedDepartment": "noroloji",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Sol kolumu ve bacağımı şu an hiç hareket ettiremiyorum, sanki vücudumun yarısı tamamen devre dışı kaldı.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "inme_belirtisi",
+      "symptomLabel": "inme_belirtisi",
+      "expectedDepartment": "noroloji",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Az önce aniden konuşma yetimi kaybettim ve yüzümün sağ tarafında ciddi bir sarkma hissediyorum.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "inme_belirtisi",
+      "symptomLabel": "inme_belirtisi",
+      "expectedDepartment": "noroloji",
+      "mode": "negation",
+      "expectNoMatch": true,
+      "text": "Yüzümde herhangi bir kayma veya vücudumun bir tarafında güç kaybı gibi bir durum söz konusu değil, sadece şiddetli bir baş ağrım var.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "sol_alt_karin",
+      "symptomLabel": "sol_alt_karin",
+      "expectedDepartment": "gastroenteroloji",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Bacakla gövdenin birleştiği yerin biraz üstünde, sol tarafta şiddetli bir ağrı var.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "sol_alt_karin",
+      "symptomLabel": "sol_alt_karin",
+      "expectedDepartment": "gastroenteroloji",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Sol alt bölgemde sanki bir şey batıyormuş gibi rahatsız edici bir his oluştu.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "sol_alt_karin",
+      "symptomLabel": "sol_alt_karin",
+      "expectedDepartment": "gastroenteroloji",
+      "mode": "negation",
+      "expectNoMatch": true,
+      "text": "Karnımın sol alt kısmında herhangi bir ağrı veya sızı hissetmiyorum.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "gorme_bulaniklik",
+      "symptomLabel": "gorme_bulaniklik",
+      "expectedDepartment": "goz",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Uzağa baktığımda her şey birbirine giriyor, sanki bir sis tabakası var gibi.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "gorme_bulaniklik",
+      "symptomLabel": "gorme_bulaniklik",
+      "expectedDepartment": "goz",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Gözlerimin önünde sanki bir tül varmış da görüntüyü engelliyormuş gibi hissediyorum.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "gorme_bulaniklik",
+      "symptomLabel": "gorme_bulaniklik",
+      "expectedDepartment": "goz",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Okuma yaparken harfleri seçmekte zorlanıyorum, sanki odak noktam kaymış gibi her yer karman çorman.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "gorme_bulaniklik",
+      "symptomLabel": "gorme_bulaniklik",
+      "expectedDepartment": "goz",
+      "mode": "negation",
+      "expectNoMatch": true,
+      "text": "Görüşümde herhangi bir kayma veya odaklanma sorunu yaşamıyorum, her şeyi gayet keskin görüyorum.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "reflü",
+      "symptomLabel": "reflü",
+      "expectedDepartment": "gastroenteroloji",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Yemeklerden sonra göğüs kafesimin arkasında şiddetli bir sızı ve ağzıma doğru yükselen yakıcı bir sıvı hissediyorum.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "reflü",
+      "symptomLabel": "reflü",
+      "expectedDepartment": "gastroenteroloji",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Sürekli olarak boğazıma doğru çıkan bir yanma hissiyle uyanıyorum ve sanki yediklerim boğazıma geri geliyor.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "reflü",
+      "symptomLabel": "reflü",
+      "expectedDepartment": "gastroenteroloji",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Özellikle uzandığım zamanlarda göğsümün ortasında sanki bir ateş varmış gibi bir huzursuzluk yaşıyorum.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "reflü",
+      "symptomLabel": "reflü",
+      "expectedDepartment": "gastroenteroloji",
+      "mode": "negation",
+      "expectNoMatch": true,
+      "text": "Göğsümde veya boğazımda herhangi bir yanma ya da ağzıma acı bir tat gelmesi gibi bir şikayetim kesinlikle yok.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "parkinson_belirtisi",
+      "symptomLabel": "parkinson_belirtisi",
+      "expectedDepartment": "noroloji",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Son zamanlarda hareketlerimde ciddi bir hantallık var, sanki vücudum komutlarımı geç algılıyor.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "parkinson_belirtisi",
+      "symptomLabel": "parkinson_belirtisi",
+      "expectedDepartment": "noroloji",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Yürürken ayaklarım yere takılıyor ve sanki vücudumun bir tarafı sürekli kaskatı kesilmiş gibi hissediyorum.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "parkinson_belirtisi",
+      "symptomLabel": "parkinson_belirtisi",
+      "expectedDepartment": "noroloji",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Yüz ifademde bir donukluk oluştu ve ellerim boş dururken kendi kendine titremeye başlıyor.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "goz_kizariklik",
+      "symptomLabel": "goz_kizariklik",
+      "expectedDepartment": "goz",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Gözlerimin içi sanki damarlar belirginleşmiş gibi kıpkırmızı görünüyor.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "goz_kizariklik",
+      "symptomLabel": "goz_kizariklik",
+      "expectedDepartment": "goz",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Gözlerimde belirgin bir renk değişimi ve yoğun bir rahatsızlık hissi var.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "goz_kizariklik",
+      "symptomLabel": "goz_kizariklik",
+      "expectedDepartment": "goz",
+      "mode": "negation",
+      "expectNoMatch": true,
+      "text": "Gözlerimde herhangi bir renk değişikliği veya kızarma durumu söz konusu değil.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "idrar_yanmasi",
+      "symptomLabel": "idrar_yanmasi",
+      "expectedDepartment": "uroloji",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Tuvalete çıktığımda idrarımı boşaltırken sanki içimden ateş geçiyormuş gibi bir sızı hissediyorum.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "idrar_yanmasi",
+      "symptomLabel": "idrar_yanmasi",
+      "expectedDepartment": "uroloji",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "İdrarımı yaparken sonlara doğru bölgede şiddetli bir sızlama ve batma hissi oluşuyor.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "idrar_yanmasi",
+      "symptomLabel": "idrar_yanmasi",
+      "expectedDepartment": "uroloji",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "İdrarımı boşaltırken sanki bölgede bir tahriş varmış gibi keskin bir sızı duyuyorum.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "idrar_yanmasi",
+      "symptomLabel": "idrar_yanmasi",
+      "expectedDepartment": "uroloji",
+      "mode": "negation",
+      "expectNoMatch": true,
+      "text": "İdrarımı yaparken herhangi bir sızı veya batma hissetmiyorum, sadece sık idrara çıkma şikayetim var.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "depresyon",
+      "symptomLabel": "depresyon",
+      "expectedDepartment": "psikiyatri",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Son zamanlarda hiçbir şeyden keyif alamıyorum ve sürekli bir boşluk hissi içerisindeyim.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "depresyon",
+      "symptomLabel": "depresyon",
+      "expectedDepartment": "psikiyatri",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Sabahları yataktan kalkmak için kendimde hiç güç bulamıyorum, her şey anlamsız geliyor.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "depresyon",
+      "symptomLabel": "depresyon",
+      "expectedDepartment": "psikiyatri",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Sürekli bir karamsarlık halindeyim, sanki üzerimde aşamadığım ağır bir yük var.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "yutkunma_guclugu",
+      "symptomLabel": "yutkunma_guclugu",
+      "expectedDepartment": "kbb",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Ne zaman bir şeyler yesem sanki yemek borumda bir engel varmış gibi hissediyorum.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "yutkunma_guclugu",
+      "symptomLabel": "yutkunma_guclugu",
+      "expectedDepartment": "kbb",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Sıvı gıdaları tüketirken bile boğazımdan aşağıya geçişlerinde ciddi bir zorlanma yaşıyorum.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "yutkunma_guclugu",
+      "symptomLabel": "yutkunma_guclugu",
+      "expectedDepartment": "kbb",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Katı gıdaları çiğneyip yutmaya çalıştığımda boğazımda sanki bir tıkanıklık oluşuyor.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "kanli_diski",
+      "symptomLabel": "kanli_diski",
+      "expectedDepartment": "gastroenteroloji",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Lavaboya çıktığımda dışkımın renginin kırmızıya döndüğünü ve peçeteye parlak kırmızı lekeler bulaştığını fark ettim.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "kanli_diski",
+      "symptomLabel": "kanli_diski",
+      "expectedDepartment": "gastroenteroloji",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Son birkaç gündür bağırsak hareketlerim sırasında ciddi miktarda kırmızı sıvı geldiğini gözlemliyorum.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "kanli_diski",
+      "symptomLabel": "kanli_diski",
+      "expectedDepartment": "gastroenteroloji",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Tuvalet ihtiyacımı giderirken dışkımın üzerinde yoğun bir kan tabakası olduğunu gördüm, bu durum beni endişelendirdi.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "kanli_diski",
+      "symptomLabel": "kanli_diski",
+      "expectedDepartment": "gastroenteroloji",
+      "mode": "negation",
+      "expectNoMatch": true,
+      "text": "Dışkılama alışkanlıklarımda herhangi bir renk değişikliği veya kanama gibi bir durumla karşılaşmadım.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "rozase",
+      "symptomLabel": "rozase",
+      "expectedDepartment": "dermatoloji",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Son zamanlarda yanaklarımda ve burnumun üzerinde geçmeyen, sıcak basması gibi bir kırmızılık oluştu.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "rozase",
+      "symptomLabel": "rozase",
+      "expectedDepartment": "dermatoloji",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Aynaya baktığımda cildimin özellikle orta kısmında belirgin bir damarlanma ve sürekli bir al al olma durumu görüyorum.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "rozase",
+      "symptomLabel": "rozase",
+      "expectedDepartment": "dermatoloji",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Yüzümde özellikle güneşli havalarda veya heyecanlandığımda artan, sanki güneş yanığı varmış gibi bir renk değişimi yaşıyorum.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "rozase",
+      "symptomLabel": "rozase",
+      "expectedDepartment": "dermatoloji",
+      "mode": "negation",
+      "expectNoMatch": true,
+      "text": "Cildimde herhangi bir renk değişimi veya damar belirginleşmesi gibi bir şikayetim bulunmuyor.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "cilt_sorunu",
+      "symptomLabel": "cilt_sorunu",
+      "expectedDepartment": "dermatoloji",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Vücudumun çeşitli yerlerinde kızarıklıklar ve pütürlü bir yapı oluştu.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "cilt_sorunu",
+      "symptomLabel": "cilt_sorunu",
+      "expectedDepartment": "dermatoloji",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Yüzümde ve sırtımda geçmek bilmeyen ağrılı şişlikler meydana geldi.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "cilt_sorunu",
+      "symptomLabel": "cilt_sorunu",
+      "expectedDepartment": "dermatoloji",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Bacaklarımda sürekli tekrarlayan ve beni çok rahatsız eden bir kabarıklık var.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "cilt_sorunu",
+      "symptomLabel": "cilt_sorunu",
+      "expectedDepartment": "dermatoloji",
+      "mode": "negation",
+      "expectNoMatch": true,
+      "text": "Tenimde herhangi bir anormallik veya rahatsız edici bir durum gözlemlemedim.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "kol_agrisi",
+      "symptomLabel": "kol_agrisi",
+      "expectedDepartment": "ortopedi",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Sol tarafımdaki uzvumda hareket ettikçe şiddetlenen bir sızı hissediyorum.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "kol_agrisi",
+      "symptomLabel": "kol_agrisi",
+      "expectedDepartment": "ortopedi",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Dirseğimden bileğime kadar yayılan yoğun bir huzursuzluk ve sancı mevcut.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "kol_agrisi",
+      "symptomLabel": "kol_agrisi",
+      "expectedDepartment": "ortopedi",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Üst ekstremitemde sanki bir ağırlık varmış gibi sürekli bir sızlama yaşıyorum.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "kol_agrisi",
+      "symptomLabel": "kol_agrisi",
+      "expectedDepartment": "ortopedi",
+      "mode": "negation",
+      "expectNoMatch": true,
+      "text": "Bacaklarımda ciddi bir sızı var ama üst uzuvlarımda herhangi bir rahatsızlık hissetmiyorum.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "idrar_sorunlari",
+      "symptomLabel": "idrar_sorunlari",
+      "expectedDepartment": "uroloji",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Tuvalete gitme ihtiyacım son günlerde çok arttı ve her seferinde ciddi bir acı hissediyorum.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "idrar_sorunlari",
+      "symptomLabel": "idrar_sorunlari",
+      "expectedDepartment": "uroloji",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Banyoya girdiğimde mesanemi tam boşaltamıyormuşum gibi bir his oluşuyor ve bazen damla damla geliyor.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "idrar_sorunlari",
+      "symptomLabel": "idrar_sorunlari",
+      "expectedDepartment": "uroloji",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "İdrarımı yaparken sanki içimden ateş çıkıyormuş gibi bir sızı duyuyorum.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "idrar_sorunlari",
+      "symptomLabel": "idrar_sorunlari",
+      "expectedDepartment": "uroloji",
+      "mode": "negation",
+      "expectNoMatch": true,
+      "text": "Tuvalet alışkanlıklarımda herhangi bir değişiklik yok, boşaltım sistemimle ilgili bir şikayetim bulunmuyor.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "bel_agrisi",
+      "symptomLabel": "bel_agrisi",
+      "expectedDepartment": "ortopedi",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Eğilip bir şey alırken belimde sanki bir bıçak saplanıyormuş gibi bir acı oluşuyor.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "bel_agrisi",
+      "symptomLabel": "bel_agrisi",
+      "expectedDepartment": "ortopedi",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Uzun süre ayakta kaldığımda belimin alt kısmında geçmeyen bir huzursuzluk ve sancı oluyor.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "bel_agrisi",
+      "symptomLabel": "bel_agrisi",
+      "expectedDepartment": "ortopedi",
+      "mode": "negation",
+      "expectNoMatch": true,
+      "text": "Vücudumun genelinde bir yorgunluk var ama bel bölgemde herhangi bir rahatsızlık hissetmiyorum.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "unutkanlik",
+      "symptomLabel": "unutkanlik",
+      "expectedDepartment": "noroloji",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Son zamanlarda anahtarlarımı nereye koyduğumu sürekli karıştırıyorum.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "unutkanlik",
+      "symptomLabel": "unutkanlik",
+      "expectedDepartment": "noroloji",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Yeni tanıştığım insanların isimlerini hemen zihnimden siliniyor.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "unutkanlik",
+      "symptomLabel": "unutkanlik",
+      "expectedDepartment": "noroloji",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Yapmam gereken işleri sürekli atlıyorum, sanki zihnim eskisi kadar keskin değil.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "bayilma",
+      "symptomLabel": "bayilma",
+      "expectedDepartment": "noroloji",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Aniden bilincim kapandı, ne olduğunu anlamadan kendimi yerde buldum.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "bayilma",
+      "symptomLabel": "bayilma",
+      "expectedDepartment": "noroloji",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Ayaktayken bir anda boşluğa düştüm ve kısa bir süreliğine hiçbir şey hatırlamıyorum.",
+      "lang": "tr"
+    }
+  ]
+}
