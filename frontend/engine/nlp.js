@@ -14,7 +14,7 @@
 //  6. Yeni export: analyzeIntensifiers(text) → { boost, words }
 // ============================================
 
-import { STOP_WORDS, SYNONYMS } from './symptom-db.js';
+import { STOP_WORDS, SYNONYMS, SYMPTOM_DATABASE } from './symptom-db.js';
 import { deleteNeighborhood } from './keyword-index.js';
 
 // ─────────────────────────────────────────────
@@ -531,6 +531,143 @@ export function fuzzyMatch(input, target, maxDistance = 2) {
 }
 
 // ─────────────────────────────────────────────
+// 10-B. BİLİNEN YANLIŞ-EŞLEŞME (FUZZY ÇAKIŞMA) ENGELLEME
+// ─────────────────────────────────────────────
+// SORUN: fuzzyMatchCanonical, 4+ harfli iki kelime arasında 1 harf fark
+// varsa bunu "yazım hatası" sayıp eşleştiriyor. Ama Türkçe'de kısa
+// kelimelerde 1 harf fark çoğu zaman TAMAMEN FARKLI bir kelime demek:
+// "kanama"↔"kafama", "kaygı"↔"kaydı", "ağırlık"↔"sağırlık" gibi. Bu,
+// veritabanındaki keyword'ler arasında + kullanıcının sık yazdığı ama
+// hiçbir keyword'de birebir geçmeyen çekimli vücut bölgesi kelimelerinde
+// (örn. "kafama", "mideme") gerçek, ölçülmüş yanlış-eşleşmelere yol açtı.
+//
+// ÇÖZÜM: keyword-index.js'in kullandığı silme-komşuluğu (SymSpell tarzı)
+// tekniğiyle AYNI yöntemle, modül yüklenirken BİR KERE, veritabanındaki
+// tüm keyword kelimeleri + bilinen çekimli vücut-bölgesi biçimleri
+// arasında motorun kendi toleransıyla çakışan ama farklı KEYWORD
+// CÜMLELERİNDEN gelen (yani anlamca ilgisiz) çiftlerin bir listesi
+// çıkarılır. Granülarite semptom id değil, tek tek keyword cümlesi —
+// aksi halde aynı semptomun keyword listesindeki ilgisiz iki cümle
+// (örn. "kafama çivi çakılıyor" ve "beyin kanaması geçiriyor olabilir
+// miyim" ikisi de siddetli_bas_agrisi'nde) yanlışlıkla "güvenli" sayılır.
+//
+// Çalışma zamanında maliyet: tek bir Set.has() — ölçülemeyecek kadar ucuz.
+// Kurulum maliyeti: ~650ms, bir kere, ilk kullanımda (keyword-index.js'in
+// kendi indeksini kurma maliyetiyle aynı mertebede).
+
+// Kullanıcının serbest metinde sık yazdığı ama hiçbir keyword'de birebir
+// geçmeyen, iyelik+yönelme çekimli vücut bölgesi biçimleri. Elle
+// doğrulanmış, dar bir liste — stemmer'ın genel kök-uzunluğu kuralına
+// dokunmadan (bkz. STEM_MIN_LEN yorumu) bu biçimlerin çakışma taramasına
+// dahil olmasını sağlar.
+const BODY_PART_INFLECTIONS = [
+  'kafama', 'basima', 'gozume', 'yuzume', 'disime', 'elime', 'koluma',
+  'ayagima', 'dizime', 'sirtima', 'belime', 'boynuma', 'karnima',
+  'mideme', 'gogsume', 'burnuma', 'kulagima', 'bogazima', 'omzuma', 'enseme',
+];
+
+// Türkçe'ye özgü ünlü düşmesi: "karın"→"karnım" gibi 2 heceli bazı kökler,
+// ünlüyle başlayan ek aldığında ikinci ünlüyü düşürür. Bu yüzden AYNI kelime,
+// farklı keyword cümlelerinde "karin" / "karn" gibi iki farklı canonical
+// üretebiliyor — anlam değişmiyor, sadece ek durumuna göre yazım değişiyor.
+// Buna karşın gerçek çakışmalarımızın (kanama↔kafama, kaygı↔kaydı, ağır↔
+// sağır) hepsi bir ÜNSÜZ değişimi/eksilmesiydi. Bu yüzden tek-ünlü
+// ekleme/çıkarma farkını (uzunluk farkı 1 VE fark eden harf ünlü) güvenli
+// sayıp engellemiyoruz.
+const TURKISH_VOWELS = new Set(['a', 'e', 'i', 'ı', 'o', 'ö', 'u', 'ü']);
+function isSingleVowelInsertion(shorter, longer) {
+  if (longer.length - shorter.length !== 1) return false;
+  for (let i = 0; i < longer.length; i++) {
+    if (longer.slice(0, i) + longer.slice(i + 1) === shorter) {
+      return TURKISH_VOWELS.has(longer[i]);
+    }
+  }
+  return false;
+}
+
+// Türkçe fiil/isim kökleri ortak bir gövdeyi paylaşıp farklı eklerle
+// ayrışabilir (örn. "konuşamıyorum" / "konuşmam" — ikisi de "konuş"
+// kökünden). Ölçülen gerçek çakışmalarımızda (kanama/kafama: 2 harf,
+// kaygı/kaydı: 3 harf, ağır/sağır: 0 harf) ortak önek hep 4 harfin
+// altında kaldı; bu yüzden 5+ harflik ortakönek paylaşan çiftleri
+// "muhtemelen aynı kök" sayıp güvenli kabul ediyoruz.
+const SAFE_COMMON_PREFIX_LEN = 5;
+function commonPrefixLength(a, b) {
+  let i = 0;
+  while (i < a.length && i < b.length && a[i] === b[i]) i++;
+  return i;
+}
+
+let _collisionBlocklist = null;
+
+function buildCollisionBlocklist() {
+  const canonToGroups = new Map(); // canonical -> Set(symptomId::keyword cümlesi)
+
+  for (const s of SYMPTOM_DATABASE) {
+    const all = s.keywords_en ? [...s.keywords, ...s.keywords_en] : s.keywords;
+    for (const kw of all) {
+      const groupKey = s.id + '::' + kw;
+      for (const t of tokenizeForMatching(kw)) {
+        if (!t.canonical || t.canonical.length < 4) continue;
+        if (!canonToGroups.has(t.canonical)) canonToGroups.set(t.canonical, new Set());
+        canonToGroups.get(t.canonical).add(groupKey);
+      }
+    }
+  }
+  for (const form of BODY_PART_INFLECTIONS) {
+    const t = tokenizeForMatching(form)[0];
+    if (!t || !t.canonical) continue;
+    if (!canonToGroups.has(t.canonical)) canonToGroups.set(t.canonical, new Set());
+    canonToGroups.get(t.canonical).add('BODYPART::' + form);
+  }
+
+  // keyword-index.js ile AYNI silme-komşuluğu bucket'ları — O(n²) yerine
+  // sadece aynı bucket'ı paylaşan adayları karşılaştırıyoruz.
+  const bucket = new Map();
+  for (const c of canonToGroups.keys()) {
+    for (const v of deleteNeighborhood(c)) {
+      if (!bucket.has(v)) bucket.set(v, new Set());
+      bucket.get(v).add(c);
+    }
+  }
+
+  const blocklist = new Set();
+  for (const [, tokens] of bucket) {
+    if (tokens.size < 2) continue;
+    const arr = [...tokens];
+    for (let i = 0; i < arr.length; i++) {
+      for (let j = i + 1; j < arr.length; j++) {
+        const a = arr[i], b = arr[j];
+        const dist = levenshteinDistance(a, b);
+        const longer = Math.max(a.length, b.length);
+        const allowed = longer <= 5 ? 1 : Math.min(2, Math.max(1, Math.floor(longer / 4)));
+        if (dist === 0 || dist > allowed) continue;
+        // Kısa olan, uzun olanın TAM BAŞ KISMI (prefix) ise bu bir "farklı
+        // kelime çakışması" değil, sondan harf düşen meşru bir konuşma dili
+        // varyasyonudur (örn. "atıyor"→"atıyo", "yığıldı"→"yığıl"). Gerçek
+        // çakışmalar (kanama↔kafama, kaygı↔kaydı) ORTADA değişir, prefix
+        // ilişkisi kurmaz — bu yüzden prefix çiftlerini engellemiyoruz.
+        const shorter = a.length <= b.length ? a : b;
+        const longerStr = a.length <= b.length ? b : a;
+        if (longerStr.startsWith(shorter)) continue;
+        if (isSingleVowelInsertion(shorter, longerStr)) continue;
+        if (commonPrefixLength(a, b) >= SAFE_COMMON_PREFIX_LEN) continue;
+        const groupsA = canonToGroups.get(a), groupsB = canonToGroups.get(b);
+        const sameOrigin = [...groupsA].some(g => groupsB.has(g));
+        if (!sameOrigin) blocklist.add(a < b ? a + '|' + b : b + '|' + a);
+      }
+    }
+  }
+  return blocklist;
+}
+
+function isKnownCollision(canonicalA, canonicalB) {
+  if (!_collisionBlocklist) _collisionBlocklist = buildCollisionBlocklist();
+  const key = canonicalA < canonicalB ? canonicalA + '|' + canonicalB : canonicalB + '|' + canonicalA;
+  return _collisionBlocklist.has(key);
+}
+
+// ─────────────────────────────────────────────
 // 11. TOKEN KARŞILAŞTIRMA
 // ─────────────────────────────────────────────
 
@@ -547,6 +684,11 @@ function compareTokens(inputToken, keywordToken) {
   if (inputToken.original.length <= 3 || keywordToken.original.length <= 3) {
     return inputToken.stem === keywordToken.stem ? 0.9 : 0;
   }
+
+  // Bilinen, kanıtlanmış yanlış-eşleşme çifti mi? (örn. kanama↔kafama)
+  // İki fuzzy dal da bu kontrolden geçer — bkz. yukarıdaki BİLİNEN
+  // YANLIŞ-EŞLEŞME bölümü.
+  if (isKnownCollision(inputToken.canonical, keywordToken.canonical)) return 0;
 
   // ESKİ: fuzzyMatch(inputToken.original, keywordToken.original)
   // inputToken.canonical === canonicalizeToken(inputToken.original) olduğu

@@ -3,7 +3,7 @@
   "createdAt": "2026-07-22T05:16:02Z",
   "generator": "gemini-3.1-flash-lite",
   "symptomCount": 142,
-  "totalExamples": 992,
+  "totalExamples": 1016,
   "examples": [
     {
       "symptomId": "balgam",
@@ -7494,69 +7494,6 @@
       "lang": "tr"
     },
     {
-      "symptomId": "dis_agrisi",
-      "symptomLabel": "dis_agrisi",
-      "expectedDepartment": "dis",
-      "mode": "positive",
-      "expectNoMatch": false,
-      "text": "Çiğneme yaparken çenemde keskin bir sızı hissediyorum.",
-      "lang": "tr"
-    },
-    {
-      "symptomId": "dis_agrisi",
-      "symptomLabel": "dis_agrisi",
-      "expectedDepartment": "dis",
-      "mode": "positive",
-      "expectNoMatch": false,
-      "text": "Gece uykumdan uyandıran şiddetli bir sancı var, ağzımın sağ tarafına dokunamıyorum bile.",
-      "lang": "tr"
-    },
-    {
-      "symptomId": "dis_agrisi",
-      "symptomLabel": "dis_agrisi",
-      "expectedDepartment": "dis",
-      "mode": "positive",
-      "expectNoMatch": false,
-      "text": "Sıcak bir şeyler içtiğimde ağzımın içinde dayanılmaz bir sızı başlıyor.",
-      "lang": "tr"
-    },
-    {
-      "symptomId": "dis_agrisi",
-      "symptomLabel": "dis_agrisi",
-      "expectedDepartment": "dis",
-      "mode": "positive",
-      "expectNoMatch": false,
-      "text": "Diş etlerimde sanki bir şey vuruyor gibi bir his var, çok rahatsızım.",
-      "lang": "tr"
-    },
-    {
-      "symptomId": "dis_agrisi",
-      "symptomLabel": "dis_agrisi",
-      "expectedDepartment": "dis",
-      "mode": "positive",
-      "expectNoMatch": false,
-      "text": "Ağzımın içinde sürekli bir baskı ve zonklama hissediyorum, yemek yiyemez hale geldim.",
-      "lang": "tr"
-    },
-    {
-      "symptomId": "dis_agrisi",
-      "symptomLabel": "dis_agrisi",
-      "expectedDepartment": "dis",
-      "mode": "positive",
-      "expectNoMatch": false,
-      "text": "Soğuk su içtiğim an ağzımın içinde elektrik çarpması gibi bir acı oluşuyor.",
-      "lang": "tr"
-    },
-    {
-      "symptomId": "dis_agrisi",
-      "symptomLabel": "dis_agrisi",
-      "expectedDepartment": "dis",
-      "mode": "negation",
-      "expectNoMatch": true,
-      "text": "Ağzımda herhangi bir sızı veya rahatsızlık hissetmiyorum, sadece diş taşı temizliği yaptırmak istiyorum.",
-      "lang": "tr"
-    },
-    {
       "symptomId": "lenf_sisme",
       "symptomLabel": "lenf_sisme",
       "expectedDepartment": "dahiliye",
@@ -8932,9 +8869,288 @@
       "expectNoMatch": false,
       "text": "Mide bölgemde sanki asit birikmiş gibi devamlı bir yanma ve kazınma hissi yaşıyorum.",
       "lang": "tr"
+    },
+    {
+      "symptomId": "dis_agrisi",
+      "symptomLabel": "dis_agrisi",
+      "expectedDepartment": "dis",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Azı dişimde dayanılmaz bir sızı var, yemek yerken çok zorlanıyorum.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "dis_agrisi",
+      "symptomLabel": "dis_agrisi",
+      "expectedDepartment": "dis",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Çene kemiğime vuran şiddetli bir acı hissediyorum.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "dis_agrisi",
+      "symptomLabel": "dis_agrisi",
+      "expectedDepartment": "dis",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Sıcak bir şey içtiğimde ağzımın içinde keskin bir sancı oluşuyor.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "dis_agrisi",
+      "symptomLabel": "dis_agrisi",
+      "expectedDepartment": "dis",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Gece uykumdan uyandıran bir diş sancısı çekiyorum.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "dis_agrisi",
+      "symptomLabel": "dis_agrisi",
+      "expectedDepartment": "dis",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Diş etlerimde ve dişlerimde geçmek bilmeyen bir baskı var.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "dis_agrisi",
+      "symptomLabel": "dis_agrisi",
+      "expectedDepartment": "dis",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Soğuk su içtiğimde dişimde ani bir elektrik çarpması gibi bir his oluyor.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "dis_agrisi",
+      "symptomLabel": "dis_agrisi",
+      "expectedDepartment": "dis",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Çiğneme yaparken ağzımın sol tarafında ciddi bir rahatsızlık duyuyorum.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "dis_agrisi",
+      "symptomLabel": "dis_agrisi",
+      "expectedDepartment": "dis",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Dişimin içinde sanki bir şey atıyor gibi, çok huzursuzum.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "dis_agrisi",
+      "symptomLabel": "dis_agrisi",
+      "expectedDepartment": "dis",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Tatlı bir şeyler yediğimde dişimde garip bir sızlama başlıyor.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "dis_agrisi",
+      "symptomLabel": "dis_agrisi",
+      "expectedDepartment": "dis",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Dişimin etrafında yoğun bir hassasiyet ve ağrı mevcut.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "dis_agrisi",
+      "symptomLabel": "dis_agrisi",
+      "expectedDepartment": "dis",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Ağzımı açıp kapatırken dişlerimde ciddi bir acı hissediyorum.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "dis_agrisi",
+      "symptomLabel": "dis_agrisi",
+      "expectedDepartment": "dis",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Dişimin kökünde sanki bir iltihap varmış gibi bir ağrı var.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "dis_agrisi",
+      "symptomLabel": "dis_agrisi",
+      "expectedDepartment": "dis",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Diş etlerimden başlayan ve tüm çeneme yayılan bir sızı yaşıyorum.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "dis_agrisi",
+      "symptomLabel": "dis_agrisi",
+      "expectedDepartment": "dis",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Dişlerimin üzerine baskı uyguladığımda çok canım yanıyor.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "dis_agrisi",
+      "symptomLabel": "dis_agrisi",
+      "expectedDepartment": "dis",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Sürekli bir diş sızlaması yüzünden günlük işlerime odaklanamıyorum.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "dis_agrisi",
+      "symptomLabel": "dis_agrisi",
+      "expectedDepartment": "dis",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Dişimin içindeki o keskin acı bir türlü dinmiyor.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "dis_agrisi",
+      "symptomLabel": "dis_agrisi",
+      "expectedDepartment": "dis",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Dişlerimde sanki bir nabız atıyor, çok rahatsız edici.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "dis_agrisi",
+      "symptomLabel": "dis_agrisi",
+      "expectedDepartment": "dis",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Bir şeyler yerken dişimin içinde sanki bir boşluk varmış gibi acıyor.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "dis_agrisi",
+      "symptomLabel": "dis_agrisi",
+      "expectedDepartment": "dis",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Dişimin etrafındaki dokularda ciddi bir ağrı ve şişlik hissediyorum.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "dis_agrisi",
+      "symptomLabel": "dis_agrisi",
+      "expectedDepartment": "dis",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Sıcak veya soğuk temasında dişlerimde çok kötü bir sızı oluyor.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "dis_agrisi",
+      "symptomLabel": "dis_agrisi",
+      "expectedDepartment": "dis",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Dişimin içindeki o zonklama hissi beni çok yordu.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "dis_agrisi",
+      "symptomLabel": "dis_agrisi",
+      "expectedDepartment": "dis",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Dişlerimi birbirine değdirdiğimde çok keskin bir acı duyuyorum.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "dis_agrisi",
+      "symptomLabel": "dis_agrisi",
+      "expectedDepartment": "dis",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Dişimin içinde sanki bir şey batıyor gibi sürekli bir ağrı var.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "dis_agrisi",
+      "symptomLabel": "dis_agrisi",
+      "expectedDepartment": "dis",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Diş etlerimde ve dişlerimde çok yoğun bir sızı hissediyorum.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "dis_agrisi",
+      "symptomLabel": "dis_agrisi",
+      "expectedDepartment": "dis",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Dişimin üzerindeki o baskı hissi beni çok rahatsız ediyor.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "dis_agrisi",
+      "symptomLabel": "dis_agrisi",
+      "expectedDepartment": "dis",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Gece boyunca dişimin içindeki o sızıdan uyuyamadım.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "dis_agrisi",
+      "symptomLabel": "dis_agrisi",
+      "expectedDepartment": "dis",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Dişlerimi fırçalarken bile çok ciddi bir acı çekiyorum.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "dis_agrisi",
+      "symptomLabel": "dis_agrisi",
+      "expectedDepartment": "dis",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Dişimin içinde sanki bir şey patlayacakmış gibi bir ağrı var.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "dis_agrisi",
+      "symptomLabel": "dis_agrisi",
+      "expectedDepartment": "dis",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Dişlerimin genelinde çok şiddetli bir sızlama ve hassasiyet mevcut.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "dis_agrisi",
+      "symptomLabel": "dis_agrisi",
+      "expectedDepartment": "dis",
+      "mode": "positive",
+      "expectNoMatch": false,
+      "text": "Dişimin içindeki o sancı bir türlü geçmek bilmiyor.",
+      "lang": "tr"
+    },
+    {
+      "symptomId": "dis_agrisi",
+      "symptomLabel": "dis_agrisi",
+      "expectedDepartment": "dis",
+      "mode": "negation",
+      "expectNoMatch": true,
+      "text": "Dişlerimde herhangi bir sızı veya ağrı hissetmiyorum, sadece diş etlerimde hafif bir kanama var.",
+      "lang": "tr"
     }
   ],
-  "updatedAt": "2026-07-23T03:38:14Z",
+  "updatedAt": "2026-08-09T15:59:26Z",
   "manualAdditions": [
     {
       "symptomId": "mide_ulser",

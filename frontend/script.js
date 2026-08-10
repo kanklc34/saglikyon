@@ -313,7 +313,14 @@ async function startAnalysis() {
     const result = analyzeSymptoms(text, null, state.lang, t().followUpUniversal);
 
     if (result.error) { showScreen('screenInput'); showError(result.error); }
-    else if (result.noMatch) { await tryShowSemanticSuggestions(text); }
+    // NOT: semantik katman artık sadece TAM noMatch'te değil, lexical
+    // motorun 'low' güvenle sonuçlandığı durumlarda da tetikleniyor —
+    // ölçtüğümüze göre (regression_corpus.json, 517 vaka) 'low' bandındaki
+    // lexical sonuçların doğruluğu (%39.3) semantik katmanın kendi top-1
+    // doğruluğundan (%80.6) belirgin şekilde düşük. 'medium' bandı için
+    // de benzer bir zayıflık var ama örneklem küçük (12 vaka) — şimdilik
+    // sadece 'low' için genişletiyoruz, veri büyüdükçe yeniden değerlendirilebilir.
+    else if (result.noMatch || result.confidence === 'low') { await tryShowSemanticSuggestions(text); }
     else if (result.isEmergency) { showEmergency(result, text); }
     else if (result.needsMoreInfo) { startFollowUp(result, text); }
     else { showResult(result, text); }
