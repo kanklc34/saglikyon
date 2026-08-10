@@ -325,11 +325,33 @@ function buildSynonymIndex() {
   const claimants = new Map(); // key -> Map(canonical -> [{base, variant}])
   const allSynonyms = { ...SYNONYMS, ...EXTENDED_SYNONYMS };
 
+  // BULGU: deriveKey, çok kelimeli bir synonym ifadesinden ("sol taraf",
+  // "o bölgede" gibi) ilk 4+ harfli kelimeyi alıp bunu GLOBAL bir
+  // çözümleme anahtarı yapıyordu — kelimenin ne kadar genel olduğuna
+  // bakılmaksızın. Bu, zamirlerin ("kendi"→bayılma, "beni"→ben/leke),
+  // pozisyon kelimelerinin ("bölge"→karın, "arka"→makat!), ve çok genel
+  // fiil/sıfatların ("kullan"→madde, "büyük"→dışkı) tek, rastgele bir
+  // semptoma sabitlenmesine yol açıyordu. Ölçüm: regression_corpus.json'daki
+  // 517 vakada bu anahtarların kaçı 3+ FARKLI departmanın metninde geçiyor
+  // ama tek bir dar anlama kilitli — 47 anahtar bulundu, aşağıdaki liste
+  // bunlardan güvenli olmayanları (jenerik zamir/pozisyon/fiil/sıfat)
+  // kapsıyor. "sırt", "parmak", "yutma" gibi gerçekten spesifik anatomik/
+  // semptom terimleri bilinçli olarak DIŞARIDA bırakıldı — onlar için
+  // çözümleme hâlâ değerli.
+  const GENERIC_KEY_BLOCKLIST = new Set([
+    'surekli', 'kendi', 'bolge', 'alti', 'baski', 'atak', 'beni', 'basi',
+    'yemek', 'uclu', 'ozel', 'bosal', 'agzi', 'irin',
+    'hava', 'buyuk', 'arka', 'kullan', 'nokta', 'yeri',
+    'kaburga', 'parlak', 'kati', 'goruntu', 'kuru', 'erime',
+    'hayat', 'uzak', 'akis', 'konus', 'adim',
+  ]);
+
   const deriveKey = (folded) => folded.includes(' ')
     ? stemTurkish(folded.split(' ').find(t => t.length >= 4) || folded.split(' ')[0], false)
     : stemTurkish(folded, false);
 
   const recordClaim = (key, canonical, source) => {
+    if (GENERIC_KEY_BLOCKLIST.has(key)) return;
     if (!claimants.has(key)) claimants.set(key, new Map());
     const byCanonical = claimants.get(key);
     if (!byCanonical.has(canonical)) byCanonical.set(canonical, []);
@@ -367,6 +389,7 @@ function buildSynonymIndex() {
 }
 
 const SYNONYM_INDEX = buildSynonymIndex();
+export const _synonymIndexForDebug = SYNONYM_INDEX;
 
 // ─────────────────────────────────────────────
 // 6. GELİŞTİRİLMİŞ TÜRKÇE STEMMER
