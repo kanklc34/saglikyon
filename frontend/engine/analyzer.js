@@ -151,10 +151,20 @@ const HIGH_RISK_IDS = new Set([
 // ── Bayes-tarzı ağırlıklandırma ──────────────────────────
 // Her bölüm için kabaca "bu şikayetle aile hekiminize/polikliniğe
 // başvuran kişilerin hangi bölümde sonlanma payı" mantığıyla bir
-// önsel (prior) olasılık tanımlıyoruz. Bunlar kesin epidemiyolojik
-// veri değil, mantıklı bir başlangıç noktası — gerçek başvuru
-// verisi toplandığında buradan kalibre edilebilir. Amaç: motorun
-// her bölümü "eşit olası" kabul ederek sıfırdan başlamaması.
+// önsel (prior) olasılık tanımlıyoruz. Çoğu değer hâlâ elle atanmış,
+// mantıklı bir başlangıç noktası — gerçek başvuru verisi toplandıkça
+// buradan kalibre edilmeye devam edilecek. Amaç: motorun her bölümü
+// "eşit olası" kabul ederek sıfırdan başlamaması.
+//
+// dis (diş): TEK istisna — artık tahmin değil, ölçüm. TC Sağlık
+// Bakanlığı 2023 Sağlık İstatistikleri Yıllığı (haber bülteni):
+// kişi başı hekime müracaat 11,4; kişi başı diş hekimine müracaat 0,68.
+// 0.68 / (11.4 + 0.68) ≈ %5,6 — yani başvuruların yaklaşık her 18'de 1'i
+// diş hekimliğine. Eski değer (0.02) bu oranın ~1/3'ü kadardı ve
+// regresyon corpus'unda ölçülebilir bir hataya yol açıyordu: 4/4 pozitif
+// "diş ağrısı" vakası (mükemmel anahtar kelime eşleşmesiyle) noMatch/
+// needsMoreInfo'da kalıyordu, primaryDepartment='dis' hiç çıkmıyordu.
+// Kaynak: https://ohsad.org/wp-content/uploads/2024/10/Saglik-Istatistikleri-Yilligi-2023-Haber-Bulteni.pdf
 const DEPARTMENT_PRIORS = {
   aile_hekimi: 0.20,
   dahiliye: 0.14,
@@ -164,6 +174,7 @@ const DEPARTMENT_PRIORS = {
   gastroenteroloji: 0.07,
   goz: 0.06,
   kadin_dogum: 0.05,
+  dis: 0.056,       // ↑ 0.02 → 0.056 (bkz. yukarıdaki not) — sıralamada aile_hekimi/dahiliye'den sonra, kbb ile kıyaslanabilir bir seviyeye geldi
   psikiyatri: 0.05,
   uroloji: 0.04,
   noroloji: 0.04,
@@ -173,7 +184,6 @@ const DEPARTMENT_PRIORS = {
   genel_cerrahi: 0.025,
   kardiyoloji: 0.025,
   gogus: 0.025,
-  dis: 0.02,
 };
 const DEFAULT_PRIOR = 0.04;
 
@@ -494,11 +504,16 @@ function calculateDepartmentScores(extractedSymptoms, previousAnswers, ageBand =
 
   // Önce her bölüm için hangi semptomların ne kadar kanıt sunduğunu
   // topla, sonra en güçlüden başlayarak azalan ağırlıkla (discount) ekle.
+  // Aynı geçişte, o bölüm için gelen en "özgül" kanıtı da ayrıca not
+  // ediyoruz (bkz. aşağıdaki taban/floor mantığı).
   const contributionsByDept = {};
+  const maxSpecificityByDept = {};
   for (const symptom of extractedSymptoms) {
     for (const [id, weight] of Object.entries(symptom.departments)) {
       const lr = symptomLogLR(weight, symptom.matchScore, symptom.urgency);
       (contributionsByDept[id] ??= []).push(lr);
+      const specificity = weight * symptom.matchScore;
+      if (specificity > (maxSpecificityByDept[id] ?? 0)) maxSpecificityByDept[id] = specificity;
     }
   }
   for (const [id, contributions] of Object.entries(contributionsByDept)) {
@@ -508,6 +523,22 @@ function calculateDepartmentScores(extractedSymptoms, previousAnswers, ageBand =
       const discount = EVIDENCE_DISCOUNT[Math.min(i, EVIDENCE_DISCOUNT.length - 1)];
       logOdds[id] += lr * discount;
     });
+  }
+
+  // Özgüllük tabanı (specificity floor): "dis" örneğinde görüldüğü gibi,
+  // dar (az semptomlu) ama semptom veritabanında neredeyse tek-bölüme
+  // işaret eden (departments ağırlığı çok yüksek, ör. 0.95) bir semptom
+  // net biçimde eşleştiğinde, o bölümün düşük nüfus-önseli yüzünden
+  // tamamen elenmesi yanlış olur — dar kapsam, düşük olasılık demek
+  // değildir. weight*matchScore >= 0.80 olan bir kanıt varsa, bölümün
+  // log-odds'unu en az "medium" güven alt sınırına (sigmoid ≈ 0.55)
+  // çekiyoruz; üstündeyse dokunmuyoruz.
+  const SPECIFICITY_FLOOR_THRESHOLD = 0.80;
+  const SPECIFICITY_FLOOR_LOGODDS = Math.log(0.55 / (1 - 0.55)); // ≈ 0.2007
+  for (const [id, specificity] of Object.entries(maxSpecificityByDept)) {
+    if (specificity >= SPECIFICITY_FLOOR_THRESHOLD && logOdds[id] < SPECIFICITY_FLOOR_LOGODDS) {
+      logOdds[id] = SPECIFICITY_FLOOR_LOGODDS;
+    }
   }
 
   // Yaş grubu etkisi: mevcut veritabanında neredeyse hiçbir semptom

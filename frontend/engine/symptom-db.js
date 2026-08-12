@@ -16184,7 +16184,16 @@ export const SYNONYMS = {
   'kellik': ['kel kalmak', 'saçsızlık', 'seyreklik'],
   'saç dökülmesi': ['saç kaybı', 'saçların dökülmesi', 'saç kaybı süreci'],
   'idrar': ['çiş', 'sidik', 'işeme', 'küçük tuvalet', 'tuvalet'],
-  'yanma': ['sızı', 'acı', 'batma', 'ısı basması', 'zonklama'],
+  // BUG DÜZELTMESİ: 'sızı' önceden burada da tanımlıydı ve 'ağrı' grubuyla
+  // çakışıp (aynı kelime iki farklı canonical'a claim ediyordu) collision-
+  // güvenlik ağı tarafından TAMAMEN silinmesine yol açıyordu — yani "sızı"
+  // kelimesi ne 'ağrı'ya ne 'yanma'ya çözülmüyor, ham/işlenmemiş kalıyordu.
+  // "sızı" Türkçede ezici çoğunlukla genel/donuk ağrı anlamında kullanılır
+  // (yanma değil), o yüzden burada bırakmak yerine sadece 'ağrı' grubunda
+  // tutuyoruz. 'yanma' kendi başına yeterince güçlü işaretçilere sahip
+  // ('batma', 'ısı basması'). Ölçüm: regression_corpus.json'daki "diş
+  // ağrısı" pozitif vakalarından biri bu tek kelime yüzünden eşleşmiyordu.
+  'yanma': ['acı', 'batma', 'ısı basması', 'zonklama'],
   'sık idrara çıkma': ['tuvaletten çıkamamak', 'sürekli çişe kalkmak', 'pollaküri', 'sıkışma hissi', 'idrar sıklığı'],
   'böbrek ağrısı': ['bel sancısı', 'yan sızısı'],
   'böbrek taşı': ['taş sancısı', 'kum dökme ağrısı', 'taş', 'kum', 'böbrek sancısı', 'böbrek kumu'],

@@ -344,6 +344,13 @@ function buildSynonymIndex() {
     'hava', 'buyuk', 'arka', 'kullan', 'nokta', 'yeri',
     'kaburga', 'parlak', 'kati', 'goruntu', 'kuru', 'erime',
     'hayat', 'uzak', 'akis', 'konus', 'adim',
+    // BUG DÜZELTMESİ: 'sicak', 'ateş' synonym'ındaki 'sıcaklık' kelimesinin
+    // stem'i ile birebir çakışıyordu ("-lık" eki düşünce ikisi de "sicak"
+    // oluyor). Sonuç: "sıcak çay içtim" gibi ateşle hiç ilgisi olmayan her
+    // cümle 'ateş' semptomuna eşleşiyordu. Ölçüm: regression_corpus.json,
+    // "diş ağrısı" pozitif vakalarından biri bu yüzden needsMoreInfo'da
+    // takılıyordu (dis_agrisi yerine ates de eşleşip soru soruyordu).
+    'sicak',
   ]);
 
   const deriveKey = (folded) => folded.includes(' ')
