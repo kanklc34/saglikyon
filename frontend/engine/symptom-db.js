@@ -5366,6 +5366,22 @@ export const SYMPTOM_DATABASE = [
       'ateşli hastalık belirtisi var',
       'ateşim var sanırım',
       'ateşten başım dönüyo',
+      // Kapsam genişletmesi: regression_corpus.json'daki 3 pozitif "ateş"
+      // vakası (participle/iyelik çekimleri, titreme+hararet kombinasyonu,
+      // termometre/ölçüm çerçevesi) hiçbirine eşleşmiyordu — bu doğal
+      // paraphrase'ler o boşlukları kapatıyor (bkz. diş corpus'unun aynı
+      // yöntemle 6'dan 30'a çıkarılması).
+      'vücut ısımın çok yükseldiğini hissediyorum',
+      'kendimi oldukça sıcak hissediyorum',
+      'vücudumda ciddi bir hararet var',
+      'titremeyle birlikte hararet basıyor',
+      'gece boyunca titreyip terledim',
+      'titreyerek ateşim çıktı',
+      'termometre normalin üzerinde çıktı',
+      'ateş ölçtüm yüksek çıktı',
+      'değerler normalin çok üzerinde',
+      'vücut sıcaklığım fazlasıyla arttı',
+      'sıcaklığım hızla yükseliyor',
     ],
     keywords_en: [
       'feverish',
