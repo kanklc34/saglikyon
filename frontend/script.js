@@ -3,7 +3,7 @@
 // Dil desteği: TR / EN toggle
 // ============================================
 
-import { analyzeSymptoms, DEPARTMENTS } from './engine/analyzer.js';
+import { analyzeSymptoms, DEPARTMENTS, getDepartmentName } from './engine/analyzer.js';
 import { STRINGS } from './engine/i18n.js';
 import { RATE_LIMIT_CONFIG, getRateLimitState, recordRateLimitHit, formatCooldown } from './engine/rate-limit.js';
 import { getSemanticCandidates } from './engine/semantic-fallback.js';
@@ -368,7 +368,7 @@ function showSemanticSuggestionScreen(candidates, text) {
 
   const cardsHtml = candidates.map(c => {
     const dept = DEPARTMENTS[c.department];
-    const name = dept?.name || c.department;
+    const name = dept ? getDepartmentName(c.department, state.lang) : c.department;
     const icon = dept?.icon || '';
     return `
       <button class="semantic-suggestion-card" data-department="${c.department}" type="button">
@@ -413,7 +413,7 @@ function showSemanticSuggestionScreen(candidates, text) {
 function showSemanticConfirmedResult(department, text) {
   const s = t();
   const dept = DEPARTMENTS[department];
-  const name = dept?.name || department;
+  const name = dept ? getDepartmentName(department, state.lang) : department;
 
   DOM.resultContent.innerHTML = `
     <div class="dept-card">

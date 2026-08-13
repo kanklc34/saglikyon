@@ -6,25 +6,33 @@
 // ============================================
 
 export const DEPARTMENTS = {
-  dahiliye: { name: 'Dahiliye (İç Hastalıkları)', icon: '🏥', color: '#667eea' },
-  kardiyoloji: { name: 'Kardiyoloji', icon: '❤️', color: '#e74c3c' },
-  noroloji: { name: 'Nöroloji', icon: '🧠', color: '#9b59b6' },
-  ortopedi: { name: 'Ortopedi ve Travmatoloji', icon: '🦴', color: '#2ecc71' },
-  kbb: { name: 'Kulak Burun Boğaz', icon: '👂', color: '#f39c12' },
-  goz: { name: 'Göz Hastalıkları', icon: '👁️', color: '#3498db' },
-  dermatoloji: { name: 'Dermatoloji', icon: '🩹', color: '#e67e22' },
-  psikiyatri: { name: 'Psikiyatri', icon: '🧘', color: '#1abc9c' },
-  kadin_dogum: { name: 'Kadın Hastalıkları ve Doğum', icon: '🤰', color: '#e91e63' },
-  uroloji: { name: 'Üroloji', icon: '🔬', color: '#00bcd4' },
-  cocuk: { name: 'Çocuk Sağlığı', icon: '👶', color: '#ff9800' },
-  fizik_tedavi: { name: 'Fizik Tedavi ve Rehabilitasyon', icon: '💪', color: '#4caf50' },
-  genel_cerrahi: { name: 'Genel Cerrahi', icon: '🔪', color: '#795548' },
-  gogus: { name: 'Göğüs Hastalıkları', icon: '🫁', color: '#607d8b' },
-  aile_hekimi: { name: 'Aile Hekimi', icon: '👨‍⚕️', color: '#28a745' },
-  endokrinoloji: { name: 'Endokrinoloji', icon: '⚗️', color: '#8e44ad' },
-  gastroenteroloji: { name: 'Gastroenteroloji', icon: '🫃', color: '#d35400' },
-  dis: { name: 'Diş Hekimliği', icon: '🦷', color: '#bdc3c7' }
+  dahiliye: { name: { tr: 'Dahiliye (İç Hastalıkları)', en: 'Internal Medicine' }, icon: '🏥', color: '#667eea' },
+  kardiyoloji: { name: { tr: 'Kardiyoloji', en: 'Cardiology' }, icon: '❤️', color: '#e74c3c' },
+  noroloji: { name: { tr: 'Nöroloji', en: 'Neurology' }, icon: '🧠', color: '#9b59b6' },
+  ortopedi: { name: { tr: 'Ortopedi ve Travmatoloji', en: 'Orthopedics and Traumatology' }, icon: '🦴', color: '#2ecc71' },
+  kbb: { name: { tr: 'Kulak Burun Boğaz', en: 'Ear, Nose and Throat (ENT)' }, icon: '👂', color: '#f39c12' },
+  goz: { name: { tr: 'Göz Hastalıkları', en: 'Ophthalmology' }, icon: '👁️', color: '#3498db' },
+  dermatoloji: { name: { tr: 'Dermatoloji', en: 'Dermatology' }, icon: '🩹', color: '#e67e22' },
+  psikiyatri: { name: { tr: 'Psikiyatri', en: 'Psychiatry' }, icon: '🧘', color: '#1abc9c' },
+  kadin_dogum: { name: { tr: 'Kadın Hastalıkları ve Doğum', en: 'Obstetrics and Gynecology' }, icon: '🤰', color: '#e91e63' },
+  uroloji: { name: { tr: 'Üroloji', en: 'Urology' }, icon: '🔬', color: '#00bcd4' },
+  cocuk: { name: { tr: 'Çocuk Sağlığı', en: 'Pediatrics' }, icon: '👶', color: '#ff9800' },
+  fizik_tedavi: { name: { tr: 'Fizik Tedavi ve Rehabilitasyon', en: 'Physical Therapy and Rehabilitation' }, icon: '💪', color: '#4caf50' },
+  genel_cerrahi: { name: { tr: 'Genel Cerrahi', en: 'General Surgery' }, icon: '🔪', color: '#795548' },
+  gogus: { name: { tr: 'Göğüs Hastalıkları', en: 'Pulmonology' }, icon: '🫁', color: '#607d8b' },
+  aile_hekimi: { name: { tr: 'Aile Hekimi', en: 'Family Medicine' }, icon: '👨‍⚕️', color: '#28a745' },
+  endokrinoloji: { name: { tr: 'Endokrinoloji', en: 'Endocrinology' }, icon: '⚗️', color: '#8e44ad' },
+  gastroenteroloji: { name: { tr: 'Gastroenteroloji', en: 'Gastroenterology' }, icon: '🫃', color: '#d35400' },
+  dis: { name: { tr: 'Diş Hekimliği', en: 'Dentistry' }, icon: '🦷', color: '#bdc3c7' }
 };
+
+// name artık {tr, en} — DEPARTMENTS[id].name doğrudan string olarak
+// kullanılamaz, bu yardımcıyla okunmalı (bkz. İngilizce mod eksikleri).
+export function getDepartmentName(id, lang) {
+  const dept = DEPARTMENTS[id];
+  if (!dept) return id;
+  return dept.name[lang] || dept.name.tr || id;
+}
 
 // ============================================
 // ANA SEMPTOM VERİTABANI
@@ -16023,74 +16031,168 @@ export const EMERGENCY_RULES = [
 // ============================================
 
 export const FOLLOW_UP_TEMPLATES = {
-  'bas_agrisi': [
-    { question: 'Bu sizin hayatınızdaki en şiddetli baş ağrınız mı?', impact: { noroloji: 0.3 } },
-    { question: 'Görme bozukluğu veya bulanıklık eşlik ediyor mu?', impact: { noroloji: 0.2, goz: 0.2 } },
-    { question: 'Boyun sertliği var mı?', impact: { noroloji: 0.3 } },
-    { question: 'Mide bulantısı veya kusma var mı?', impact: { noroloji: 0.2 } }
-  ],
-  'bogaz_agrisi': [
-    { question: 'Ateşiniz var mı?', impact: { dahiliye: 0.2, kbb: 0.1 } },
-    { question: 'Yutkunurken çok şiddetli ağrı oluyor mu?', impact: { kbb: 0.3 } },
-    { question: 'Kaç gündür devam ediyor?', impact: { aile_hekimi: 0.2 }, thresholdDays: 3, type: 'options', options: ['1-2 gün', '3-6 gün', '1 haftadan uzun'], optionDays: [1, 3, 7] }
-  ],
-  'karin_agrisi': [
-    { question: 'Ağrı ani mi başladı yoksa yavaş yavaş mı?', impact: { genel_cerrahi: 0.3 }, type: 'options', options: ['Ani başladı', 'Yavaş yavaş başladı'] },
-    { question: 'Ateşiniz var mı?', impact: { dahiliye: 0.2, genel_cerrahi: 0.15 } },
-    { question: 'Kusma var mı?', impact: { gastroenteroloji: 0.2, genel_cerrahi: 0.15 } },
-    { question: 'Ağrı sağ alt karında mı?', impact: { genel_cerrahi: 0.4 } }
-  ],
-  'gogus_agrisi': [
-    { question: 'Nefes darlığı eşlik ediyor mu?', impact: { kardiyoloji: 0.3, gogus: 0.2 } },
-    { question: 'Kola veya çeneye yayılıyor mu?', impact: { kardiyoloji: 0.4 } },
-    { question: 'Eforla mı artıyor?', impact: { kardiyoloji: 0.3 } }
-  ],
-  'nefes_darligi': [
-    { question: 'İstirahat halinde de nefes darlığınız var mı?', impact: { kardiyoloji: 0.3, gogus: 0.2 } },
-    { question: 'Öksürük eşlik ediyor mu?', impact: { gogus: 0.3 } },
-    { question: 'Göğüs ağrısı var mı?', impact: { kardiyoloji: 0.3 } }
-  ],
-  'oksuruk': [
-    { question: 'Balgam var mı?', impact: { gogus: 0.2, kbb: 0.1 } },
-    { question: 'Kanlı balgam var mı?', impact: { gogus: 0.4 } },
-    { question: 'Nefes darlığı var mı?', impact: { gogus: 0.25, kardiyoloji: 0.15 } },
-    { question: 'Ateş var mı?', impact: { dahiliye: 0.2, gogus: 0.15 } }
-  ],
-  'kalp_carpintisi': [
-    { question: 'İstirahat halinde mi oluyor?', impact: { kardiyoloji: 0.3 } },
-    { question: 'Baş dönmesi eşlik ediyor mu?', impact: { kardiyoloji: 0.2, noroloji: 0.1 } },
-    { question: 'Göğüs ağrısı var mı?', impact: { kardiyoloji: 0.3 } }
-  ],
-  'kol_agrisi': [
-    { question: 'Şişlik var mı?', impact: { ortopedi: 0.2 } },
-    { question: 'Travma geçirdiniz mi?', impact: { ortopedi: 0.4 } },
-    { question: 'Uyuşma veya güçsüzlük var mı?', impact: { noroloji: 0.3 } }
-  ],
-  'bacak_agrisi': [
-    { question: 'Şişlik var mı?', impact: { kardiyoloji: 0.3 } },
-    { question: 'Yürürken mi ağrıyor?', impact: { ortopedi: 0.2, kardiyoloji: 0.2 } },
-    { question: 'Uyuşma veya karıncalanma var mı?', impact: { noroloji: 0.3 } }
-  ],
-  'ates': [
-    { question: 'Kaç gündür ateşiniz var?', impact: { dahiliye: 0.2 }, thresholdDays: 3, type: 'options', options: ['1-2 gün', '3-6 gün', '1 haftadan uzun'], optionDays: [1, 3, 7] },
-    { question: 'Öksürük var mı?', impact: { gogus: 0.2, kbb: 0.15 } },
-    { question: 'Boğaz ağrınız var mı?', impact: { kbb: 0.2, aile_hekimi: 0.1 } }
-  ],
-  'boyun_agrisi': [
-    { question: 'Kol veya ellere yayılan ağrı var mı?', impact: { noroloji: 0.3 } },
-    { question: 'Uyuşma var mı?', impact: { noroloji: 0.3 } },
-    { question: 'Travma yaşadınız mı?', impact: { ortopedi: 0.3 } }
-  ],
-  'depresyon': [
-    { question: 'İntihar düşünceniz var mı?', impact: { psikiyatri: 0.5 }, urgent: true },
-    { question: 'İştahınızda değişiklik var mı?', impact: { psikiyatri: 0.1, dahiliye: 0.1 } },
-    { question: 'Bu durum 2 haftadan uzun süredir devam ediyor mu?', impact: { psikiyatri: 0.3 } }
-  ],
-  'yorgunluk': [
-    { question: 'Kilo değişikliği var mı?', impact: { endokrinoloji: 0.3 } },
-    { question: 'İştahınızda değişiklik var mı?', impact: { dahiliye: 0.2, endokrinoloji: 0.2 } },
-    { question: 'Bu durum 2 haftadan uzun süredir mi devam ediyor?', impact: { dahiliye: 0.2 } }
-  ]
+  'bas_agrisi': {
+    tr: [
+      { question: 'Bu sizin hayatınızdaki en şiddetli baş ağrınız mı?', impact: { noroloji: 0.3 } },
+      { question: 'Görme bozukluğu veya bulanıklık eşlik ediyor mu?', impact: { noroloji: 0.2, goz: 0.2 } },
+      { question: 'Boyun sertliği var mı?', impact: { noroloji: 0.3 } },
+      { question: 'Mide bulantısı veya kusma var mı?', impact: { noroloji: 0.2 } }
+    ],
+    en: [
+      { question: 'Is this the worst headache of your life?', impact: { noroloji: 0.3 } },
+      { question: 'Is it accompanied by vision problems or blurriness?', impact: { noroloji: 0.2, goz: 0.2 } },
+      { question: 'Do you have neck stiffness?', impact: { noroloji: 0.3 } },
+      { question: 'Do you have nausea or vomiting?', impact: { noroloji: 0.2 } }
+    ]
+  },
+  'bogaz_agrisi': {
+    tr: [
+      { question: 'Ateşiniz var mı?', impact: { dahiliye: 0.2, kbb: 0.1 } },
+      { question: 'Yutkunurken çok şiddetli ağrı oluyor mu?', impact: { kbb: 0.3 } },
+      { question: 'Kaç gündür devam ediyor?', impact: { aile_hekimi: 0.2 }, thresholdDays: 3, type: 'options', options: ['1-2 gün', '3-6 gün', '1 haftadan uzun'], optionDays: [1, 3, 7] }
+    ],
+    en: [
+      { question: 'Do you have a fever?', impact: { dahiliye: 0.2, kbb: 0.1 } },
+      { question: 'Is the pain severe when swallowing?', impact: { kbb: 0.3 } },
+      { question: 'How many days has it been going on?', impact: { aile_hekimi: 0.2 }, thresholdDays: 3, type: 'options', options: ['1-2 days', '3-6 days', 'More than a week'], optionDays: [1, 3, 7] }
+    ]
+  },
+  'karin_agrisi': {
+    tr: [
+      { question: 'Ağrı ani mi başladı yoksa yavaş yavaş mı?', impact: { genel_cerrahi: 0.3 }, type: 'options', options: ['Ani başladı', 'Yavaş yavaş başladı'] },
+      { question: 'Ateşiniz var mı?', impact: { dahiliye: 0.2, genel_cerrahi: 0.15 } },
+      { question: 'Kusma var mı?', impact: { gastroenteroloji: 0.2, genel_cerrahi: 0.15 } },
+      { question: 'Ağrı sağ alt karında mı?', impact: { genel_cerrahi: 0.4 } }
+    ],
+    en: [
+      { question: 'Did the pain start suddenly or gradually?', impact: { genel_cerrahi: 0.3 }, type: 'options', options: ['Started suddenly', 'Started gradually'] },
+      { question: 'Do you have a fever?', impact: { dahiliye: 0.2, genel_cerrahi: 0.15 } },
+      { question: 'Do you have vomiting?', impact: { gastroenteroloji: 0.2, genel_cerrahi: 0.15 } },
+      { question: 'Is the pain in the lower right abdomen?', impact: { genel_cerrahi: 0.4 } }
+    ]
+  },
+  'gogus_agrisi': {
+    tr: [
+      { question: 'Nefes darlığı eşlik ediyor mu?', impact: { kardiyoloji: 0.3, gogus: 0.2 } },
+      { question: 'Kola veya çeneye yayılıyor mu?', impact: { kardiyoloji: 0.4 } },
+      { question: 'Eforla mı artıyor?', impact: { kardiyoloji: 0.3 } }
+    ],
+    en: [
+      { question: 'Is it accompanied by shortness of breath?', impact: { kardiyoloji: 0.3, gogus: 0.2 } },
+      { question: 'Does it radiate to your arm or jaw?', impact: { kardiyoloji: 0.4 } },
+      { question: 'Does it worsen with exertion?', impact: { kardiyoloji: 0.3 } }
+    ]
+  },
+  'nefes_darligi': {
+    tr: [
+      { question: 'İstirahat halinde de nefes darlığınız var mı?', impact: { kardiyoloji: 0.3, gogus: 0.2 } },
+      { question: 'Öksürük eşlik ediyor mu?', impact: { gogus: 0.3 } },
+      { question: 'Göğüs ağrısı var mı?', impact: { kardiyoloji: 0.3 } }
+    ],
+    en: [
+      { question: 'Do you have shortness of breath even at rest?', impact: { kardiyoloji: 0.3, gogus: 0.2 } },
+      { question: 'Is it accompanied by coughing?', impact: { gogus: 0.3 } },
+      { question: 'Do you have chest pain?', impact: { kardiyoloji: 0.3 } }
+    ]
+  },
+  'oksuruk': {
+    tr: [
+      { question: 'Balgam var mı?', impact: { gogus: 0.2, kbb: 0.1 } },
+      { question: 'Kanlı balgam var mı?', impact: { gogus: 0.4 } },
+      { question: 'Nefes darlığı var mı?', impact: { gogus: 0.25, kardiyoloji: 0.15 } },
+      { question: 'Ateş var mı?', impact: { dahiliye: 0.2, gogus: 0.15 } }
+    ],
+    en: [
+      { question: 'Do you have phlegm?', impact: { gogus: 0.2, kbb: 0.1 } },
+      { question: 'Is there blood in your phlegm?', impact: { gogus: 0.4 } },
+      { question: 'Do you have shortness of breath?', impact: { gogus: 0.25, kardiyoloji: 0.15 } },
+      { question: 'Do you have a fever?', impact: { dahiliye: 0.2, gogus: 0.15 } }
+    ]
+  },
+  'kalp_carpintisi': {
+    tr: [
+      { question: 'İstirahat halinde mi oluyor?', impact: { kardiyoloji: 0.3 } },
+      { question: 'Baş dönmesi eşlik ediyor mu?', impact: { kardiyoloji: 0.2, noroloji: 0.1 } },
+      { question: 'Göğüs ağrısı var mı?', impact: { kardiyoloji: 0.3 } }
+    ],
+    en: [
+      { question: 'Does it happen at rest?', impact: { kardiyoloji: 0.3 } },
+      { question: 'Is it accompanied by dizziness?', impact: { kardiyoloji: 0.2, noroloji: 0.1 } },
+      { question: 'Do you have chest pain?', impact: { kardiyoloji: 0.3 } }
+    ]
+  },
+  'kol_agrisi': {
+    tr: [
+      { question: 'Şişlik var mı?', impact: { ortopedi: 0.2 } },
+      { question: 'Travma geçirdiniz mi?', impact: { ortopedi: 0.4 } },
+      { question: 'Uyuşma veya güçsüzlük var mı?', impact: { noroloji: 0.3 } }
+    ],
+    en: [
+      { question: 'Is there swelling?', impact: { ortopedi: 0.2 } },
+      { question: 'Did you experience any injury or trauma?', impact: { ortopedi: 0.4 } },
+      { question: 'Is there numbness or weakness?', impact: { noroloji: 0.3 } }
+    ]
+  },
+  'bacak_agrisi': {
+    tr: [
+      { question: 'Şişlik var mı?', impact: { kardiyoloji: 0.3 } },
+      { question: 'Yürürken mi ağrıyor?', impact: { ortopedi: 0.2, kardiyoloji: 0.2 } },
+      { question: 'Uyuşma veya karıncalanma var mı?', impact: { noroloji: 0.3 } }
+    ],
+    en: [
+      { question: 'Is there swelling?', impact: { kardiyoloji: 0.3 } },
+      { question: 'Does it hurt when walking?', impact: { ortopedi: 0.2, kardiyoloji: 0.2 } },
+      { question: 'Is there numbness or tingling?', impact: { noroloji: 0.3 } }
+    ]
+  },
+  'ates': {
+    tr: [
+      { question: 'Kaç gündür ateşiniz var?', impact: { dahiliye: 0.2 }, thresholdDays: 3, type: 'options', options: ['1-2 gün', '3-6 gün', '1 haftadan uzun'], optionDays: [1, 3, 7] },
+      { question: 'Öksürük var mı?', impact: { gogus: 0.2, kbb: 0.15 } },
+      { question: 'Boğaz ağrınız var mı?', impact: { kbb: 0.2, aile_hekimi: 0.1 } }
+    ],
+    en: [
+      { question: 'How many days have you had the fever?', impact: { dahiliye: 0.2 }, thresholdDays: 3, type: 'options', options: ['1-2 days', '3-6 days', 'More than a week'], optionDays: [1, 3, 7] },
+      { question: 'Do you have a cough?', impact: { gogus: 0.2, kbb: 0.15 } },
+      { question: 'Do you have a sore throat?', impact: { kbb: 0.2, aile_hekimi: 0.1 } }
+    ]
+  },
+  'boyun_agrisi': {
+    tr: [
+      { question: 'Kol veya ellere yayılan ağrı var mı?', impact: { noroloji: 0.3 } },
+      { question: 'Uyuşma var mı?', impact: { noroloji: 0.3 } },
+      { question: 'Travma yaşadınız mı?', impact: { ortopedi: 0.3 } }
+    ],
+    en: [
+      { question: 'Does the pain radiate to your arms or hands?', impact: { noroloji: 0.3 } },
+      { question: 'Is there numbness?', impact: { noroloji: 0.3 } },
+      { question: 'Did you experience any injury or trauma?', impact: { ortopedi: 0.3 } }
+    ]
+  },
+  'depresyon': {
+    tr: [
+      { question: 'İntihar düşünceniz var mı?', impact: { psikiyatri: 0.5 }, urgent: true },
+      { question: 'İştahınızda değişiklik var mı?', impact: { psikiyatri: 0.1, dahiliye: 0.1 } },
+      { question: 'Bu durum 2 haftadan uzun süredir devam ediyor mu?', impact: { psikiyatri: 0.3 } }
+    ],
+    en: [
+      { question: 'Do you have thoughts of suicide?', impact: { psikiyatri: 0.5 }, urgent: true },
+      { question: 'Has your appetite changed?', impact: { psikiyatri: 0.1, dahiliye: 0.1 } },
+      { question: 'Has this been going on for more than 2 weeks?', impact: { psikiyatri: 0.3 } }
+    ]
+  },
+  'yorgunluk': {
+    tr: [
+      { question: 'Kilo değişikliği var mı?', impact: { endokrinoloji: 0.3 } },
+      { question: 'İştahınızda değişiklik var mı?', impact: { dahiliye: 0.2, endokrinoloji: 0.2 } },
+      { question: 'Bu durum 2 haftadan uzun süredir mi devam ediyor?', impact: { dahiliye: 0.2 } }
+    ],
+    en: [
+      { question: 'Has your weight changed?', impact: { endokrinoloji: 0.3 } },
+      { question: 'Has your appetite changed?', impact: { dahiliye: 0.2, endokrinoloji: 0.2 } },
+      { question: 'Has this been going on for more than 2 weeks?', impact: { dahiliye: 0.2 } }
+    ]
+  }
 };
 
 // ============================================

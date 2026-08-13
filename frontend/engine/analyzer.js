@@ -3,7 +3,7 @@
 // Dil desteği: lang parametresi dışarıdan gelir
 // ============================================
 
-import { SYMPTOM_DATABASE, DEPARTMENTS, FOLLOW_UP_TEMPLATES, AGE_SENSITIVE_SYMPTOM_IDS } from './symptom-db.js';
+import { SYMPTOM_DATABASE, DEPARTMENTS, FOLLOW_UP_TEMPLATES, AGE_SENSITIVE_SYMPTOM_IDS, getDepartmentName } from './symptom-db.js';
 import { matchKeywords, normalizeForSearch, isNegated, analyzeIntensifiers } from './nlp.js';
 import { getCandidateSymptomIds } from './keyword-index.js';
 
@@ -24,6 +24,7 @@ const IMMEDIATE_RED_FLAG_IDS = new Set([
 //      kalıyor — sessiz, düzeltilemez bir varsayım asla yapılmıyor.
 const AGE_BAND_QUESTION_ID = '__age_band__';
 const AGE_BAND_OPTIONS = ['Bebek (0-2 yaş)', 'Çocuk (2-12 yaş)', 'Genç/Yetişkin (12-65 yaş)', '65 yaş üstü'];
+const AGE_BAND_OPTIONS_EN = ['Infant (0-2 years)', 'Child (2-12 years)', 'Teen/Adult (12-65 years)', 'Over 65'];
 const AGE_BAND_VALUES = ['bebek', 'cocuk', 'yetiskin', 'yasli'];
 
 // Metinden AÇIK yaş ipucu çıkarma — sadece güçlü/net sinyaller kabul
@@ -52,14 +53,15 @@ function detectAgeBand(text) {
   return null;
 }
 
-function buildAgeBandQuestion() {
+function buildAgeBandQuestion(lang) {
+  const options = lang === 'en' ? AGE_BAND_OPTIONS_EN : AGE_BAND_OPTIONS;
   return {
-    question: 'Bu değerlendirme kimin için?',
+    question: lang === 'en' ? 'Who is this assessment for?' : 'Bu değerlendirme kimin için?',
     symptomId: AGE_BAND_QUESTION_ID,
     impact: {},
     urgent: false,
     type: 'options',
-    options: AGE_BAND_OPTIONS,
+    options,
     ageBandValues: AGE_BAND_VALUES,
   };
 }
@@ -297,7 +299,7 @@ export function analyzeSymptoms(inputText, previousAnswers = null, lang = 'tr', 
     const candidateDepartments = getCandidateDepartments(preliminaryScores);
     const followUpQuestions = generateFollowUpQuestions(extractedSymptoms, lang, universalQuestions, candidateDepartments);
     if (!detectedAgeBand && needsAgeBandQuestion(extractedSymptoms)) {
-      followUpQuestions.unshift(buildAgeBandQuestion());
+      followUpQuestions.unshift(buildAgeBandQuestion(lang));
     }
     if (followUpQuestions.length > 0) {
       return { needsMoreInfo: true, followUpQuestions, matchedSymptoms: extractedSymptoms.map(s => s.id), primarySymptom: extractedSymptoms[0].id, lang };
@@ -696,7 +698,7 @@ function buildResult(scores, extractedSymptoms, triage, lang) {
   if (confidenceScore >= 72 && gap > 0.15) confidence = 'high';
   else if (confidenceScore >= 55) confidence = 'medium';
 
-  const alternatives = sorted.slice(1, 4).filter(([, s]) => s >= primaryScore * 0.6).map(([id]) => ({ id, name: DEPARTMENTS[id]?.name || id, icon: DEPARTMENTS[id]?.icon || '🏥' }));
+  const alternatives = sorted.slice(1, 4).filter(([, s]) => s >= primaryScore * 0.6).map(([id]) => ({ id, name: getDepartmentName(id, lang), icon: DEPARTMENTS[id]?.icon || '🏥' }));
   const avgUrgency = extractedSymptoms.reduce((s, sym) => s + sym.urgency, 0) / extractedSymptoms.length;
   const isFamilyDoctor = triage.careLevel === 'routine' && (primaryId === 'aile_hekimi' || (avgUrgency <= 3.2 && confidence !== 'high'));
   const primaryDept = DEPARTMENTS[primaryId];
@@ -706,7 +708,7 @@ function buildResult(scores, extractedSymptoms, triage, lang) {
 
   return {
     isEmergency: false, needsMoreInfo: false,
-    primaryDepartment: primaryId, primaryDepartmentName: primaryDept?.name || primaryId,
+    primaryDepartment: primaryId, primaryDepartmentName: primaryDept ? getDepartmentName(primaryId, lang) : primaryId,
     primaryDepartmentIcon: primaryDept?.icon || '🏥', primaryDepartmentColor: primaryDept?.color || '#667eea',
     confidence, confidenceScore, alternatives, isFamilyDoctor,
     familyDoctorMessage: isFamilyDoctor ? familyMsg : null,
@@ -719,7 +721,7 @@ function buildResult(scores, extractedSymptoms, triage, lang) {
 
 function generateReasoning(symptoms, primaryId, triage, lang) {
   const names = symptoms.slice(0, 3).map(s => s.matchedKeyword || s.keywords[0]);
-  const deptName = DEPARTMENTS[primaryId]?.name || primaryId;
+  const deptName = getDepartmentName(primaryId, lang);
   const joined = names.join(', ');
   if (lang === 'en') return symptoms.length === 1 ? `"${joined}" is most consistent with ${deptName}. ${triage.summary}` : `${joined} — when evaluated together, ${deptName} appears most appropriate. ${triage.summary}`;
   return symptoms.length === 1 ? `"${joined}" şikayeti en çok ${deptName} ile uyumlu görünüyor. ${triage.summary}` : `${joined} belirtileri birlikte değerlendirildiğinde en uygun bölüm ${deptName} görünüyor. ${triage.summary}`;
@@ -729,4 +731,4 @@ function generateReasoning(symptoms, primaryId, triage, lang) {
 // tarafından gerçek eşleştirme çekirdeğini doğrudan ölçmek için export
 // edildi. Motorun davranışında hiçbir değişiklik yapmaz, sadece mevcut
 // (zaten var olan) iç fonksiyonu dışarıya açar.
-export { DEPARTMENTS, SYMPTOM_DATABASE, extractSymptoms };
+export { DEPARTMENTS, SYMPTOM_DATABASE, extractSymptoms, getDepartmentName };
