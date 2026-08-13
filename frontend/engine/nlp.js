@@ -100,6 +100,15 @@ export function analyzeIntensifiers(text) {
 //    "baş ağrım yok", "ağrımıyor", "hissetmiyorum"
 // ─────────────────────────────────────────────
 
+// Genel "-mıyor/-miyor/-muyor" bitiş kalıbı, dilbilgisel olarak negatif
+// ama semptomu İNKÂR ETMEYEN, aksine ŞİDDETİNİ/SÜRESİNİ anlatan fiilleri
+// de yakalıyordu: "gece uyutmuyor" (uyumamı engelliyor - şiddet göstergesi,
+// semptomun yokluğu değil), "ağrım geçmiyor" (sürüyor - yine semptomun
+// VARLIĞINI güçlendiren bir ifade). Bu fiiller genel kalıba göre negasyon
+// gibi görünse de gerçekte semptomu doğruluyor; bu yüzden istisna listesi
+// dışarıda tutuluyor.
+const NEGATION_SUFFIX_EXCEPTIONS = /\b(uyutmuyor|uyutmuyo|gecmiyor|gecmiyo|birakmiyor)\b/;
+
 const NEGATION_PATTERNS = [
   /\b\w+m?[iuio]yor\s*degil/,          // "hissediyorum değil" (fold sonrası)
   /\b\w+(m[iuio]yor|miyor|muyor)\b/,   // ağrımıyor → agrimiyor (folded)
@@ -110,6 +119,14 @@ const NEGATION_PATTERNS = [
   /\bhissetmiyorum\b/,
   /\bsikayet\w*\s+yok\b/                // şikayetim yok → sikayet... yok
 ];
+
+function hasGenuineNegation(window) {
+  // Istisna fiillerden birini icap eden bir esleseyi, sadece o fiil
+  // yuzunden negatif saymayalim: istisnayi window'dan cikarip geri kalan
+  // metinde baska bir negasyon kaliba bakiyoruz.
+  const stripped = window.replace(NEGATION_SUFFIX_EXCEPTIONS, ' ');
+  return NEGATION_PATTERNS.some(p => p.test(stripped));
+}
 
 /**
  * Metnin bir semptom için negasyon içerip içermediğini kontrol eder.
@@ -145,17 +162,31 @@ export function isNegated(text, keyword) {
   const keyIdx = folded.indexOf(foldedKw);
 
   if (keyIdx === -1) {
-    const firstToken = foldedKw.split(' ')[0];
-    const tokenIdx = firstToken.length >= 3 ? folded.indexOf(firstToken) : -1;
-    if (tokenIdx === -1) {
-      return NEGATION_PATTERNS.some(p => p.test(folded));
+    // Tam ifade metinde birebir geçmiyor olabilir - bu, keyword'ün fuzzy/
+    // token eşleşmesiyle bulunduğu (matchKeywords'ün asıl yolu) durumlarda
+    // normal. ÖNCEKİ DAVRANIŞ sadece keyword'ün İLK kelimesine bakıyordu;
+    // o kelime girdide çekimli/farklı bir formda geçtiğinde (ör. keyword
+    // "çenemde", girdi "çenemin") HİÇBİR token bulunamıyor ve negasyon
+    // kontrolü SINIRSIZ tam-metin taramasına düşüyordu — cümlenin
+    // herhangi bir yerindeki alakasız bir olumsuzluk (ör. "gece
+    // uyutmuyor") bile eşleşmeyi yanlışlıkla negatif işaretliyordu. Şimdi
+    // keyword'ün TÜM kelimelerini (sadece ilkini değil) çapa adayı olarak
+    // deniyoruz; günlük konuşmadaki çekim farkları çoğu zaman bir diğer
+    // kelimede birebir eşleşir. Hiçbiri bulunamazsa eski güvenlik ağına
+    // (tam-metin tarama) düşüyoruz — davranış hiçbir zaman eskisinden
+    // daha KÖTÜ olmuyor, sadece çapa bulma şansı artıyor.
+    const kwTokens = foldedKw.split(' ').filter(t => t.length >= 3);
+    for (const kwToken of kwTokens) {
+      const idx = folded.indexOf(kwToken);
+      if (idx === -1) continue;
+      const win = folded.slice(Math.max(0, idx - 10), idx + 80);
+      return hasGenuineNegation(win);
     }
-    const win = folded.slice(tokenIdx, tokenIdx + 80);
-    return NEGATION_PATTERNS.some(p => p.test(win));
+    return hasGenuineNegation(folded);
   }
 
   const win = folded.slice(Math.max(0, keyIdx - 10), keyIdx + 80);
-  return NEGATION_PATTERNS.some(p => p.test(win));
+  return hasGenuineNegation(win);
 }
 
 // ─────────────────────────────────────────────

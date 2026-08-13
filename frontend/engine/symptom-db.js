@@ -1655,6 +1655,18 @@ export const SYMPTOM_DATABASE = [
       'yüzüm sızlıyor',
       'yüzüme vuran ağrı',
       'çene ve yüz ağrısı',
+      // Kapsam genişletmesi: 'çene ağrısı/sancısı' kompakt biçimleri
+      // hiç yoktu, mevcut tek satır ('çene ve yüz ağrısı') gündelik
+      // ifadelerle örtüşmüyordu (bkz. "çenemin sağ tarafında sürekli
+      // bir sancı var" — hiç eşleşmiyordu, aynı diş/ateş yöntemiyle
+      // kapatıldı).
+      'çene ağrısı',
+      'çenem ağrıyor',
+      'çenemde sancı var',
+      'çenemin sağ tarafında ağrı var',
+      'çenemin sol tarafında ağrı var',
+      'çenemde sürekli bir ağrı var',
+      'çene eklemimde ağrı',
       'yüzümde batma var',
       'şakaklarım sızlıyor',
       'yüzümde baskı hissediyorum',
