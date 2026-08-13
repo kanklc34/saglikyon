@@ -307,7 +307,8 @@ export function analyzeSymptoms(inputText, previousAnswers = null, lang = 'tr', 
   }
 
   const scores = calculateDepartmentScores(extractedSymptoms, previousAnswers, resolvedAgeBand);
-  const result = buildResult(scores, extractedSymptoms, triage, lang);
+  const hasAnsweredFollowUps = Array.isArray(previousAnswers) && previousAnswers.length > 0;
+  const result = buildResult(scores, extractedSymptoms, triage, lang, hasAnsweredFollowUps);
   result.ageBand = resolvedAgeBand || 'yetiskin'; // görünürlük için: varsayılan da açıkça belirtiliyor
   result.ageBandWasAssumed = !resolvedAgeBand;
   return result;
@@ -671,15 +672,32 @@ function calculateDepartmentScores(extractedSymptoms, previousAnswers, ageBand =
   return scores;
 }
 
-function buildResult(scores, extractedSymptoms, triage, lang) {
+function buildResult(scores, extractedSymptoms, triage, lang, hasAnsweredFollowUps = false) {
   // scores artık her bölüm için 0-1 aralığında bağımsız bir "olasılık
   // benzeri" değer (sigmoid çıktısı). Aile hekimi gibi yüksek önsele
   // sahip bölümler kanıt olmasa da hafif pozitif kalabilir; bu yüzden
   // anlamlı bir eşik koyup gerçekten kanıtla desteklenmeyenleri eleriz.
   const MEANINGFUL_THRESHOLD = 0.30;
-  const sorted = Object.entries(scores)
+  let sorted = Object.entries(scores)
     .filter(([, s]) => s > MEANINGFUL_THRESHOLD)
     .sort((a, b) => b[1] - a[1]);
+
+  // "En iyi tahmin" düşüşü: bazı semptomlar (ör. öksürük) kanıtı 3-4
+  // bölüme öyle dengeli dağıtıyor ki HİÇBİRİ tek başına 0.30'u
+  // geçemiyor — kullanıcı sorulan TÜM takip sorularını cevaplasa bile.
+  // Elimizde soracak başka soru kalmadığında (hasAnsweredFollowUps),
+  // topladığımız kanıtı çöpe atıp düz "belirlenemedi" demek yerine, en
+  // yüksek skoru DÜŞÜK GÜVENLE göstermeyi tercih ediyoruz — 0.15 alt
+  // sınırının altındaki gerçekten sinyalsiz durumlar hâlâ noMatch kalır.
+  const BEST_GUESS_FLOOR = 0.15;
+  let isBestGuess = false;
+  if (sorted.length === 0 && hasAnsweredFollowUps) {
+    const all = Object.entries(scores).sort((a, b) => b[1] - a[1]);
+    if (all.length > 0 && all[0][1] >= BEST_GUESS_FLOOR) {
+      sorted = all;
+      isBestGuess = true;
+    }
+  }
 
   if (sorted.length === 0) {
     return { error: null, noMatch: true, message: lang === 'en' ? 'Could not determine a department. Consider visiting a GP first.' : 'Bu şikayet için net bir bölüm çıkarılamadı. İlk adım olarak aile hekiminizden destek alabilirsiniz.' };
@@ -695,8 +713,8 @@ function buildResult(scores, extractedSymptoms, triage, lang) {
   const gap = primaryScore - secondScore;
 
   let confidence = 'low';
-  if (confidenceScore >= 72 && gap > 0.15) confidence = 'high';
-  else if (confidenceScore >= 55) confidence = 'medium';
+  if (!isBestGuess && confidenceScore >= 72 && gap > 0.15) confidence = 'high';
+  else if (!isBestGuess && confidenceScore >= 55) confidence = 'medium';
 
   const alternatives = sorted.slice(1, 4).filter(([, s]) => s >= primaryScore * 0.6).map(([id]) => ({ id, name: getDepartmentName(id, lang), icon: DEPARTMENTS[id]?.icon || '🏥' }));
   const avgUrgency = extractedSymptoms.reduce((s, sym) => s + sym.urgency, 0) / extractedSymptoms.length;
@@ -704,13 +722,16 @@ function buildResult(scores, extractedSymptoms, triage, lang) {
   const primaryDept = DEPARTMENTS[primaryId];
   const reasoning = generateReasoning(extractedSymptoms, primaryId, triage, lang);
   const familyMsg = lang === 'en' ? 'Your symptoms can be initially evaluated by a GP who can refer you to the right specialist.' : 'Belirtileriniz ilk adımda aile hekimi tarafından değerlendirilebilir. Gerekirse doğru branşa yönlendirme yapılabilir.';
-  const note = lang === 'en' ? `${triage.advice} This is not a diagnosis; a definitive assessment requires a doctor's examination.` : `${triage.advice} Bu öneri teşhis değildir; kesin tanı için doktor muayenesi gerekir.`;
+  const bestGuessNote = lang === 'en'
+    ? ' Your answers did not clearly point to a single department — this is our best guess, not a confident match.'
+    : ' Verdiğiniz cevaplar tek bir bölümü net biçimde işaret etmedi — bu kesin bir eşleşme değil, en yakın tahminimiz.';
+  const note = (lang === 'en' ? `${triage.advice} This is not a diagnosis; a definitive assessment requires a doctor's examination.` : `${triage.advice} Bu öneri teşhis değildir; kesin tanı için doktor muayenesi gerekir.`) + (isBestGuess ? bestGuessNote : '');
 
   return {
     isEmergency: false, needsMoreInfo: false,
     primaryDepartment: primaryId, primaryDepartmentName: primaryDept ? getDepartmentName(primaryId, lang) : primaryId,
     primaryDepartmentIcon: primaryDept?.icon || '🏥', primaryDepartmentColor: primaryDept?.color || '#667eea',
-    confidence, confidenceScore, alternatives, isFamilyDoctor,
+    confidence, confidenceScore, alternatives, isFamilyDoctor, isBestGuess,
     familyDoctorMessage: isFamilyDoctor ? familyMsg : null,
     reasoning,
     matchedSymptoms: extractedSymptoms.map(s => ({ id: s.id, keyword: s.matchedKeyword || s.keywords[0], score: Math.round(s.matchScore * 100) })),
