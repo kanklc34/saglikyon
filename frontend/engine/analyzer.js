@@ -97,6 +97,18 @@ function needsAgeBandQuestion(extractedSymptoms) {
 // Eşleşen kelime bu kümenin DIŞINDAysa (örn. "subaraknoid kanama",
 // "yüzüm eğrildi") uyarı sorgusuz kesin kalır.
 const AMBIGUOUS_RED_FLAG_KEYWORDS = {
+  felc: new Set([
+    // Bunlar pozisyonel uyuşma (kolun üstünde yatmak vb.), yorgunluk gibi
+    // sıradan sebeplerle de sık kullanılan ifadeler — felc'in DİĞER
+    // keywordleri (ör. 'yüzüm eğrildi', 'vücudumun yarısı tutmuyor') kadar
+    // spesifik değiller. Not: 'peltek konuşuyorum' aynı zamanda
+    // konusma_bozuklugu'nda da var ve orada doğrulama tetikliyordu — bu
+    // ifade hangi semptomun önce eşleştiğine bağlı olmadan HER ZAMAN
+    // doğrulama görmeli, o yüzden burada da carve-out var.
+    'peltek konuşuyorum', 'vücudum bi tuhaf oldu uyuştu',
+    'elim ayağım boşaldı', 'kolum tutmuyor hissizleşti',
+    'bacağım çekmiyor basamıyorum', 'düşüp kaldım',
+  ]),
   siddetli_bas_agrisi: new Set([
     'başım patlar gibi', 'beynim zonkluyor', 'kafam ikiye ayrılıyor',
     'gözlerim yerinden çıkacak', 'şakaklarım sızlıyor', 'başım çatlıyor',
@@ -138,6 +150,11 @@ const AMBIGUOUS_RED_FLAG_KEYWORDS = {
 // "reassure" seçeneği seçilirse uyarı yumuşatılır (ama hâlâ aile
 // hekimi/ilgili bölüm önerisiyle, asla tamamen göz ardı edilmez).
 const RED_FLAG_VERIFICATION = {
+  felc: {
+    question: { tr: 'Bu ani mi başladı ve vücudun bir tarafında mı (yüz, kol veya bacak)?', en: 'Did this start suddenly, and is it on one side of the body (face, arm, or leg)?' },
+    confirm: { tr: 'Evet, ani başladı ve tek tarafta', en: 'Yes, sudden and one-sided' },
+    reassure: { tr: 'Hayır, muhtemelen pozisyondan/yorgunluktan', en: 'No, probably from position/tiredness' },
+  },
   siddetli_bas_agrisi: {
     question: { tr: 'Bu ağrı aniden mi başladı ve hayatınızda hissettiğiniz en şiddetli ağrı mı?', en: 'Did this pain start suddenly, and is it the worst you have ever felt?' },
     confirm: { tr: 'Evet, tam olarak böyle', en: 'Yes, exactly like that' },
