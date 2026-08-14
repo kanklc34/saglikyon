@@ -9,7 +9,10 @@ import { getCandidateSymptomIds } from './keyword-index.js';
 
 const IMMEDIATE_RED_FLAG_IDS = new Set([
   'felc', 'gorme_kaybi', 'hemoptizi', 'bayilma', 'nöbet',
-  'inme_belirtisi', 'siddetli_bas_agrisi', 'anevrizma_belirti'
+  'inme_belirtisi', 'siddetli_bas_agrisi', 'anevrizma_belirti',
+  'konusma_bozuklugu' // FAST inme kriterinin "S"si (Speech) — felc ile
+  // aynı klinik kategoride, önceden eksikti (bkz.
+  // emergency-audit notu).
 ]);
 
 // ── Yaş grubu tespiti ve sorusu ──────────────────────────────
@@ -117,6 +120,18 @@ const AMBIGUOUS_RED_FLAG_KEYWORDS = {
     'gözlerimin önü boşaldı', 'bulanıklaşıyor', 'gözümün önünde sis var',
     'ışığı seçemiyorum', 'gözüm kapandı',
   ]),
+  konusma_bozuklugu: new Set([
+    // Bunlar günlük konuşmada yorgunluk/heyecan/dikkatsizlikle de sık
+    // kullanılan ifadeler ("dilim sürçtü", "kelime bulamadım" gibi) —
+    // felc/afazi kadar spesifik değiller, bu yüzden dogrudan alarm
+    // yerine dogrulama sorusu tetikliyorlar.
+    'kelime bulamıyorum', 'dilim sürçüyor', 'dilim sürçüyor sanki',
+    'lafı toparlayamıyorum', 'diksiyonum iyice bozuldu',
+    'konuşurken takılıyorum', 'konusurken sacmaliyorum',
+    'peltek konuşuyorum', 'peltek peltek cikiyor',
+    'tane tane cikmiyor', 'sesim cikmiyor gibi', 'konusmam degisti sanki',
+    'bozuk konuşuyorum', 'konuşmam bozuldu',
+  ]),
 };
 
 // Belirsiz eşleşmelerde sorulacak, durumu netleştirecek tek bir soru.
@@ -142,6 +157,11 @@ const RED_FLAG_VERIFICATION = {
     question: { tr: 'Görme kaybı ani mi başladı ve hâlâ sürüyor mu?', en: 'Did the vision loss start suddenly, and is it still ongoing?' },
     confirm: { tr: 'Evet, ani ve sürüyor', en: 'Yes, sudden and ongoing' },
     reassure: { tr: 'Hayır, geçici bulanıklık gibiydi', en: 'No, it was more like temporary blurriness' },
+  },
+  konusma_bozuklugu: {
+    question: { tr: 'Bu ani mi başladı ve yüzünüzde düşüklük veya kolunuzda güçsüzlük de var mı?', en: 'Did this start suddenly, and do you also have facial drooping or arm weakness?' },
+    confirm: { tr: 'Evet, ani başladı ve/veya bunlar da var', en: 'Yes, it started suddenly and/or these are also present' },
+    reassure: { tr: 'Hayır, sadece yorgunluktan/heyecandan kaynaklanıyor gibi', en: 'No, it just seems like tiredness/nervousness' },
   },
 };
 
@@ -408,10 +428,10 @@ function checkImmediateEmergency(extractedSymptoms, lang, suppressRedFlagIds = [
 function buildEmergencyMessage(symptomId, matchedKeyword, lang) {
   const label = matchedKeyword || symptomId;
   if (lang === 'en') {
-    const msgs = { felc: `Sudden stroke or speech loss ("${label}") may require emergency intervention. Call 112 immediately.`, gorme_kaybi: `Sudden "${label}" requires urgent evaluation. Call 112 immediately.`, hemoptizi: `"${label}" may indicate a serious condition. Seek emergency help immediately.`, bayilma: `"${label}" may require emergency intervention. Call 112 immediately.`, nöbet: `"${label}" may require emergency intervention. Call 112 immediately.` };
+    const msgs = { felc: `Sudden stroke or speech loss ("${label}") may require emergency intervention. Call 112 immediately.`, gorme_kaybi: `Sudden "${label}" requires urgent evaluation. Call 112 immediately.`, hemoptizi: `"${label}" may indicate a serious condition. Seek emergency help immediately.`, bayilma: `"${label}" may require emergency intervention. Call 112 immediately.`, nöbet: `"${label}" may require emergency intervention. Call 112 immediately.`, konusma_bozuklugu: `Sudden speech difficulty ("${label}") can be a sign of stroke. Call 112 immediately.` };
     return msgs[symptomId] || `"${label}" may indicate a serious condition. Call 112 or go to the nearest emergency room.`;
   }
-  const msgs = { felc: `Ani felç veya konuşma kaybı benzeri "${label}" belirtisi acil müdahale gerektirebilir. Hemen 112 ile iletişime geçin.`, gorme_kaybi: `Ani gelişen "${label}" durumu acil değerlendirme gerektirir. Hemen 112 ile iletişime geçin.`, hemoptizi: `"${label}" ciddi bir tabloya işaret edebilir. Hemen acil destek alın.`, bayilma: `"${label}" acil müdahale gerektirebilir. Hemen 112 ile iletişime geçin.`, nöbet: `"${label}" acil müdahale gerektirebilir. Hemen 112 ile iletişime geçin.` };
+  const msgs = { felc: `Ani felç veya konuşma kaybı benzeri "${label}" belirtisi acil müdahale gerektirebilir. Hemen 112 ile iletişime geçin.`, gorme_kaybi: `Ani gelişen "${label}" durumu acil değerlendirme gerektirir. Hemen 112 ile iletişime geçin.`, hemoptizi: `"${label}" ciddi bir tabloya işaret edebilir. Hemen acil destek alın.`, bayilma: `"${label}" acil müdahale gerektirebilir. Hemen 112 ile iletişime geçin.`, nöbet: `"${label}" acil müdahale gerektirebilir. Hemen 112 ile iletişime geçin.`, konusma_bozuklugu: `Ani gelişen konuşma bozukluğu ("${label}") felç/inme belirtisi olabilir. Hemen 112 ile iletişime geçin.` };
   return msgs[symptomId] || `"${label}" ciddi bir duruma işaret edebilir. Hemen 112 ile iletişime geçin.`;
 }
 
