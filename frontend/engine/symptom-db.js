@@ -539,8 +539,16 @@ export const SYMPTOM_DATABASE = [
       'göremiyorum',
       'görme kaybı',
       'gözüm görmüyor',
-      'karartı',
-      'kararma',
+      // BUG DÜZELTMESİ: burada önceden çıplak/bağlamsız 'karartı' ve
+      // 'kararma' kelimeleri vardı — bunlar Türkçe'de görüşle hiç ilgisi
+      // olmadan da (cilt lekesi, gölge, genel kararma) çok yaygın
+      // kullanılıyor. Sonuç: cilt döküntüsü/mantarı gibi tamamen alakasız
+      // metinler yanlışlıkla "görme kaybı acil durumu" tetikliyordu
+      // (emergency-denetimi sırasında bulundu, regression_corpus'ta 3
+      // yanlış-pozitif). Diğer keywordler ('dünya karardı birden',
+      // 'gözlerim karardı' vb.) zaten yeterince kapsıyor, kaldırmak
+      // gerçek vaka kaybına yol açmadı (tek regresyon-corpus vakası hâlâ
+      // geçiyor).
       'ani görme kaybı',
       'gözüme perde indi',
       'önümü göremiyorum',
@@ -568,6 +576,13 @@ export const SYMPTOM_DATABASE = [
       'bakıyorum ama net değil',
       'gözlerim cortladı',
       'dünya karardı birden',
+      // BUG DÜZELTMESİ (aynı denetim sırasında bulundu): stemmer 'dünya'
+      // kelimesini yanlışlıkla 'dun'a kısaltıyor (ayrı, dokunulmamış bir
+      // sorun) - bu yüzden 'dünyam karardı' hiçbir keyword'le eşleşmiyor
+      // ve yanlışlıkla ben_degisimi (leke/ben değişimi) ile çakışıyordu.
+      // Stemmer'a dokunmak yerine (riskli, genel etkisi bilinmiyor) bu
+      // kritik ifadeyi doğrudan ekliyoruz.
+      'dünyam karardı',
       'gözüme bişey oldu',
       'görüşüm zayıfladı',
       'ışıklar parlıyor göremiyorum',
@@ -8073,7 +8088,8 @@ export const SYMPTOM_DATABASE = [
       'bilye gibi şişlik',
       'yumru oluştu',
       'bezelerin şişmesi',
-      'şişlik var',
+      'bezimde şişlik var',
+      'lenf bezimde şişlik var',
       'deri altında sertlik',
       'şişmiş lenfler',
       'bezelerim şişti',
@@ -15215,6 +15231,9 @@ export const SYMPTOM_DATABASE = [
       'cildim yandı kabuk bağladı',
       'yüzümde yanık kırmızılığı var',
       'cilt yanması ve derin acı',
+      'kaynar su döküldü içi sıvı dolu kabarcık oluştu',
+      'yanık yerinde içi su dolu şişlik var',
+      'kaynar su döküldüğü için içi sıvı dolu şişlik oluştu',
     ],
     keywords_en: [
       'sunburn',
