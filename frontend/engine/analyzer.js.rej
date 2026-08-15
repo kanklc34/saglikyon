@@ -1,0 +1,75 @@
+diff a/frontend/engine/analyzer.js b/frontend/engine/analyzer.js	(rejected hunks)
+@@ -286,7 +286,16 @@ export function analyzeSymptoms(inputText, previousAnswers = null, lang = 'tr',
+   const resolvedAgeBand = detectedAgeBand || resolveAnsweredAgeBand(previousAnswers);
+ 
+   if (!previousAnswers) {
+-    const followUpQuestions = generateFollowUpQuestions(extractedSymptoms, lang, universalQuestions);
++    // Takip sorularını seçmeden önce, şu ana kadarki kanıtla bir ön skor
++    // hesaplıyoruz. Bu, "en yakın rakip bölümler hangileri" sorusuna
++    // cevap verip, soru seçimini rastgele/sabit sıradan department-
++    // discriminative (rakip bölümleri gerçekten ayırt eden) hale getirmek
++    // için kullanılıyor — cevap henüz yok (previousAnswers=null), o yüzden
++    // scores burada sadece "şu ana kadarki metinden ne çıkarabiliyoruz"u
++    // yansıtan bir ön izleme, nihai sonuç değil.
++    const preliminaryScores = calculateDepartmentScores(extractedSymptoms, null, resolvedAgeBand);
++    const candidateDepartments = getCandidateDepartments(preliminaryScores);
++    const followUpQuestions = generateFollowUpQuestions(extractedSymptoms, lang, universalQuestions, candidateDepartments);
+     if (!detectedAgeBand && needsAgeBandQuestion(extractedSymptoms)) {
+       followUpQuestions.unshift(buildAgeBandQuestion());
+     }
+@@ -403,7 +412,38 @@ function buildEmergencyMessage(symptomId, matchedKeyword, lang) {
+   return msgs[symptomId] || `"${label}" ciddi bir duruma işaret edebilir. Hemen 112 ile iletişime geçin.`;
+ }
+ 
+-function generateFollowUpQuestions(extractedSymptoms, lang, universalQuestions) {
++// Şu anki ön skorlara göre "hâlâ yarışan" bölümleri bulur: en yüksek
++// skorlu bölümün gerisinde ama makul mesafede olan (yani bir takip
++// sorusuyla öne geçebilecek) en fazla 4 bölüm. Sabit bir MEANINGFUL_
++// THRESHOLD'a takılı kalmıyoruz çünkü henüz cevap yokken pek çok gerçek
++// aday zaten eşiğin altında kalabilir (bkz. dis/ates gibi düşük-
++// özgüllüklü örnekler) — asıl önemli olan, birbirine göre nerede
++// durdukları.
++function getCandidateDepartments(scores) {
++  const sorted = Object.entries(scores).sort((a, b) => b[1] - a[1]);
++  if (sorted.length === 0) return [];
++  const topScore = sorted[0][1];
++  const MARGIN = 0.25; // top skorun bu kadar altındaki bölümler hâlâ "yarışta" sayılır
++  return sorted
++    .filter(([, s]) => s >= topScore - MARGIN)
++    .slice(0, 4)
++    .map(([id]) => id);
++}
++
++// Bir sorunun "ayırt edicilik" değeri: adaylardan kaçını etkiliyor ve
++// aralarındaki ağırlık farkı ne kadar büyük. Hiçbir adayı etkilemeyen
++// bir soru (impact'i tamamen adayların dışında) sıralamayı değiştirmez,
++// en düşük öncelikte kalır.
++function discriminativeScore(template, candidateIds) {
++  if (!template.impact || candidateIds.length === 0) return 0;
++  const weights = candidateIds.map(id => template.impact[id] || 0);
++  const touched = weights.filter(w => w > 0).length;
++  if (touched === 0) return 0;
++  const spread = Math.max(...weights) - Math.min(...weights);
++  return touched + spread;
++}
++
++function generateFollowUpQuestions(extractedSymptoms, lang, universalQuestions, candidateDepartments = []) {
+   const questions = [];
+   const addedQuestions = new Set();
+ 
+@@ -414,7 +454,14 @@ function generateFollowUpQuestions(extractedSymptoms, lang, universalQuestions)
+     const templates = FOLLOW_UP_TEMPLATES[symptom.id];
+     if (!templates) continue;
+     const langTemplates = Array.isArray(templates) ? templates : (templates[lang] || templates.tr || []);
+-    for (const template of langTemplates) {
++    // Aday bölümleri en iyi ayırt eden sorular öne alınıyor; urgent
++    // olanlar (ör. intihar riski) her zaman önde kalmaya devam ediyor
++    // çünkü bu sıralama sadece bu semptomun kendi şablon listesi
++    // içinde — nihai `.sort((a,b)=>urgent)` aşağıda hâlâ uygulanıyor.
++    const ranked = langTemplates
++      .map(template => ({ template, score: discriminativeScore(template, candidateDepartments) }))
++      .sort((a, b) => (Number(b.template.urgent) - Number(a.template.urgent)) || (b.score - a.score));
++    for (const { template } of ranked) {
+       if (addedQuestions.has(template.question)) continue;
+       if (questions.length >= 2) break;
+       questions.push({

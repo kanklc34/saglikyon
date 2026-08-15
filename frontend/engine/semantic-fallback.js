@@ -48,7 +48,14 @@ let corpusPromise = null;
 function getExtractor() {
     if (!extractorPromise) {
         extractorPromise = import(TRANSFORMERS_CDN_URL).then(({ pipeline }) =>
-            pipeline('feature-extraction', MODEL_ID)
+            // dtype BİLİNÇLİ OLARAK 'q8': dtype belirtilmezse transformers.js
+            // varsayılan olarak fp32/model.onnx dosyasını arar — repo'muzda
+            // öyle bir dosya HİÇ YOK, sadece int8 quantized model var
+            // (onnx/model_quantized.onnx). dtype:'q8' bu dosya adıyla eşleşen
+            // tek seçenek. Bu satır eksikken katman sessizce (try/catch
+            // içinde) hep başarısız oluyor, kullanıcıya hiçbir hata
+            // görünmüyordu — bkz. 2026-08-15 doğrulama oturumu.
+            pipeline('feature-extraction', MODEL_ID, { dtype: 'q8' })
         );
     }
     return extractorPromise;

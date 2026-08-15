@@ -1,0 +1,52 @@
+From 657bb721d65259916b2e9c04f418283ed78d6dae Mon Sep 17 00:00:00 2001
+From: KAAN <kanklcx1903@gmail.com>
+Date: Wed, 12 Aug 2026 17:36:31 +0000
+Subject: [PATCH] feat: ates semptomu keyword corpus genisletmesi
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+diş corpus'unun (6->30) ayni yontemiyle: regression_corpus.json'daki
+3 pozitif 'ates' vakasi (participle/iyelik cekimleri, titreme+hararet
+kombinasyonu, termometre/olcum cercevesi) hicbirine eslesmiyordu -
+tamamen noMatch donuyordu. 11 dogal paraphrase eklendi.
+
+Dogrulama (regression_corpus.json, 517 vaka, ilk baseline'a gore):
+passed 208 -> 218 (+10). 0 regresyon. ates: 4/4 vaka artik gecerli
+(3 pozitif -> needsMoreInfo [dogru davranis, ates 4 bolume yayili ve
+dusuk ozgullukte, dis gibi tek-bolume-isaret-eden bir semptom degil],
+1 negation -> dogru noMatch).
+---
+ frontend/engine/symptom-db.js | 16 ++++++++++++++++
+ 1 file changed, 16 insertions(+)
+
+diff --git a/frontend/engine/symptom-db.js b/frontend/engine/symptom-db.js
+index 5b1c628..0a6686e 100644
+--- a/frontend/engine/symptom-db.js
++++ b/frontend/engine/symptom-db.js
+@@ -5366,6 +5366,22 @@ export const SYMPTOM_DATABASE = [
+       'ateşli hastalık belirtisi var',
+       'ateşim var sanırım',
+       'ateşten başım dönüyo',
++      // Kapsam genişletmesi: regression_corpus.json'daki 3 pozitif "ateş"
++      // vakası (participle/iyelik çekimleri, titreme+hararet kombinasyonu,
++      // termometre/ölçüm çerçevesi) hiçbirine eşleşmiyordu — bu doğal
++      // paraphrase'ler o boşlukları kapatıyor (bkz. diş corpus'unun aynı
++      // yöntemle 6'dan 30'a çıkarılması).
++      'vücut ısımın çok yükseldiğini hissediyorum',
++      'kendimi oldukça sıcak hissediyorum',
++      'vücudumda ciddi bir hararet var',
++      'titremeyle birlikte hararet basıyor',
++      'gece boyunca titreyip terledim',
++      'titreyerek ateşim çıktı',
++      'termometre normalin üzerinde çıktı',
++      'ateş ölçtüm yüksek çıktı',
++      'değerler normalin çok üzerinde',
++      'vücut sıcaklığım fazlasıyla arttı',
++      'sıcaklığım hızla yükseliyor',
+     ],
+     keywords_en: [
+       'feverish',
+-- 
+2.43.0
+
