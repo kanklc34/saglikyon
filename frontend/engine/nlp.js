@@ -107,7 +107,7 @@ export function analyzeIntensifiers(text) {
 // VARLIĞINI güçlendiren bir ifade). Bu fiiller genel kalıba göre negasyon
 // gibi görünse de gerçekte semptomu doğruluyor; bu yüzden istisna listesi
 // dışarıda tutuluyor.
-const NEGATION_SUFFIX_EXCEPTIONS = /\b(uyutmuyor|uyutmuyo|gecmiyor|gecmiyo|birakmiyor)\b/;
+const NEGATION_SUFFIX_EXCEPTIONS = /\b(uyutmuyor|uyutmuyo|gecmiyor|gecmiyo|birakmiyor|cikis olmuyor|disari cikmiyor)\b/;
 
 const NEGATION_PATTERNS = [
   /\b\w+m?[iuio]yor\s*degil/,          // "hissediyorum değil" (fold sonrası)
@@ -119,6 +119,17 @@ const NEGATION_PATTERNS = [
   /\bhissetmiyorum\b/,
   /\bsikayet\w*\s+yok\b/                // şikayetim yok → sikayet... yok
 ];
+
+// Pencereyi sabit karakter sayısı yerine mevcut CÜMLENİN SONUNA kadar
+// genişletir (nokta/ünlem/soru işareti veya metin sonu, en fazla +200
+// karakter üst sınırla). Sabit +80 karakter, uzun cümlelerde geç kalan
+// negasyon kelimelerini (ör. "...şikayetim bulunmuyor.") ortadan kesip
+// kaçırıyordu.
+function sentenceEnd(text, fromIdx) {
+  const rest = text.slice(fromIdx, fromIdx + 200);
+  const m = /[.!?]/.exec(rest);
+  return fromIdx + (m ? m.index + 1 : rest.length);
+}
 
 function hasGenuineNegation(window) {
   // Istisna fiillerden birini icap eden bir esleseyi, sadece o fiil
@@ -149,11 +160,39 @@ export function isNegated(text, keyword) {
     const kwFirst = kwStem.split(' ')[0]; // multi-word keyword → ilk token
     // afterScope'da keyword stem'i veya keyword'ün herhangi bir token'ı geçiyorsa
     // bu keyword negasyon kapsamı dışında
-    if (kwFirst.length >= 3 && afterScope.split(/\s+/).some(t => {
+    // KRITIK BUG DÜZELTMESİ: afterScope 'sadece'den hemen sonraki
+    // boşlukla başladığı için split(/\s+/) baştaki boş string'i de bir
+    // token olarak veriyordu. JS'te HER string ""'den başlar
+    // (kwFirst.startsWith('') === true), yani bu kontrol keyword
+    // afterScope'ta HİÇ geçmese bile true dönüyordu — "sadece/ama/fakat"
+    // geçen HER cümlede negasyon sessizce es geçiliyordu. Ölçüm: "Herhangi
+    // bir akıntı şikayetim yok, sadece karın ağrım var." → 'akıntı'
+    // yanlışlıkla negatif SAYILMIYORDU (regression_corpus'ta 21 negation
+    // vakasının hepsi bu tek bug'dan etkileniyordu). .filter(Boolean) ile
+    // boş token'lar elendi.
+    if (kwFirst.length >= 3 && afterScope.split(/\s+/).filter(Boolean).some(t => {
       const ts = stemTurkish(t, false);
       return ts === kwFirst || ts.startsWith(kwFirst) || kwFirst.startsWith(ts);
     })) {
-      return false;
+      // EK DÜZELTME: afterScope'ta bulunmak otomatik olarak "olumlu/
+      // tutulan taraf" demek değil — "ancak X yaşamıyorum" gibi post-
+      // connector cümlenin KENDİSİ de kendi negasyonunu taşıyabilir
+      // ("sadece Y var" farklı, orada gerçekten olumlu). Keyword'ün
+      // afterScope içindeki konumunun etrafına bakıp orada da genuine
+      // bir negasyon var mı kontrol ediyoruz; varsa erken "false" ile
+      // çıkmıyoruz.
+      const afterTokens = afterScope.split(/\s+/).filter(Boolean);
+      const hitToken = afterTokens.find(t => {
+        const ts = stemTurkish(t, false);
+        return ts === kwFirst || ts.startsWith(kwFirst) || kwFirst.startsWith(ts);
+      });
+      const localIdx = hitToken ? afterScope.indexOf(hitToken) : -1;
+      const localWin = localIdx !== -1 ? afterScope.slice(Math.max(0, localIdx - 10), sentenceEnd(afterScope, localIdx)) : '';
+      if (localIdx === -1 || !hasGenuineNegation(localWin)) {
+        return false;
+      }
+      // yoksa (localWin kendi negasyonunu tasiyorsa) asagidaki normal
+      // akisa devam ediyoruz.
     }
   }
 
@@ -176,16 +215,27 @@ export function isNegated(text, keyword) {
     // (tam-metin tarama) düşüyoruz — davranış hiçbir zaman eskisinden
     // daha KÖTÜ olmuyor, sadece çapa bulma şansı artıyor.
     const kwTokens = foldedKw.split(' ').filter(t => t.length >= 3);
+    const textTokens = folded.split(/[^a-z0-9]+/).filter(Boolean);
     for (const kwToken of kwTokens) {
-      const idx = folded.indexOf(kwToken);
+      let idx = folded.indexOf(kwToken);
+      if (idx === -1) {
+        // Turkce unsuz yumusamasi (k->g, p->b, t->d, c->c — ör. öksürük +
+        // -üm → öksürüğüm) tam substring aramasını kaçırıyordu ve
+        // SINIRSIZ tam-metin fallback'ine düşülüyordu. Ortak-önek
+        // (prefix) karşılaştırması bu tür ek-kaynaklı son-harf
+        // değişimlerini tolere ediyor.
+        const minPrefix = Math.max(3, kwToken.length - 2);
+        const found = textTokens.find(tok => tok.length >= minPrefix && tok.slice(0, minPrefix) === kwToken.slice(0, minPrefix));
+        if (found) idx = folded.indexOf(found);
+      }
       if (idx === -1) continue;
-      const win = folded.slice(Math.max(0, idx - 10), idx + 80);
+      const win = folded.slice(Math.max(0, idx - 10), sentenceEnd(folded, idx));
       return hasGenuineNegation(win);
     }
     return hasGenuineNegation(folded);
   }
 
-  const win = folded.slice(Math.max(0, keyIdx - 10), keyIdx + 80);
+  const win = folded.slice(Math.max(0, keyIdx - 10), sentenceEnd(folded, keyIdx));
   return hasGenuineNegation(win);
 }
 
