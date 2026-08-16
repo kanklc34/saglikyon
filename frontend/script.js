@@ -598,8 +598,18 @@ async function finishFollowUp() {
 
   await new Promise(r => setTimeout(r, 600));
   const result = analyzeSymptoms(state._originalText, state.followUp.answers, state.lang, t().followUpUniversal);
-  if (result.isEmergency) showEmergency(result, state._originalText);
-  else showResult(result, state._originalText, true);
+  // KRİTİK DÜZELTME (2026-08-15): takip sorularının SONUNDA da ana
+  // akıştaki AYNI güvenlik ağı uygulanmalı — önceden burası sadece
+  // isEmergency kontrol edip gerisini doğrudan showResult'a
+  // gönderiyordu. Sonuç noMatch/hadNegatedMatch/low-confidence olsa
+  // BİLE showResult çağrılıyordu — ya bozuk bir ekran (resolved
+  // olmayan objeyle) ya da kullanıcıya hiç semantik yardım sunulmadan
+  // (needsMoreInfo'nun 92 vakalık regresyon grubunun hiç güvenlik ağı
+  // olmaması sorunu tam burasıydı).
+  if (result.isEmergency) { showEmergency(result, state._originalText); }
+  else if (result.noMatch && result.hadNegatedMatch) { showScreen('screenInput'); showError(result.message || t().errorNoMatch); }
+  else if ((result.noMatch && !result.hadNegatedMatch) || result.confidence === 'low') { await tryShowSemanticSuggestions(state._originalText); }
+  else { showResult(result, state._originalText, true); }
 }
 
 // ── Result ────────────────────────────────
