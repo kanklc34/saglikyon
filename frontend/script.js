@@ -313,6 +313,13 @@ async function startAnalysis() {
     const result = analyzeSymptoms(text, null, state.lang, t().followUpUniversal);
 
     if (result.error) { showScreen('screenInput'); showError(result.error); }
+    // KRİTİK DÜZELTME: noMatch && hadNegatedMatch durumunda semantik
+    // katman kasıtlı olarak atlanıyor (aşağıdaki koşula bak) — ama bu
+    // durumu burada AÇIKÇA ele almazsak zincirin sonundaki showResult'a
+    // düşüyor, o da 'resolved' olmayan bir result ile çağrılınca ekranda
+    // "undefined" gösteriyordu. Var olan noMatch-mesaj kalıbını (bkz.
+    // r2.noMatch aşağıda) burada da kullanıyoruz.
+    else if (result.noMatch && result.hadNegatedMatch) { showScreen('screenInput'); showError(result.message || t().errorNoMatch); }
     // NOT: semantik katman artık sadece TAM noMatch'te değil, lexical
     // motorun 'low' güvenle sonuçlandığı durumlarda da tetikleniyor —
     // ölçtüğümüze göre (regression_corpus.json, 517 vaka) 'low' bandındaki
