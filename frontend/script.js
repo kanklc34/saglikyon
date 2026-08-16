@@ -320,7 +320,16 @@ async function startAnalysis() {
     // doğruluğundan (%80.6) belirgin şekilde düşük. 'medium' bandı için
     // de benzer bir zayıflık var ama örneklem küçük (12 vaka) — şimdilik
     // sadece 'low' için genişletiyoruz, veri büyüdükçe yeniden değerlendirilebilir.
-    else if (result.noMatch || result.confidence === 'low') { await tryShowSemanticSuggestions(text); }
+    //
+    // KRİTİK GÜVENLİK DÜZELTMESİ (2026-08-15): result.hadNegatedMatch true
+    // ise, lexical motor metni ANLADI ve kullanıcı bir semptomu doğru
+    // şekilde negatif ifade etti ("ağrım yok" gibi) — bu gerçek bir
+    // noMatch değil, doğru sonuç. Uçtan-uca ölçümde, semantik katman bu
+    // durumlarda bile yüksek skorla (bazen >0.88) yanlış departman
+    // öneriyordu (128 negasyon vakasının 109'unda öneri gösteriliyordu,
+    // en riskli örneklerde skor 0.88+). Artık bu durumda katman hiç
+    // tetiklenmiyor.
+    else if ((result.noMatch && !result.hadNegatedMatch) || result.confidence === 'low') { await tryShowSemanticSuggestions(text); }
     else if (result.isEmergency) { showEmergency(result, text); }
     else if (result.needsMoreInfo) { startFollowUp(result, text); }
     else { showResult(result, text); }

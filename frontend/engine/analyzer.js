@@ -287,12 +287,18 @@ export function analyzeSymptoms(inputText, previousAnswers = null, lang = 'tr', 
     };
   }
 
-  const extractedSymptoms = extractSymptoms(inputText);
+  const { matched: extractedSymptoms, hadNegatedMatch } = extractSymptoms(inputText);
 
   if (extractedSymptoms.length === 0) {
     return {
       error: null,
       noMatch: true,
+      // KRİTİK: true ise, lexical motor aslında bir semptomu TANIDI ama
+      // kullanıcı onu negatif ifade etti ("ağrım yok" gibi) — bu durumda
+      // "hiçbir şey anlaşılamadı" değil, "doğru şekilde hiçbir şey bulunamadı"
+      // söz konusu. script.js semantik fallback'i SADECE bu false iken
+      // tetiklemeli (bkz. 2026-08-15 doğrulama oturumu — negasyon riski).
+      hadNegatedMatch,
       message: lang === 'en'
         ? 'Could not understand your complaint clearly. Please describe in more detail or use the body map.'
         : 'Şikayetinizi yeterince net anlayamadım. Lütfen daha detaylı yazın veya vücut haritasından destek alın.',
@@ -384,6 +390,7 @@ function getCombinedKeywords(symptom) {
 // taşımaz.
 function extractSymptoms(inputText) {
   const matched = [];
+  let hadNegatedMatch = false;
   const { boost: intensifierBoost } = analyzeIntensifiers(inputText);
 
   const candidateIds = getCandidateSymptomIds(inputText);
@@ -395,15 +402,25 @@ function extractSymptoms(inputText) {
     const kwAll = getCombinedKeywords(symptom);
     const result = matchKeywords(inputText, kwAll);
     if (!result.matched) continue;
-    if (isNegated(inputText, result.keyword)) continue;
+    if (isNegated(inputText, result.keyword)) {
+      // KRİTİK: burada sessizce atlamıyoruz artık — bu, lexical motorun
+      // metni ANLADIĞI ama kullanıcının "yok" dediği anlamına geliyor.
+      // noMatch ile "hiçbir şey tanınmadı" durumunu ayırt etmek için
+      // işaretliyoruz (bkz. analyzeSymptoms'taki hadNegatedMatch).
+      hadNegatedMatch = true;
+      continue;
+    }
     matched.push({ ...symptom, urgency: Math.min(10, symptom.urgency * intensifierBoost), matchScore: result.score, matchedKeyword: result.keyword });
   }
 
-  if (matched.length === 0) return [];
+  if (matched.length === 0) return { matched: [], hadNegatedMatch };
   matched.sort((a, b) => b.matchScore - a.matchScore);
   const topScore = matched[0].matchScore;
   const threshold = Math.max(0.78, topScore * 0.72);
-  return matched.filter((s, i) => s.matchScore >= threshold || (i < 2 && s.matchScore >= 0.76)).slice(0, 6);
+  return {
+    matched: matched.filter((s, i) => s.matchScore >= threshold || (i < 2 && s.matchScore >= 0.76)).slice(0, 6),
+    hadNegatedMatch,
+  };
 }
 
 function checkImmediateEmergency(extractedSymptoms, lang, suppressRedFlagIds = []) {
